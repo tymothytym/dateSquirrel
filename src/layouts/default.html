@@ -1,0 +1,33 @@
+<!doctype html>
+<html class="no-js" lang="en">
+	<head>
+	    <meta charset="utf-8" />
+	    <meta http-equiv="x-ua-compatible" content="ie=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	    <title>dateSquirrel</title>
+	    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
+	    <link rel="stylesheet" href="{{root}}dsq.css">
+    	{{#ifpage 'index'}}
+	    	<link rel="stylesheet" href="{{root}}dsq.css">
+	    	<link rel="stylesheet" href="{{root}}assets/css/app.css">
+    	{{/ifpage}}
+    	{{#ifpage 'test'}}
+	    	<link rel="stylesheet" href="{{root}}dsq.min.css">
+    	{{/ifpage}}
+	</head>
+	<body>
+		<div class="container">
+    	{{#ifpage 'index'}}
+    		{{> nav}}
+    	{{/ifpage}}
+		    {{> body}}
+		</div>
+    	{{#ifpage 'index'}}
+			<script src="{{root}}dsq.js"></script>
+		    <script src="{{root}}assets/js/app.js"></script>
+    	{{/ifpage}}
+    	{{#ifpage 'test'}}
+			<script src="{{root}}dsq.min.js"></script>
+    	{{/ifpage}}
+	</body>
+</html>

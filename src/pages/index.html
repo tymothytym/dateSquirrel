@@ -1,0 +1,575 @@
+<div class="splash">
+    <header id="home" class="intro">
+        <h1>dateSquirrel&nbsp;<span>a datepicker with a nutty tang</span></h1>
+        <h3>A test page to check the options and features in the build</h3>
+    </header>
+    <div class="quiz-box example">
+        <label for="#eg0">First check below (default settings)...
+            <input id="eg0" type="date" placeholder="Pick the date...">
+        </label>
+    </div>
+</div>
+<section class="light" id="getstarted">
+    <div class="demo-wrapper block row">
+        <div class="block-content gr-12">
+            <h2>Getting started</h2>
+            <p>Going through the steps below should get dateSquirrel up and running on your site. If you notice any bugs, please post them to <a>GitHub issues</a>.</p>
+            <p class="callout-reminder">dateSquirrel assumes you have standard (s)css resetting and / or normalization included in your site or build and doesn't include this.</p>
+            <h3>Dependencies</h3>
+            <p>dateSquirrel has no dependencies (except for JavaScript!)</p>
+            <h3>Browser support</h3>
+            <p>dateSquirrel supports recent(ish) browsers but needs access to some newer (but not bleeding edge) JavaScript DOM properties &amp; methods; Element.querySelector(), EventTarget.addEventListener() &amp; Element.classList - dateSquirrel also polyfills for Element.closest(), childNode.remove() and Array.from back to ~IE9 for the benefit of IE11</p>
+            <p>dateSquirrel is only attempts to support browsers that have a share of <a href="https://netmarketshare.com/browser-market-share.aspx?options=%7B%22filter%22%3A%7B%22%24and%22%3A%5B%7B%22deviceType%22%3A%7B%22%24in%22%3A%5B%22Desktop%2Flaptop%22%2C%22Mobile%22%5D%7D%7D%5D%7D%2C%22dateLabel%22%3A%22Trend%22%2C%22attributes%22%3A%22share%22%2C%22group%22%3A%22browserVersion%22%2C%22sort%22%3A%7B%22share%22%3A-1%7D%2C%22id%22%3A%22browsersDesktopVersions%22%2C%22dateInterval%22%3A%22Monthly%22%2C%22dateStart%22%3A%222017-01%22%2C%22dateEnd%22%3A%222017-12%22%2C%22segments%22%3A%22-1000%22%7D" target="_blank">above ~3% globally</a> which means testing is only done on Chrome, Safari, Firefox &amp; grudgingly IE11 (Sorry Opera users).
+            <h3>Step one: add the script reference to your page(s)</h3>
+            <div class="example-code">
+                <button class="clipboard" data-clipboard-target="#code_01"><i class="iconsqrl iconsqrl-content_paste"></i></button>
+                <pre>
+                    <code class="language-html" id="code_01">
+                    &lt;body>
+                        &lt;!-- page html -->
+                        &lt;script src="path/to/dsq.min.js">&lt;/script>
+                        &lt;!-- scripts that use dsq-->
+                    &lt;/body>
+                    </code>
+                </pre>
+            </div>
+        </div>
+    </div>
+    <div class="demo-wrapper block row">
+        <div class="block-content gr-12">
+            <h3>Step two: add the HTML</h3>
+            <div class="demo-box">
+                <div class="example-code">
+                    <button class="clipboard" data-clipboard-target="#code_02"><i class="iconsqrl iconsqrl-content_paste"></i></button>
+                    <pre>
+                        <code class="language-html" id="code_02">
+                            &lt;label for="eg1">Pick a date
+                                &lt;input type="date" id="eg1">
+                            &lt;/label>
+                        </code>
+                    </pre>
+                </div>
+            </div>
+        </div>
+        <div class="block-content gr-12">
+            <h3>Step three: initialise dateSquirrel</h3>
+            <div class="demo-box">
+                <div class="example-code">
+                    <button class="clipboard" data-clipboard-target="#code_03"><i class="iconsqrl iconsqrl-content_paste"></i></button>
+                    <pre>
+                        <code class="language-js" id="code_03">
+                            // either by selector...
+                            new dsq('#myDateInput');
+
+                            // ...or by element...
+                            const dateInput = document.getElementById('myDateInput');
+                            new dsq(dateInput);
+
+                            // ...but generally you would want to create an object so you can operate on it
+                            const myDatePicker = new dsq('#myDateInput');
+                        </code>
+                    </pre>
+                </div>
+            </div>
+        </div>
+        <div class="block-content gr-12">
+            <h3>Output: dateSquirrel field</h3>
+            <div class="demo-box">
+                <div class="example">
+                    <label class="eg-label" for="eg1">Pick a date
+                        <input type="date" id="eg1" placeholder="Tada!">
+                    </label>
+                </div>
+                <div class="example-code">
+                    <button class="clipboard" data-clipboard-target="#code_04"><i class="iconsqrl iconsqrl-content_paste"></i></button>
+                    <pre>
+                        <code class="language-html" id="code_04">
+                            &lt;body>
+                                &lt;label for="eg1">Pick a date
+                                    &lt;input type="date" id="eg1" placeholder="Tada!">
+                                &lt;/label>
+                                &lt;script src="path/to/dsq.min.js">&lt;/script>
+                                &lt;script>
+                                    new dsq('#eg1', {
+                                        pattern: 'dx mmm yyyy'
+                                    });
+                                &lt;/script>
+                            &lt;/body>
+                        </code>
+                    </pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="darker" id="examples">
+    <div class="demo-wrapper block row">
+        <div class="block-content gr-12">
+            <div class="demo-box">
+                <h2>Examples of features &amp; functions</h2>
+                <div class="example">
+                    <label class="eg-label" for="eg2">Specify visual format (text)
+                        <input type="date" id="eg2" placeholder="Fancy date format">
+                    </label>
+                </div>
+                <div class="example-code">
+                    <button class="clipboard" data-clipboard-target="#code_05"><i class="iconsqrl iconsqrl-content_paste"></i></button><pre>
+                
+                <code class="language-html" id="code_05">
+                        &lt;input type="date" id="eg2" placeholder="Fancy date format">
+                        &lt;script>
+                            new dsq('#eg2', {
+                                pattern: 'wwww, dx mmmm yyyy'
+                            });
+                        &lt;/script>
+                    </code></pre>
+                </div>
+            </div>
+            <div class="demo-box">
+                <div class="example">
+                    <label class="eg-label" for="eg3">Start &amp; end dates (text, function)
+                    <input type="date" id="eg3" placeholder="From hence to thence"></label>
+                </div>
+                <div class="example-code">
+                    <button class="clipboard" data-clipboard-target="#code_06"><i class="iconsqrl iconsqrl-content_paste"></i></button><pre>
+                
+                <code class="language-html" id="code_06">
+                        &lt;input type="date" id="eg3" placeholder="From hence to thence">
+                        &lt;script>
+                            // with literal dates
+                            new dsq('#eg3', {
+                                start: {
+                                    d: 28, // the 28th day
+                                    m: 1, // the SECOND month (February)
+                                    y: 1990 // the full year
+                                },
+                                end: {
+                                    d: 1, // the 1st day
+                                    m: 6, // the SEVENTH month (July)
+                                    y: 2000 // the full year
+                                } 
+                            });
+
+                            // via individual functions that return numbers
+                            var today = new Date();
+                            new dsq('#eg3', {
+                                start: {
+                                    d: 1, // Beginning of the month (1st)
+                                    m: today.getMonth(), // Today's month
+                                    y: today.getFullYear() + 1 // next year
+                                } 
+                            });
+
+                            // note: dsq automatically changes impossible dates **downward** 
+                            // to the nearest possible value 
+                            {
+                                d: 31, // becomes => 29
+                                m: 2, // March
+                                y: 2364 // leap year
+                                // result = 29th Mar 2364
+                            } 
+                            {
+                                d: 34, // becomes => 31
+                                m: 15, // becomes => 11 (December)
+                                y: 1999
+                                // result = 31st Dec 1999
+                            } 
+
+                            // via a date object
+                            new dsq('#eg3', {
+                                start: new Date(new Date().getFullYear() - 10, 
+                                                new Date().getMonth(), 
+                                                new Date().getDate()) 
+                                // ten years ago
+                            });
+
+                            // note: ranges INCLUDE start and end day
+                            // note: Months are expected as: 0 = Jan, 1 = Feb, 2 = Mar..., 11 = Dec
+
+                        &lt;/script>
+                    </code></pre>
+                </div>
+            </div>
+            <div class="demo-box">
+                <div class="example">
+                    <label class="eg-label" for="eg4">Get creative; use a function (function)
+                    <input type="date" id="eg4" placeholder="Rolling start date"></label>
+                </div>
+                <div class="example-code">
+                    <button class="clipboard" data-clipboard-target="#code_07"><i class="iconsqrl iconsqrl-content_paste"></i></button><pre>
+                
+                <code class="language-html" id="code_07">
+                        &lt;input type="date" id="eg4" placeholder="Rolling start date">
+                        &lt;script>
+                            new dsq('#eg4', {
+                                start: function() {
+                                    // a simple function to calculate the date three days
+                                    // in the future (excluding weekends)
+                                    var today = new Date(),
+                                        dayName = today.toLocaleString('en-gb', { weekday: "short" }),
+                                        workDaysHence,
+                                        addD = function addDays(d, days) {
+                                            return new Date(d.valueOf())
+                                                        .setDate(new Date(d.valueOf()).getDate() + days);
+                                        };
+                                    if (dayName === 'Mon' || dayName === 'Tue') {
+                                        workDaysHence = addD(today, 3);
+                                    } else if (dayName === 'Wed' || dayName === 'Thu' || 
+                                                dayName === 'Fri' || dayName === 'Sat') {
+                                        workDaysHence = addD(today, 5);
+                                    } else {
+                                        workDaysHence = addD(today, 4);
+                                    }
+                                    // you must return a Date object!
+                                    return new Date(workDaysHence); 
+                                },
+                                // the first of the month following next
+                                end: new Date(new Date().getFullYear(), new Date().getMonth() + 2, 1) 
+
+                            });
+                        &lt;/script>
+                    </code></pre>
+                </div>
+            </div>
+            <div class="demo-box">
+                <div class="example">
+                    <label class="eg-label" for="eg5">No day selection (boolean)
+                        <input type="date" id="eg5" placeholder="Details are for squares">
+                    </label>
+                </div>
+                <div class="example-code">
+                    <button class="clipboard" data-clipboard-target="#code_08"><i class="iconsqrl iconsqrl-content_paste"></i></button><pre>
+                
+                <code class="language-html" id="code_08">
+                        &lt;input type="date" id="eg5" placeholder="Details are for squares">
+                        &lt;script>
+                            new dsq('#eg5', {
+                                day: false,
+                                pattern: 'mmm \'yy'
+                            });
+                        &lt;/script>
+                    </code></pre>
+                </div>
+            </div>
+            <div class="demo-box">
+                <div class="example">
+                    <label class="eg-label" for="eg6">No day or month selection (boolean)
+                        <input type="date" id="eg6" placeholder="Hardly seems worth it">
+                    </label>
+                </div>
+                <div class="example-code">
+                    <button class="clipboard" data-clipboard-target="#code_09"><i class="iconsqrl iconsqrl-content_paste"></i></button><pre>
+                
+                <code class="language-html" id="code_09">
+                        &lt;input type="date" id="eg6" placeholder="Hardly seems worth it">
+                        &lt;script>
+                            new dsq('#eg6', {
+                                day: false,
+                                month: false,
+                                pattern: 'yyyy'
+                            });
+                        &lt;/script>
+                    </code></pre>
+                </div>
+            </div>
+            <div class="demo-box">
+                <div class="example">
+                    <label class="eg-label" for="eg7">Default to shortest view
+                    <input type="date" id="eg7" placeholder="Pick from days only"></label>
+                </div>
+                <div class="example-code">
+                    <button class="clipboard" data-clipboard-target="#code_10"><i class="iconsqrl iconsqrl-content_paste"></i></button><pre>
+                
+                <code class="language-html" id="code_10">
+                        &lt;input type="date" id="eg7" placeholder="Pick from days only">
+                        &lt;script>
+                            var today = new Date();
+                            new dsq('#eg7', {
+                                // beginning of this month
+                                start: new Date(today.getFullYear(), today.getMonth(), 1),
+                                // end of this month
+                                end: {
+                                    d: 32, // becomes => last of month
+                                    m: today.getMonth(), // 0 = Jan, 1 = Feb, 2 = Mar..., 11 = Dec
+                                    y: today.getFullYear()
+                                }
+                            });
+                        &lt;/script>
+                    </code></pre>
+                </div>
+            </div>
+            <div class="demo-box">
+                <div class="example">
+                    <label class="eg-label" for="eg8">Disable specific dates
+                    <input type="date" id="eg8" placeholder="Restricted selection"></label>
+                </div>
+                <div class="example-code">
+                    <button class="clipboard" data-clipboard-target="#code_11"><i class="iconsqrl iconsqrl-content_paste"></i></button><pre>
+                
+                <code class="language-html" id="code_11">
+                        &lt;input type="date" id="eg8" placeholder="Restricted selection">
+                        &lt;script>
+                            var firstOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+                            new dsq('#eg8', {
+                                start: new Date(2000,0,1),
+                                end:  new Date(2020,6,10),
+                                disabledDates: [
+                                    // recurring days ("mon", "tue",..., "sun")
+                                    "wed", 
+                                    // recurring dates ("mm/dd" n.b. 00/01 === January 1st)
+                                    "11/25", 
+                                    // single dates (Date objects)
+                                    new Date(2019, 0, 31), 
+                                    // date ranges ([Date object, Date object])
+                                    [new Date(2008,3,15), new Date(2008,4,14)], 
+                                    [new Date(2000,7,2), new Date(2003,9,22)],
+                                    [new Date(2001,7,2), new Date(2003,0,31)],
+                                    [new Date(2010,0,1), new Date(2013,0,14)],
+                                    [new Date(2014,6,1), new Date(2016,2,14)], 
+                                    // whole years (1999, 2000,..., 2999)
+                                    2006, 
+                                    // recurring months (0, 1,..., 11)
+                                    5
+                                ]
+                            });
+                        &lt;/script>
+                    </code></pre>
+                </div>
+            </div>
+            <div class="demo-box">
+                <div class="example">
+                    <label class="eg-label" for="eg9">Defaulting to months
+                        <input type="date" id="eg9" placeholder="No year selection">
+                    </label>
+                </div>
+                <div class="example-code">
+                    <button class="clipboard" data-clipboard-target="#code_12"><i class="iconsqrl iconsqrl-content_paste"></i></button><pre>
+                
+                <code class="language-html" id="code_12">
+                        &lt;input type="date" id="eg9" placeholder="No year selection">
+                        &lt;script>
+                            new dsq('#eg9', {
+                                start: new Date(2020,0,1),
+                                end: new Date(2020,3,30)
+                            });
+                        &lt;/script>
+                    </code></pre>
+                </div>
+            </div>
+            <div class="demo-box">
+                <div class="example">
+                    <label class="eg-label" for="eg10">Set colours (text -> CSS colours)
+                    <input type="date" id="eg10" placeholder="accountForTaste() is not a function"></label>
+                </div>
+                <div class="example-code">
+                    <button class="clipboard" data-clipboard-target="#code_13"><i class="iconsqrl iconsqrl-content_paste"></i></button><pre>
+                
+                <code class="language-html" id="code_13">
+                        &lt;input type="date" id="eg10" placeholder="accountForTaste() is not a function">
+                        &lt;script>
+                            new dsq('#eg10', {
+                                primaryColour: 'hsla(340, 82%, 52%, 0.95)',
+                                primaryTextColour: 'rgba(160, 12, 62, 1)',
+                                textOnPrimaryColour: '#fbfffe'
+                            });
+                        &lt;/script>
+                    </code></pre>
+                </div>
+            </div>
+            <div class="demo-box">
+                <div class="example">
+                    <label class="eg-label" for="eg11">Set start and end dates via min &amp; max
+                        <input type="date" id="eg11" min="2012-04-01" max="2017-04-30" placeholder="Look, no hands!">
+                    </label>
+                </div>
+                <div class="example-code">
+                    <button class="clipboard" data-clipboard-target="#code_14"><i class="iconsqrl iconsqrl-content_paste"></i></button><pre>
+                        <code class="language-html" id="code_14">
+                            &lt;label class="eg-label" for="eg11">Set start and end dates via min &amp; max
+                                &lt;input type="date" id="eg11" min="2012-04-01" max="2017-04-30">
+                            &lt;/label>
+                            &lt;script>
+                                new dsq('#eg11');
+                            &lt;/script>
+                        </code>
+                    </pre>
+                </div>
+            </div>
+            <div class="demo-box">
+                <div class="example">
+                    <label class="eg-label" for="eg12">Initialisation criteria (function)
+                        <input type="date" id="eg12" placeholder="Sometimes I'm browser-native">
+                    </label>
+                </div>
+                <div class="example-code">
+                    <button class="clipboard" data-clipboard-target="#code_15"><i class="iconsqrl iconsqrl-content_paste"></i></button><pre>
+                
+                <code class="language-html" id="code_15">
+                        &lt;input type="date" id="eg12" placeholder="Sometimes I'm browser-native">
+                        &lt;script>
+                            $('#eg12').dsq({
+                                activation: function() {
+                                    if ($(window).width() > 1024) {
+                                        return true; // activate
+                                    } else {
+                                        return false; // dormant
+                                    }
+                                }
+                            });
+                        &lt;/script>
+                    </code></pre>
+                </div>
+            </div>
+            <div class="demo-box">
+                <div class="example">
+                    <label class="eg-label" for="eg13" placeholder="Check the console log too">Callback (function)
+                        <input type="date" id="eg13">
+                    </label>
+                </div>
+                <div class="example-code">
+                    <button class="clipboard" data-clipboard-target="#code_16"><i class="iconsqrl iconsqrl-content_paste"></i></button>
+                    <pre>
+                        <code class="language-html" id="code_16">
+                            &lt;input type="date" id="eg13" placeholder="Check the console log too">
+                            &lt;script>
+                                $('#eg13').dsq({
+                                    callback: function() {
+                                        alert('The date set is: ' + this.startDate);
+                                        console.log('Date set: ', this.startDate);
+                                        console.log('End date set (null if no end date): ', this.endDate);
+                                        console.log('The input element: ', this.input);
+                                        console.log('The dateSquirrel input wrapper: ', this.wrapper);
+                                    }
+                                });
+                            &lt;/script>
+                        </code>
+                    </pre>
+                </div>
+            </div>
+            <div class="demo-box">
+                <div class="example">
+                    <label class="eg-label" for="eg14">Auto scroll-into-view
+                        <input type="date" id="eg14" placeholder="Don't start with disabled options">
+                    </label>
+                </div>
+                <div class="example-code">
+                    <button class="clipboard" data-clipboard-target="#code_17"><i class="iconsqrl iconsqrl-content_paste"></i></button>
+                    <pre>
+                        <code class="language-html" id="code_17">
+                            &lt;input type="date" id="eg14" placeholder="Don't start with disabled options">
+                            &lt;script>
+                                new dsq('#eg14', {
+                                    start:  {
+                                        d: 1, 
+                                        m: 10, // 0 = Jan, 1 = Feb, 2 = Mar..., 11 = Dec
+                                        y: 2029 
+                                    },
+                                    end: {
+                                        d: 32, 
+                                        m: 3, // 0 = Jan, 1 = Feb, 2 = Mar..., 11 = Dec
+                                        y: 2030 
+                                    }
+                                });
+                            &lt;/script>
+                        </code>
+                    </pre>
+                </div>
+            </div>
+            <div class="demo-box">
+                <div class="example">
+                    <label class="eg-label" for="eg15">No scrollbars on lists
+                        <input type="date" id="eg15" placeholder="Form > Function">
+                    </label>
+                </div>
+                <div class="example-code">
+                    <button class="clipboard" data-clipboard-target="#code_18"><i class="iconsqrl iconsqrl-content_paste"></i></button>
+                    <pre>
+                        <code class="language-html" id="code_18">
+                            &lt;input type="date" id="eg15" placeholder="Form > Function">
+                            &lt;script>
+                                new dsq('#eg15', {
+                                    hideScrollbars: true
+                                });
+                            &lt;/script>
+                        </code>
+                    </pre>
+                </div>
+            </div>
+            <div class="demo-box">
+                <div class="example">
+                    <legend>Example of setting an interval with a callback</legend>
+                    <div class="half-box">
+                        <div class="half-segment">
+                            <label class="eg-label" for="eg16">
+                                <input type="date" id="eg16" placeholder="From here...">
+                            </label>
+                        </div>
+                        <div class="half-segment">
+                            <label class="eg-label" for="eg17">
+                                <input type="date" id="eg17" placeholder="... to here" disabled>
+                            </label>
+                        </div>
+                    </div>
+                    <p id="eg17Output"></p>
+                </div>
+                <div class="example-code">
+                    <button class="clipboard" data-clipboard-target="#code_19"><i class="iconsqrl iconsqrl-content_paste"></i></button>
+                    <pre>
+                        <code class="language-html" id="code_19">
+                            &lt;div class="half-box">
+                                &lt;div class="half-segment">
+                                    &lt;label class="eg-label" for="eg16">
+                                        &lt;input type="date" id="eg16" placeholder="From here...">
+                                    &lt;/label>
+                                &lt;/div>
+                                &lt;div class="half-segment">
+                                    &lt;label class="eg-label" for="eg17">
+                                        &lt;input type="date" id="eg16" placeholder="... to here">
+                                    &lt;/label>
+                                &lt;/div>
+                            &lt;/div>
+                            &lt;script>
+                                let dateA = new Date(),
+                                output = document.getElementById('eg17Output').innerHTML,
+                                boxA = new dsq('#eg16', {
+                                    start: today,
+                                    end: {
+                                        d: today.getDate(),
+                                        m: today.getMonth(),
+                                        y: today.getFullYear() + 3
+                                    },
+                                    callback: function() {
+                                        dateA = new Date(this.date.getFullYear(), 
+                                                        this.date.getMonth(), 
+                                                        this.date.getDate() + 1);
+                                        boxB.destroy();
+                                        boxB = new dsq('#eg17', {
+                                           start: dateA,
+                                            end: {
+                                                d: today.getDate(),
+                                                m: today.getMonth(),
+                                                y: today.getFullYear() + 5
+                                            },
+                                            callback: function() {
+                                                const difference = new Date(this.date - dateA);
+                                                output = "That's " + 
+                                                        (difference.toISOString().slice(0, 4) - 1970) + " years, " + 
+                                                        (difference.getMonth()) + " months and " + 
+                                                        difference.getDate() + " days";
+                                            }
+                                        });
+                                        document.getElementById('eg17').disabled = false;
+                                    }
+                                }),
+                                boxB = new dsq('#eg17');
+                            &lt;/script>
+                        </code>
+                    </pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<footer>
+    <a class="navigation-icon" href="#home"><i class="iconsqrl iconsqrl-arrow_upward"></i></a>
+</footer>

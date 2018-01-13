@@ -1,0 +1,26 @@
+// grid settings
+@include gridle_setup($dsq-gridle-page);
+
+// breakpoints
+@include gridle_register_state(m, (
+    max-width : #{$dsq-breakpoint-mobile}
+));
+@include gridle_register_state(t, (
+    min-width : #{$dsq-breakpoint-mobile}
+));
+@include gridle_register_state(d, (
+    min-width : #{$dsq-breakpoint-desktop}
+));
+// generate classes
+@include gridle_generate_classes();
+
+// container width
+.container {
+    max-width : 100%;
+    margin : 0 auto;
+}
+[class*="gr-"] {
+    @include gridle_state(m) {
+        @include gridle_grid(12);
+    }
+}
