@@ -7,10 +7,10 @@ A date picker with a nutty tang
 | :---- | :---- | :---- |
 | dsq.css | style | 14.1 KB |
 | dsq.min.css | style | 10.1 KB |
-| dsq.min.css.gz | style | 1.76 KB |
+| **dsq.min.css.gz | style | 1.76 KB** |
 | dsq.js | functions | 81.0 KB |
 | dsq.min.js | functions | 32.8 KB |
-| dsq.min.js.gz | functions | 7.99 KB |
+| **dsq.min.js.gz | functions | 7.99 KB** |
 
 ## TODO - This is an alpha-stage project
 - [x] Make dsq stay in viewport when opened at edges
@@ -77,7 +77,7 @@ A date picker with a nutty tang
 
 <a name="About"/></a>
 ## About
-dateSquirrel is a date picker with calendar dates. It's modal-free, dependency-free and free-free. The aim is to put the date picking into a single field and make it so you can pick any date in three clicks. It is not trying to be better than the Google style modal or the Bootstrap calendar style drop down, dateSquirrel is for wide date possibilities (like date of birth) that are a pain to pick when you have to navigate through several decades worth of months to get to the date you want.
+dateSquirrel is a date picker with calendar dates. It's modal-free, dependency-free, library-free and free-free. The aim is to put the date picking into a single field and make it so you can pick any date in three clicks. It's not trying to be better than other date pickers, just a bit different. dateSquirrel is for wide date possibilities (like date of birth) that are a pain to pick when you have to navigate through several decades worth of months to get to the date you want.
 
 <a name="warning"/></a>
 ## Before you get started
