@@ -1,6 +1,6 @@
 #dateSquirrel
 A date picker with a nutty tang
-Version: 0.1 (Bangs mountain - alpha)
+Version: 0.1.0 (Bangs mountain - alpha)
 
 ![alt text][dateSquirrel_demo]
 [dsq_Timeline2]: https://preview.ibb.co/e1FFz6/date_Squirrel_demo.gif "dateSquirrel"

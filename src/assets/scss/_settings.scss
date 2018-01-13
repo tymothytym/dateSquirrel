@@ -44,16 +44,6 @@ $dsq-gridle-page: (
     gutter-right  : 0,   // size of right PAGE gutter
     classes-prefix : ''     // the prefix used for all PAGE classes 
 );
-$dsq-gridle-dsq: (
-    context : 12,           // number of columns in FFS grid
-    gutter-width : 10px,    // size of the FFS gutters
-    gutter-height : 5px,      // size of top and bottom FFS gutters
-    gutter-top    : 0,      // size of top FFS gutter
-    gutter-bottom : 5px,      // size of bottom FFS gutter
-    gutter-left   : 5px,   // size of left FFS gutter
-    gutter-right  : 5px,   // size of right FFS gutter
-    classes-prefix : 'fg-'     // the prefix used for all FFS classes 
-);
 
 // -- breakpoints
 

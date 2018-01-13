@@ -7,7 +7,7 @@
 		exports["dsq"] = factory();
 	else
 		root["dsq"] = factory();
-})(this, function() {
+})(typeof self !== 'undefined' ? self : this, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -289,12 +289,8 @@ var dsq = function () {
         this.label = element.parentElement;
         this.uid = '_dsq' + this.newId();
 
-        // check browser feature compatibility
-        //console.log('queryselector', 'querySelector' in document);
-        //console.log('addEventListener', 'addEventListener' in window);
-        //console.log('classList', 'addEventListener' in window.Element.prototype);
+        // check browser feature compatibility <-- Doesn't work in IE11?!
         //const features = 'querySelector' in document && 'addEventListener' in window && 'classList' in window.Element.prototype;
-        //console.log('features', features);
 
         // check activation criteria
         //if (!features) {
@@ -372,7 +368,6 @@ var dsq = function () {
         value: function destroy() {
             // remove event listeners
             if (this.isActive) {
-                //console.log('this.o.id: ',this.o.id);
                 var yearRows = this.lists.years.querySelectorAll('li') || false,
                     monthRows = this.lists.months.querySelectorAll('li') || false,
                     activeDays = this.lists.querySelectorAll('.dsq-list-days > li[data-day]') || false;
@@ -411,8 +406,6 @@ var dsq = function () {
                 // remove data
                 this.removeData(this);
             }
-            // remove getter
-            //delete this.currentValue;
             // purge associations
             this.o = null;
             this.label = null;
@@ -444,11 +437,7 @@ var dsq = function () {
             this.lists.querySelector('.dsq-list-years').innerHTML = '';
             this.lists.querySelector('.dsq-list-months').innerHTML = '';
 
-            //console.log('this.options.disabledDates is not ', (!this.options.disabledDates));
-            //console.log('this.options.disabledDates: ', this.options.disabledDates);
-            // tag disabled dates
-            //this.disYears = [];
-            //this.disMonths = [];
+            // check disabled dates
             this.disDates = [];
             if (this.options.disabledDates) {
                 this.disDates.days = [];
@@ -456,12 +445,8 @@ var dsq = function () {
                 this.disDates.years = [];
                 this.disDates.recurringDays = [];
                 this.disDates.recurringDates = [];
-                //console.log('this.options.disabledDates: ', this.options.disabledDates);
                 for (var item in this.options.disabledDates) {
-                    //console.log('item: ', this.options.disabledDates[item]);
-                    //console.log('item: ', item);
                     if (typeof this.options.disabledDates[item] === 'string') {
-                        //console.log('string: ', this.options.disabledDates[item]);
                         if (/^\w{3}$/.test(this.options.disabledDates[item])) {
                             // recurring days
                             this.disDates.recurringDays.push(this.options.disabledDates[item].toLowerCase());
@@ -478,35 +463,17 @@ var dsq = function () {
                         }
                     } else if (this.options.disabledDates[item] instanceof Date) {
                         // range of dates
-                        //console.log('date: ', this.options.disabledDates[item]);
                         this.disDates.days.push(this.options.disabledDates[item].getFullYear() + '/' + this.options.disabledDates[item].getMonth() + '/' + this.options.disabledDates[item].getDate());
                     } else if (_typeof(this.options.disabledDates[item]) === 'object') {
                         var _disDates$days, _disDates$months, _disDates$years;
 
                         // range of dates
-                        //console.log('object: ', this.options.disabledDates[item]);
-                        //console.log('object a: ', this.options.disabledDates[item][0]);
-                        //console.log('object b: ', this.options.disabledDates[item][1]);
-
-                        //console.log('vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv');
-                        //console.log('disStart: ', disStart);
-                        //console.log('disEnd: ', disEnd);
-                        //this.disYears = dsq.tagDisabled(disStart, disEnd);
-                        //
-
                         var range = this.tagDisabled(this.options.disabledDates[item][0], this.options.disabledDates[item][1]);
                         (_disDates$days = this.disDates.days).push.apply(_disDates$days, _toConsumableArray(range.days));
                         (_disDates$months = this.disDates.months).push.apply(_disDates$months, _toConsumableArray(range.months));
                         (_disDates$years = this.disDates.years).push.apply(_disDates$years, _toConsumableArray(range.years));
-                        //console.log('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^');
-                        //this.disYears = dsq.countYears(this.options.disabledDates[item][0], this.options.disabledDates[item][1], true);
-                        //console.log('this.disYears: ', this.disYears);
-                        //this.disMonths = dsq.countMonths(this.options.disabledDates[item][0], this.options.disabledDates[item][1], true);
-                        //console.log('this.disMonths: ', this.disMonths);
-
                     } else if (typeof this.options.disabledDates[item] === 'number') {
                         // range of dates
-                        //console.log('number: ', this.options.disabledDates[item]);
                         if (this.options.disabledDates[item].toString().length > 2) {
                             // year
                             this.disDates.years.push(this.options.disabledDates[item]);
@@ -531,7 +498,6 @@ var dsq = function () {
                 this.disDates.years = new Set(this.uniqBy(this.disDates.years, JSON.stringify));
                 this.disDates.recurringDays = new Set(this.uniqBy(this.disDates.recurringDays, JSON.stringify));
                 this.disDates.recurringDates = new Set(this.uniqBy(this.disDates.recurringDates, JSON.stringify));
-                //console.log('this.disDates.has(2011): ', this.disDates.years.has(2011));
             } else {
                 //this.disDates = false;
                 this.disDates.days = false;
@@ -540,7 +506,6 @@ var dsq = function () {
                 this.disDates.recurringDays = false;
                 this.disDates.recurringDates = false;
             }
-            //console.log('this.disDates: ', this.disDates);
             // generate month & year lists
             if (this.hasYear) {
                 for (var y = this.options.start.y; y < this.options.end.y + 1; y++) {
@@ -551,15 +516,11 @@ var dsq = function () {
                         cl = 'tabindex="0"';
                     }
                     this.lists.querySelector('.dsq-list-years').insertAdjacentHTML('afterbegin', '<li id="' + this.uid + '_y_' + y + '" ' + cl + ' data-year="' + y + '" role="option">' + y + '</li>');
-                    //console.log('y: ', y);
                 }
             } else {
                 this.lists.querySelector('.dsq-list-years').insertAdjacentHTML('afterbegin', '<li id="' + this.uid + '_y_0" class="' + this.options.classPrefix + 'active" data-year="' + this.options.start.y + '" tabindex="0" role="option">' + this.options.start.y + '</li>');
             }
             if (this.hasMonth) {
-                //console.log('differenceInDays', differenceInDays(this.options.end, this.options.start));
-                //console.log('daysBetween', dsq.daysBetween(this.options.start, this.options.end));
-                //console.log('over a year');
                 for (var m = 0; m < 12; m++) {
                     this.lists.querySelector('.dsq-list-months').insertAdjacentHTML('beforeend', '<li id="' + this.uid + '_m_' + m + '" data-month="' + m + '" tabindex="0" role="option">' + this.monthList[m] + '</li>');
                 }
@@ -576,13 +537,6 @@ var dsq = function () {
 
             this.focFn = {
                 handleEvent: function handleEvent(e) {
-                    //console.log('_______________________________________');
-                    //console.log('focFn: ', e.target);
-                    //console.log('Active class: ', (that.wrapper.classList.contains(that.options.classPrefix + 'active')));
-                    //console.log('List height: ', that.lists.style.height);
-                    //console.log('_______________________________________');
-                    //if (!that.wrapper.classList.contains(that.options.classPrefix + 'active')) {
-
                     //suppress mobile keyboard
                     that.o.setAttribute('readonly', 'readonly');
 
@@ -591,7 +545,6 @@ var dsq = function () {
 
                     // if not open... open!
                     if (!that.wrapper.classList.contains(that.options.classPrefix + 'active')) {
-                        //console.log('wouldBeInView: ', that.wouldBeInView(that.lists));
                         that.wrapper.classList.add(that.options.classPrefix + 'active');
                         if (!that.hasYear && that.hasMonth) {
                             that.lists.classList.add(that.options.classPrefix + 'month');
@@ -605,109 +558,55 @@ var dsq = function () {
                             that.o.focus();
                         }
                         that.listHeightCalc();
-                        //console.log('this.wouldBeInView(this.lists): ', that.wouldBeInView(that.lists))
-                        //console.log('wbInView: ', (wbInView));
                         // check for lists opening offscreen and invert if required
                         var listPos = that.wouldBeInView(that.lists, true);
                         if (listPos === 'above') {
-                            //console.log('wbInView: above');
                             that.lists.classList.add(that.options.classPrefix + 'down');
                         } else if (listPos === 'below') {
-                            //console.log('wbInView: below');
                             that.lists.classList.add(that.options.classPrefix + 'up');
                         } else {
                             // in view or error
-                            //console.log('wbInView: else');
                             that.lists.classList.remove(that.options.classPrefix + 'up', that.options.classPrefix + 'down');
                         }
                     }
                     that.addEvt(document.documentElement, 'click', that.htmlClickFn, false);
-                    //that.createKeyframeAnimation();cubic-bezier(1, 0, 0, 1);
                 }
             };
             this.blurFn = {
                 handleEvent: function handleEvent(e) {
-                    //console.log('+++++++++++++++++++++++++++++++++++++++');
-                    //console.log('blurFn: ', e.target);
-                    //console.log('Active class: ', (that.wrapper.classList.contains(that.options.classPrefix + 'active')));
-                    //console.log('List height: ', that.lists.style.height);
-                    //console.log('+++++++++++++++++++++++++++++++++++++++');
-                    //console.log('that.uid: ', that.uid);
-                    //console.log('e.target.closest: ', e.target.closest('.dsq'));
-                    //console.log('that.wrapper: ', that.wrapper);
-                    //that.lists.years.querySelectorAll('li')[0].focus();
                     // un-suppress mobile keyboard
                     that.o.removeAttribute('readonly');
                     that.clearFocus();
-                    /*if (that.wrapper.classList.contains(that.options.classPrefix + 'done')) {
-                        // remove active class
-                        //that.wrapper.classList.remove(that.options.classPrefix + 'active');
-                        that.removeActive(300);
-                        
-                        // reset list to 0 height
-                        //that.lists.style.height = '0';
-                        
-                        // remove listener
-                        that.rmEvt(document.documentElement, 'click', that.htmlClickFn, false);
-                          // remove done indicator
-                        that.wrapper.classList.remove(that.options.classPrefix + 'done');
-                        
-                        // make callback 
-                        setTimeout(function() {
-                            that.makeCallback(that.o.value);
-                        }, 300);
-                          // remove indicator class
-                        setTimeout(function() {
-                            that.lists.classList.remove(that.options.classPrefix + 'day', that.options.classPrefix + 'month');
-                        }, 250);
-                    }*/
                 }
             };
             this.yrClickFn = {
                 handleEvent: function handleEvent(e) {
                     if (!e.target.classList.contains(that.options.classPrefix + 'disabled')) {
                         e.stopPropagation();
-                        //console.log('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy');
-                        //console.log('yrClickFn: ', e.target);
-                        //console.log('Active class: ', (that.wrapper.classList.contains(that.options.classPrefix + 'active')));
-                        //console.log('List height: ', that.lists.style.height);
-                        //console.log('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy');
-                        //$lists.addClass(_options.classPrefix + 'active');
                         // remove previous selection indicator
                         var _yearRows = that.lists.years.querySelectorAll('li'),
                             _monthRows = that.lists.months.querySelectorAll('li');
                         for (var i = 0; i < _yearRows.length; i++) {
                             _yearRows[i].classList.remove(that.options.classPrefix + 'active');
                         }
-                        /*for (let i = 0; i < monthRows.length; i++) {
-                            monthRows[i].classList.remove(that.options.classPrefix + 'active');
-                        }*/
                         // make e.target active
                         e.target.classList.add(that.options.classPrefix + 'active');
                         that.selectedYear = e.target.getAttribute('data-year') * 1;
                         that.o.value = that.selectedYear;
                         // animate if reselecting
-                        //console.log('that.lists.classList.contains(that.options.classPrefix + month): ', that.lists.classList.contains(that.options.classPrefix + 'month'));
-                        //console.log('that.lists.classList.contains(that.options.classPrefix + month): ', that.lists.classList.contains(that.options.classPrefix + 'day'));
-                        //console.log('both: ', (that.lists.classList.contains(that.options.classPrefix + 'month') && !that.lists.classList.contains(that.options.classPrefix + 'day')));
-
-
                         if (that.lists.classList.contains(that.options.classPrefix + 'month') && !that.lists.classList.contains(that.options.classPrefix + 'day')) {
                             that.lists.months.classList.add(that.options.classPrefix + 'switch');
                             setTimeout(function () {
                                 that.lists.months.classList.remove(that.options.classPrefix + 'switch');
                             }, 350);
-                        } /**/
+                        }
 
                         if (that.options.month) {
-                            //console.log('done years - goto month');
                             that.lists.classList.add(that.options.classPrefix + 'month');
                             // check months
                             that.checkMonths();
                             that.listHeightCalc();
                         } else {
-                            //console.log('done years');
-
                             // finished dating section
                             that.finishUp();
                         }
@@ -720,11 +619,6 @@ var dsq = function () {
                 handleEvent: function handleEvent(e) {
                     if (!e.target.classList.contains(that.options.classPrefix + 'disabled')) {
                         e.stopPropagation();
-                        //console.log('mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm');
-                        //console.log('mthClickFn: ', e.target);
-                        //console.log('Active class: ', (that.wrapper.classList.contains(that.options.classPrefix + 'active')));
-                        //console.log('List height: ', that.lists.style.height);
-                        //console.log('mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm');
                         var _monthRows2 = that.lists.months.querySelectorAll('li');
                         for (var i = 0; i < _monthRows2.length; i++) {
                             _monthRows2[i].classList.remove(that.options.classPrefix + 'active');
@@ -737,7 +631,6 @@ var dsq = function () {
                             that.lists.classList.add(that.options.classPrefix + 'day');
                             that.addDays();
                         } else {
-                            //console.log('done month');
                             // finished dating section
                             that.finishUp();
                         }
@@ -747,10 +640,6 @@ var dsq = function () {
             };
             this.htmlClickFn = {
                 handleEvent: function handleEvent(e) {
-                    //console.log('htmlClickFn: ', e.target);
-                    //console.log('that.uid: ', that.uid);
-                    //console.log('e.target.closest: ', e.target.closest('.dsq'));
-                    //console.log('that.wrapper: ', that.wrapper);
                     if (e.target.closest('.dsq') !== that.wrapper) {
                         // remove keyboard listener from window
                         that.rmEvt(window, 'keydown', that.keydownFn, false);
@@ -758,11 +647,7 @@ var dsq = function () {
                         that.clearFocus();
                         if (that.wrapper.classList.contains(that.options.classPrefix + 'active')) {
                             // remove active class
-                            //that.wrapper.classList.remove(that.options.classPrefix + 'active');
                             that.removeActive(300);
-
-                            // reset list to 0 height
-                            //that.lists.style.height = '0';
 
                             // remove this listener
                             that.rmEvt(document.documentElement, 'click', that.htmlClickFn, false);
@@ -773,10 +658,6 @@ var dsq = function () {
 
             this.keydownFn = {
                 handleEvent: function handleEvent(e) {
-                    //console.log('keydownFn: ', e.target);
-                    //console.log('e.key: ', e.key);
-                    //console.log('e.which: ', e.which);
-                    //console.log('e.shiftKey: ', e.shiftKey);
                     // up === 38
                     // left === 37
                     // right === 39
@@ -815,17 +696,10 @@ var dsq = function () {
                         that.lists.months.removeAttribute('aria-activedescendant');
                     }
 
-                    //console.log('blocks: ', blocks);
                     // find any existing focus
                     var focusedOn = that.findFocus(blocks);
                     firstTime = focusedOn[0];
                     blockOn = focusedOn[1];
-                    //console.log('focusedOn: ', focusedOn);
-
-                    //console.log('blocks.length: ', blocks.length);
-                    //console.log('blockOn: ', blockOn);
-                    //console.log('firstTime: ', firstTime);
-                    //console.log('blockOn A: ', blockOn);
 
                     // key action modification
                     switch (e.which) {
@@ -917,7 +791,6 @@ var dsq = function () {
                         default:
                         // go on merry way
                     }
-                    //console.log('blockOn B: ', blockOn);
                     if (e.which >= 37 && e.which <= 40) {
                         // set parent to active
                         unit.setAttribute('aria-activedescendant', blocks[blockOn].id);
@@ -931,14 +804,11 @@ var dsq = function () {
             if (this.hasYear) {
                 for (var i = 0; i < yearRows.length; i++) {
                     this.addEvt(yearRows[i], 'click', this.yrClickFn, false);
-                    //yearRows[i].addEventListener('click', this.yearClick.bind(this), false);
                 }
             } else {
                 yearRows[0].classList.add(this.options.classPrefix + 'noh');
             }
 
-            //console.log('selectedMonth: ', selectedMonth);
-            //console.log('selectedYear: ', selectedYear);
             // month select
             if (this.hasMonth) {
                 for (var _i3 = 0; _i3 < monthRows.length; _i3++) {
@@ -951,23 +821,6 @@ var dsq = function () {
             //focus event
             this.addEvt(this.o, 'focus', this.focFn, false);
             this.addEvt(this.o, 'blur', this.blurFn, false);
-
-            //console.log('---------------makeLists -------------------');
-            //console.log('hasYear : ', this.hasYear);
-            //console.log('hasMonth : ', this.hasMonth);
-            //console.log('selectedYear : ', this.selectedYear);
-            //console.log('selectedMonth : ', this.selectedMonth);
-            //console.log('$reminder : ', this.reminder);
-            //console.log('$lists : ', this.lists);
-            //console.log('monthList : ', this.monthList);
-            //console.log('doubleMonthList : ', doubleMonthList);
-            //console.log('rowHeight : ', this.rowHeight);
-            //console.log('$input : ', this.o);
-            //console.log('$wrapper : ', this.wrapper);
-            //console.log('listHeight : ', this.listHeight);
-            //console.log('defaults : ', defaults);
-            //console.log('this.options.end : ', this.options.end);
-            //console.log('this.options.start : ', this.options.start);
         }
     }, {
         key: 'findFocus',
@@ -1003,11 +856,9 @@ var dsq = function () {
             // clear all
             var listOn = [this.lists.years, this.lists.months, this.lists.days];
             for (var l = 0; l < listOn.length; l++) {
-                //console.log('listOn[l] : ', listOn[l]);
                 listOn[l].removeAttribute('aria-activedescendant');
                 var focustedLi = listOn[l].querySelectorAll('.' + this.options.classPrefix + 'focused');
                 for (var x = 0; x < focustedLi.length; x++) {
-                    //console.log('focustedLi[x]: ', focustedLi[x]);
                     focustedLi[x].classList.remove(this.options.classPrefix + 'focused');
                     focustedLi[x].blur();
                 }
@@ -1018,7 +869,6 @@ var dsq = function () {
         value: function removeActive(duration) {
             var _this = this;
 
-            //const that = this;
             this.wrapper.classList.add(this.options.classPrefix + 'closing');
             this.wrapper.classList.remove(this.options.classPrefix + 'active');
             setTimeout(function () {
@@ -1035,63 +885,36 @@ var dsq = function () {
                     if ((dsq.isBetweenDates(new Date(this.selectedYear, m, 1), this.options.start, this.options.end) || dsq.isBetweenDates(new Date(this.selectedYear, m, daysInCurrentMonth), this.options.start, this.options.end)) && (this.disDates.months === false || !this.disDates.months.has(this.selectedYear + '/' + m))) {
                         this.lists.querySelectorAll('.dsq-list-months li')[m].classList.remove(this.options.classPrefix + 'disabled');
                         this.lists.querySelectorAll('.dsq-list-months li')[m].setAttribute('tabindex', '0');
-                        //console.log('firstActive (before) : ', firstActive, ' on m : ', m);
                         if (firstActive === false) {
-                            //firstActive = m === 0 ? this.lists.querySelectorAll('.dsq-list-months li')[m].offsetTop : this.lists.querySelectorAll('.dsq-list-months li')[m-1].offsetTop;
                             firstActive = m * this.rowHeight;
-                            //console.log('firstActive (in) : ', firstActive, ' on m : ', m);
                         }
                     } else {
                         this.lists.querySelectorAll('.dsq-list-months li')[m].classList.add(this.options.classPrefix + 'disabled');
                         this.lists.querySelectorAll('.dsq-list-months li')[m].setAttribute('tabindex', '-1');
                     }
                 }
-                //console.log('firstActive : ', firstActive);
-                //console.log('this.isHidden(firstActive) : ', this.isHidden(firstActive));
-                // scroll first selectable month to top
-                //this.lists.months.scrollTo(0, firstActive);
                 this.lists.months.scrollTop = firstActive;
             }
         }
     }, {
         key: 'addDays',
         value: function addDays() {
-            //console.log('------------------addDays-------------------');
-            //console.log('selectedYear : ', this.selectedYear);
-            //console.log('selectedMonth : ', this.selectedMonth);
-            //console.log('monthList : ', this.monthList);
-            //console.log('rowHeight : ', this.rowHeight);
-            //console.log('listHeight : ', this.listHeight);
             var numberOfDays = dsq.daysInMonth(this.selectedYear, this.selectedMonth),
                 daysOfWeek = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'],
                 firstOfMonth = void 0;
             this.reminder.innerHTML = '<a class="' + this.options.classPrefix + 'reminder-month">' + this.monthList[this.selectedMonth] + '</a>&nbsp;<a class="' + this.options.classPrefix + 'reminder-year">' + this.selectedYear + '</a>';
             this.lists.days.innerHTML = '<li class="' + this.options.classPrefix + 'dow-header">Mon</li><li class="' + this.options.classPrefix + 'dow-header">Tue</li><li class="' + this.options.classPrefix + 'dow-header">Wed</li><li class="' + this.options.classPrefix + 'dow-header">Thu</li><li class="' + this.options.classPrefix + 'dow-header">Fri</li><li class="' + this.options.classPrefix + 'dow-header">Sat</li><li class="' + this.options.classPrefix + 'dow-header">Sun</li>';
-
-            //firstOfMonth = daysOfWeek.indexOf(format(new Date(selectedYear,((selectedMonth * 1) + 1),'01'), 'ddd'));
             firstOfMonth = new Date(this.selectedYear, this.selectedMonth, 1).getDay() === 0 ? 6 : new Date(this.selectedYear, this.selectedMonth, 1).getDay() - 1;
-            //console.log('numberOfDays in ', this.monthList[this.selectedMonth], ' >> ', numberOfDays);
-            //console.log('firstOfMonth : ', firstOfMonth);
             // set container size & 1st of month
             for (var f = 0; f < firstOfMonth; f++) {
                 this.lists.days.insertAdjacentHTML('beforeend', '<li data-day class="' + this.options.classPrefix + 'padding"></li>');
             }
-            //console.log('numberOfDays : ', numberOfDays);
             for (var d = 1; d < numberOfDays + 1; d++) {
                 var theDay = daysOfWeek[new Date(this.selectedYear, this.selectedMonth, d).getDay()];
-                //console.log('theDay : ', theDay);
                 if (dsq.isBetweenDates(new Date(this.selectedYear, this.selectedMonth, d), this.options.start, this.options.end) && (this.disDates.days === false || !this.disDates.days.has(this.selectedYear + '/' + this.selectedMonth + '/' + d) && !this.disDates.recurringDays.has(theDay) && !this.disDates.recurringDates.has(this.selectedYear + '/' + this.selectedMonth + '/' + d))) {
                     //console.log('Date ' + d + ' enabled (' + theDay + ')');
                     this.lists.days.insertAdjacentHTML('beforeend', '<li id="' + this.uid + '_d_' + d + '" data-day="' + d + '" tabindex="0" role="option">' + d + '</li>');
                 } else {
-                    //console.log('Date ' + d + ' disabled (' + theDay + ')');
-                    //console.log('isBetweenDates ', dsq.isBetweenDates(new Date(this.selectedYear, this.selectedMonth, d), this.options.start, this.options.end));
-                    //console.log('new Date(this): ', new Date(this.selectedYear, this.selectedMonth, d));
-                    //console.log('this.disDates.days.has: ', this.disDates.days.has(this.selectedYear + '/' + this.selectedMonth + '/' + d));
-                    //console.log('this.disDates.days.has.theDay: ', this.disDates.recurringDays.has(theDay));
-                    //console.log('this.disDates.recurringDates: ', this.disDates.recurringDates.has(this.selectedYear + '/' + this.selectedMonth + '/' + d));
-
-
                     this.lists.days.insertAdjacentHTML('beforeend', '<li id="' + this.uid + '_d_' + d + '" class="' + this.options.classPrefix + 'disabled" data-day="' + d + '" tabindex="-1" role="option">' + d + '</li>');
                 }
                 if (dsq.isSameDay(new Date(), new Date(this.selectedYear, this.selectedMonth, d)) && this.options.markToday) {
@@ -1106,25 +929,16 @@ var dsq = function () {
                 handleEvent: function handleEvent(e) {
                     e.stopPropagation();
                     if (!e.target.classList.contains(that.options.classPrefix + 'disabled')) {
-                        //console.log('ddddddddddddddddddddddddddddddddddddddd');
-                        //console.log('dayClickFn : ', e.target);
-                        //console.log('Active class: ', (that.wrapper.classList.contains(that.options.classPrefix + 'active')));
-                        //console.log('List height: ', that.lists.style.height);
-                        //console.log('ddddddddddddddddddddddddddddddddddddddd');
                         that.selectedDay = e.target.getAttribute('data-day') * 1;
-                        //console.log('that.selectedDay : ', that.selectedDay);
                         that.finishUp();
 
                         // reset
-                        //that.lists.style = '';
-                        //that.positionList();
                         that.setFocus(e.target);
                     }
                 }
             };
             this.reminderMonthFn = {
                 handleEvent: function handleEvent(e) {
-                    //console.log('reminderMonthFn : ', e.target);
                     e.stopPropagation();
                     that.lists.dayWrap.classList.add(that.options.classPrefix + 'sout');
                     setTimeout(function () {
@@ -1136,7 +950,6 @@ var dsq = function () {
             };
             this.reminderYearFn = {
                 handleEvent: function handleEvent(e) {
-                    //console.log('reminderYearFn : ', e.target);
                     e.stopPropagation();
                     that.goToYear();
                 }
@@ -1183,17 +996,7 @@ var dsq = function () {
         value: function finishUp() {
             var _this3 = this;
 
-            //console.log('selectedDay: ', this.selectedDay);
-            //console.log('selectedMonth: ', this.selectedMonth);
-            //console.log('selectedYear: ', this.selectedYear);
-            //console.log('selectedDay/monthList[selectedMonth]/selectedYear: ', selectedDay + '/' + monthList[selectedMonth] + '/' + selectedYear);
-
-            //console.log('==================1====================');
-            //console.log('Active class: ', (this.wrapper.classList.contains(this.options.classPrefix + 'active')));
-            //console.log('List height: ', this.lists.style.height);
-            //console.log('==================1====================');
             var delay = 250; // ms
-
             if (typeof this.selectedDay === 'undefined') {
                 // month only
                 this.selectedDay = 1;
@@ -1202,7 +1005,6 @@ var dsq = function () {
                 // year only
                 this.selectedMonth = 1;
             }
-
             this.setDate = new Date(this.selectedYear, this.selectedMonth, this.selectedDay);
             // format output & associate
             this.setDate.save = dsq.format(this.setDate, this.options.patternSave);
@@ -1214,44 +1016,27 @@ var dsq = function () {
             this.o.setAttribute('data-dsq-date', this.setDate.save);
             // value attr
             this.o.setAttribute('value', this.selectedYear + '-' + (this.selectedMonth + 1) + '-' + this.selectedDay);
-
-            // reset list styles
-            //this.lists.style = '';
-            //this.positionList()
-
             // set status to done
             this.wrapper.classList.add(this.options.classPrefix + 'done');
             // remove active class
             //that.wrapper.classList.remove(that.options.classPrefix + 'active');
             this.removeActive(delay);
-
             // remove listener
             this.rmEvt(document.documentElement, 'click', this.htmlClickFn, false);
-
             // remove stage indicator class(es)
             this.lists.classList.remove(this.options.classPrefix + 'day', this.options.classPrefix + 'month');
-
             setTimeout(function () {
                 // make callback
                 _this3.makeCallback();
                 // remove done indicator
                 _this3.wrapper.classList.remove(_this3.options.classPrefix + 'done');
             }, delay);
-
-            // blur input
-            //setTimeout(() => { this.o.blur() }, 10);
-
-            //console.log('==================2====================');
-            //console.log('No active class: ', (!this.wrapper.classList.contains(this.options.classPrefix + 'active')));
-            //console.log('List height: ', this.lists.style.height);
-            //console.log('==================2====================');
         }
         // event functions
 
     }, {
         key: 'makeCallback',
         value: function makeCallback() {
-            //console.log('arguments: ', arguments);
             var args = {
                 date: this.setDate,
                 input: this.o,
@@ -1259,8 +1044,7 @@ var dsq = function () {
                 human: this.setDate.human,
                 save: this.setDate.save
             },
-                callback = this.options.callback.call(args); /*Reflect.apply(_options.callback, undefined, args);*/
-            //var args = [start,end,input,wrapper];
+                callback = this.options.callback.call(args);
             if (typeof this.options.callback === 'function') {
                 callback;
             } else {
@@ -1277,14 +1061,6 @@ var dsq = function () {
                 viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight),
                 above = rect.top < 100,
                 below = this.listHeight + rect.top - viewHeight >= 0;
-            //below = rect.top - viewHeight + threshold >= 0;
-            //console.log('rect.top : ', rect.top);
-            //console.log('rect.bottom : ', rect.bottom);
-            //console.log('this.listHeight : ', this.listHeight);
-            //console.log('above : ', above);
-            //console.log('below : ', below);
-            //console.log('rect : ', rect);
-            //console.log('viewHeight : ', viewHeight);
             if (!above && !below) {
                 return true;
             } else if (retDir && above) {
@@ -1367,40 +1143,15 @@ var dsq = function () {
     }, {
         key: 'listHeightCalc',
         value: function listHeightCalc() {
-            //console.log('--------------listHeightCalc---------------');
-            /*let yearsHeight = this.lists.querySelectorAll('.dsq-list-years > li[data-year]').length * this.rowHeight < this.listHeight ? this.lists.querySelectorAll('.dsq-list-years > li[data-year]').length * this.rowHeight : this.listHeight,
-                monthsHeight = this.lists.querySelectorAll('.dsq-list-months > li[data-month]:not(.dsq-disabled)').length * this.rowHeight < this.listHeight ? this.lists.querySelectorAll('.dsq-list-months > li[data-month]:not(.dsq-disabled)').length * this.rowHeight : this.listHeight,
-                daysHeight = (Math.ceil(this.lists.querySelectorAll('.dsq-days > .dsq-list-days > li[data-day]').length / 7) + 1) * this.rowHeight;*/
-            //console.log('rowHeight : ', this.rowHeight);
-            /**/
-            var daysHeight = (Math.ceil(this.lists.querySelectorAll('.dsq-days > .dsq-list-days > li[data-day]').length / 7) + 1) * this.rowHeight + 20; // 15 is extra space for reminder + 5 for bottom padding
-            //this.lists.days.dataset.y = daysHeight;
-            //this.lists.days.style.height = daysHeight + 'px';
-            //this.lists.months.dataset.y = monthsHeight;
-            //this.lists.months.style.height = this.listHeight + 'px';
-            //this.lists.years.dataset.y = this.listHeight;
-            //this.lists.years.style.height = this.listHeight + 'px';
+            var daysHeight = (Math.ceil(this.lists.querySelectorAll('.dsq-days > .dsq-list-days > li[data-day]').length / 7) + 1) * this.rowHeight + 20;
 
             if (!this.wrapper.classList.contains(this.options.classPrefix + 'active')) {
-                //this.lists.dataset.y =  0;
                 this.lists.style.height = this.o.offsetHeight;
-                //console.log('day listHeightCalc: ', daysHeight);
             } else if (this.lists.classList.contains(this.options.classPrefix + 'day')) {
-                //this.lists.dataset.y =  daysHeight;
                 this.lists.style.height = daysHeight + 'px';
-                //console.log('day listHeightCalc: ', daysHeight);
             } else {
-                //this.lists.dataset.y =  this.listHeight;
                 this.lists.style.height = this.listHeight + 'px';
-
-                //console.log('default listHeightCalc: ', this.listHeight);
             }
-            //console.log('this.o.offsetHeight : ', this.o.offsetHeight);
-            //console.log('daysHeight : ', daysHeight);
-            //console.log('this.listHeight: ', this.listHeight);
-            //this.lists.dataset.yMax = Math.max(daysHeight, this.listHeight);
-            //console.log('this.lists.dataset.yMax : ', this.lists.dataset.yMax);
-            //this.createKeyframeAnimation();
         }
         // inject css
 
@@ -1423,15 +1174,11 @@ var dsq = function () {
     }, {
         key: 'wrap',
         value: function wrap() {
-            //console.log('target: ', this.label);
-            //console.log('uid: ', this.uid);
             // wrapper
             var wrapping = document.createElement('div');
             wrapping.className = 'dsq';
             wrapping.id = this.uid;
             this.label.parentNode.insertBefore(wrapping, this.label);
-            //wrapping.innerHTML = this.label.innerHTML;
-            //wrapping.appendChild(this.label).insertAdjacentHTML('beforeend', '<div class="' + this.options.classPrefix + 'lists"><ul class="' + this.options.classPrefix + 'list-years" role="listbox"></ul><ul class="' + this.options.classPrefix + 'list-months" role="listbox"></ul><div class="' + this.options.classPrefix + 'days"><span class="' + this.options.classPrefix + 'side"><p class="' + this.options.classPrefix + 'reminder"></p></span><ul class="' + this.options.classPrefix + 'list-days" role="listbox"></ul></div></div>');
             wrapping.appendChild(this.label);
             wrapping.insertAdjacentHTML('beforeend', '<div class="' + this.options.classPrefix + 'lists"><ul class="' + this.options.classPrefix + 'list-years" role="listbox"></ul><ul class="' + this.options.classPrefix + 'list-months" role="listbox"></ul><div class="' + this.options.classPrefix + 'days"><span class="' + this.options.classPrefix + 'side"><p class="' + this.options.classPrefix + 'reminder"></p></span><ul class="' + this.options.classPrefix + 'list-days" role="listbox"></ul></div></div>');
             this.wrapper = wrapping;
@@ -1441,16 +1188,10 @@ var dsq = function () {
             this.lists.days = this.lists.querySelector('.' + this.options.classPrefix + 'days .' + this.options.classPrefix + 'list-days');
             this.lists.months = this.lists.querySelector('.' + this.options.classPrefix + 'list-months');
             this.lists.years = this.lists.querySelector('.' + this.options.classPrefix + 'list-years');
-            //console.log('lists:', this.lists);
-            //console.log('wrapper:', this.wrapper);
-            //console.log('lists.days:', this.lists.days);
-            //console.log('lists.months:', this.lists.months);
-            //console.log('lists.years:', this.lists.years);
         }
     }, {
         key: 'unwrap',
         value: function unwrap(wrapping) {
-            //console.log('wrapping: ', wrapping);
             // remove lists
             document.querySelector('#' + this.uid + ' .dsq-lists').remove();
             // https://stackoverflow.com/questions/19261197/how-can-i-remove-wrapper-parent-element-without-removing-the-child#answer-33401932
@@ -1524,11 +1265,6 @@ var dsq = function () {
         value: function getSiblings(n) {
             return getChildren(n.parentNode.firstChild, n);
         }
-        /*isHidden(el) {
-            let style = window.getComputedStyle(el);
-            return (style.opacity === 0);
-        }*/
-
     }, {
         key: 'isFunction',
         value: function isFunction(obj) {
@@ -1550,14 +1286,8 @@ var dsq = function () {
     }, {
         key: 'processUd',
         value: function processUd(obj) {
-            //console.log('--------------', this.o.id,'--------------');
-            //console.log('obj: ', obj);
-            //console.log('obj.d: ', obj.d);
-            //console.log('obj.m: ', obj.m);
-            //console.log('obj.y: ', obj.y);
             if (this.isFunction(obj)) {
                 obj = obj();
-                //console.log('obj: ', obj);
             } else if (!(obj instanceof Date)) {
                 if (12 <= obj.m) {
                     obj.m = 11;
@@ -1571,11 +1301,6 @@ var dsq = function () {
             obj.y = obj.getFullYear();
             obj.m = obj.getMonth();
             obj.d = obj.getDate();
-
-            //console.log('obj: ', obj);
-            //console.log('obj.d: ', obj.d);
-            //console.log('obj.m: ', obj.m);
-            //console.log('obj.y: ', obj.y);
             return obj;
         }
         // merge array [!!mutates original array!!]
@@ -1586,7 +1311,6 @@ var dsq = function () {
             var seen = new Set();
             return a.filter(function (item) {
                 var k = key(item);
-                //console.log('k: ', k);
                 return seen.has(k) ? false : seen.add(k);
             });
         }
@@ -1599,17 +1323,6 @@ var dsq = function () {
                 difference = dsq.countMonths(fnStart, fnEnd, true),
                 fnDates = [],
                 thirdYear = new Date(fnStart.getFullYear() + 1, 11, 31);
-
-            //stepDate = startDate;
-            // set return obj to false
-            //fnDates.months = false;
-            //fnDates.days = false;
-            //console.log('difference: ', difference);
-            //console.log('thirdYear: ', thirdYear);
-            //console.log('thirdYear <= endDate: ', (thirdYear.getTime() <= endDate.getTime()));
-            //console.log('startDate: ', startDate);
-            //console.log('endDate: ', endDate);
-            //console.log('stepDate: ', stepDate);
             // calculate 1st disabled year
             if (fnStart.getDate() === 1 && fnStart.getMonth() === 0 && difference > 11) {
                 fnDates.years = [fnStart.getFullYear()];
@@ -1620,21 +1333,13 @@ var dsq = function () {
                 fnDates.years = false;
             }
             // add remaining disabled years
-            ////console.log('difference / 24: ', difference/24);
             if (difference / 24 >= 1) {
-                //console.log('floor(difference / 12): ', Math.floor((difference - 12)/12));
-                //console.log('dsq.countMonths(fnDates.years[0], fnEnd, true): ', dsq.countMonths(new Date(fnDates.years[0],11,31), fnEnd, true));
                 for (var i = 0; i <= dsq.countMonths(new Date(fnDates.years[0], 11, 31), fnEnd, true) / 12 - 1; i++) {
-                    //console.log('i: ', i);
-                    //console.log('fnDates.years[i] + 1: ', fnDates.years[i] + 1);
                     fnDates.years.push(fnDates.years[i] + 1);
                 }
             }
 
             // calculate 1st disabled month(s) (before or after any years) 
-            //console.log('fnDates.years[fnDates.years.length - 1]: ', fnDates.years[fnDates.years.length - 1]);
-            //console.log('new Date(fnDates.years[fnDates.years.length - 1] + 1, 0, 31): ', new Date(fnDates.years[fnDates.years.length - 1] + 1, 0, 31).getTime());
-            //console.log('fnEnd.getTime(): ', fnEnd.getTime());
             if (difference >= 1) {
                 // at least one whole month difference
                 if (fnDates.years[0] !== fnStart.getFullYear()) {
@@ -1669,14 +1374,9 @@ var dsq = function () {
                 fnDates.months = false;
             }
             // add remaining disabled months
-            //console.log('fnDates.years[0]: ', fnDates.years[0]);
-            //console.log('fnDates.years.length: ', fnDates.years.length);
             var preDiff = dsq.countMonths(fnStart, new Date(fnDates.years[0], 0, 1), true),
                 // months before
             postDiff = dsq.countMonths(new Date(fnDates.years[fnDates.years.length - 1] + 1, 0, 1), fnEnd, true); // months after
-            //console.log('preDiff: ', preDiff);
-            //console.log('postDiff: ', postDiff);
-            //console.log('difference: ', difference);
             if (preDiff >= 2) {
                 // months before
                 for (var b = 1; b < preDiff; b++) {
@@ -1700,8 +1400,6 @@ var dsq = function () {
                 for (var d = 1; d < difference - 1; d++) {
                     // d = 1 && difference -1 (first entry already calculated)
                     mtCount = fnDates.months[d - 1].split('/')[1] * 1;
-                    //console.log('mtCount: ', mtCount);
-                    //console.log('yrCount: ', yrCount);
                     if (mtCount === 11) {
                         mtCount = 0;
                         yrCount++;
@@ -1720,9 +1418,6 @@ var dsq = function () {
 
             if (fnDates.years === false && fnDates.months === false) {
                 // range is all days
-                //console.log('range is all days: ', fnDates.days);
-                //console.log('fnStart.getDate(): ', fnStart.getDate());
-                //console.log('fnEnd.getDate(): ', fnEnd.getDate());
                 var endIn = 0;
                 if (fnStart.getMonth() !== fnEnd.getMonth()) {
                     // ends next month
@@ -1731,7 +1426,6 @@ var dsq = function () {
                     endIn = fnEnd.getDate() + 1; // fnEnd+1 because calculates to beginning of last day (00:00) but last day is also disabled
                 }
                 for (var _i4 = fnStart.getDate(); _i4 < endIn; _i4++) {
-                    //console.log('i: ', i);
                     if (_i4 >= dsq.daysInMonth(fnStart.getFullYear(), fnStart.getMonth()) + 1) {
                         // crosses into new month
                         fnDates.days.push(fnStart.getFullYear() + '/' + fnEnd.getMonth() + '/' + (_i4 - dsq.daysInMonth(fnStart.getFullYear(), fnStart.getMonth())));
@@ -1739,30 +1433,20 @@ var dsq = function () {
                         // same month
                         fnDates.days.push(fnStart.getFullYear() + '/' + fnStart.getMonth() + '/' + _i4);
                     }
-                    //console.log('fnDates.years[i] + 1: ', fnDates.years[i] + 1);
-                    //fnDates.days.push(fnStart.getFullYear() + '/' + fnStart.getMonth() + '/' + i);
                 }
             } else if (fnDates.years === false && fnDates.months !== false) {
                 // range is months
                 if (fnStart.getMonth() < fnDates.months[0].split('/')[1]) {
                     // days at start of range
-                    //console.log('fnDates.months[0]: ', (fnDates.months[0].split('/')[1]*1)-1);
-                    //console.log('daysInMonth: ', dsq.daysInMonth(fnStart.getFullYear(),(fnDates.months[0].split('/')[1]*1)-1));
                     for (var _i5 = fnStart.getDate(); _i5 < dsq.daysInMonth(fnStart.getFullYear(), fnDates.months[0].split('/')[1] * 1 - 1) + 1; _i5++) {
                         // fnEnd+1 because calculates to beginning of last day (00:00) but last day is also disabled
-                        //console.log('i: ', i);
                         fnDates.days.push(fnStart.getFullYear() + '/' + fnStart.getMonth() + '/' + _i5);
                     }
                 }
-                //console.log('fnEnd: ', fnEnd);
-                //console.log('fnDates.months[fnDates.months.length - 1]: ', fnDates.months[fnDates.months.length - 1]);
-                //console.log('Date(fnEnd.getFullYear(),fnDates.months[fnDates.months.length - 1].split(/)[1] + 1): ', new Date(fnEnd.getFullYear(),(fnDates.months[fnDates.months.length - 1].split('/')[1] * 1) + 1));
                 if (new Date(fnEnd.getFullYear(), fnDates.months[fnDates.months.length - 1].split('/')[1] * 1 + 1).getTime() < fnEnd.getTime()) {
                     // days at end of range
                     for (var _d = 1; _d < fnEnd.getDate() + 1; _d++) {
                         // fnEnd+1 because calculates to beginning of last day (00:00) but last day is also disabled
-                        //console.log('i: ', i);
-                        //console.log('fnDates.years[i] + 1: ', fnDates.years[i] + 1);
                         fnDates.days.push(fnEnd.getFullYear() + '/' + fnEnd.getMonth() + '/' + _d);
                     }
                 }
@@ -1772,20 +1456,13 @@ var dsq = function () {
                     // days at start of range
                     for (var _i6 = fnStart.getDate(); _i6 < dsq.daysInMonth(fnStart.getFullYear(), fnStart.getMonth()) + 1; _i6++) {
                         // fnEnd+1 because calculates to beginning of last day (00:00) but last day is also disabled
-                        //console.log('i: ', i);
-                        //console.log('fnDates.years[i] + 1: ', fnDates.years[i] + 1);
                         fnDates.days.push(fnStart.getFullYear() + '/' + fnStart.getMonth() + '/' + _i6);
                     }
                 }
-                //console.log('fnEnd: ', fnEnd);
-                //console.log('fnDates.months[fnDates.months.length - 1]: ', fnDates.months[fnDates.months.length - 1]);
-                //console.log('Date(fnEnd.getFullYear(),fnDates.months[fnDates.months.length - 1].split(/)[1] + 1): ', new Date(fnEnd.getFullYear(),(fnDates.months[fnDates.months.length - 1].split('/')[1] * 1) + 1));
                 if (new Date(fnDates.years[fnDates.years.length - 1] + 1, fnStart.getMonth()).getTime() < fnEnd.getTime()) {
                     // days at end of range
                     for (var _d2 = 1; _d2 < fnEnd.getDate() + 1; _d2++) {
                         // fnEnd+1 because calculates to beginning of last day (00:00) but last day is also disabled
-                        //console.log('i: ', i);
-                        //console.log('fnDates.years[i] + 1: ', fnDates.years[i] + 1);
                         fnDates.days.push(fnEnd.getFullYear() + '/' + fnEnd.getMonth() + '/' + _d2);
                     }
                 }
@@ -1795,22 +1472,14 @@ var dsq = function () {
                     timeAtYn = new Date(fnDates.years[fnDates.years.length - 1], 11, 31).getTime(),
                     timeAtM0 = new Date(fnDates.months[0].split('/')[0], fnDates.months[0].split('/')[1]).getTime(),
                     timeAtMn = new Date(fnDates.months[fnDates.months.length - 1].split('/')[0], fnDates.months[fnDates.months.length - 1].split('/')[1]).getTime();
-                //console.log('timeAtY0: ', timeAtY0);
-                //console.log('timeAtYn: ', timeAtYn);
-                //console.log('timeAtM0: ', timeAtM0);
-                //console.log('timeAtMn: ', timeAtMn);
                 if (fnStart.getTime() < timeAtY0 && timeAtY0 < timeAtM0 || fnStart.getTime() < timeAtM0 && timeAtM0 < timeAtY0) {
                     // starts before year (not month) | d < y < m
-                    //console.log('d < y or m');
                     for (var _i7 = fnStart.getDate(); _i7 < dsq.daysInMonth(fnStart.getFullYear(), fnStart.getMonth()) + 1; _i7++) {
                         // fnEnd+1 because calculates to beginning of last day (00:00) but last day is also disabled
-                        //console.log('i: ', i);
-                        //console.log('fnDates.years[i] + 1: ', fnDates.years[i] + 1);
                         fnDates.days.push(fnStart.getFullYear() + '/' + fnStart.getMonth() + '/' + _i7);
                     }
                 } else {
                     // starts after month or year) | y or m < d
-                    //console.log('m or y < d');
                     for (var _d3 = 1; _d3 < fnEnd.getDate() + 1; _d3++) {
                         // fnEnd+1 because calculates to beginning of last day (00:00) but last day is also disabled
                         fnDates.days.push(fnEnd.getFullYear() + '/' + fnEnd.getMonth() + '/' + _d3);
@@ -1820,11 +1489,6 @@ var dsq = function () {
             if (fnDates.days.length === 0) {
                 fnDates.days = false;
             }
-            //console.log('this.disDates: ',this.disDates);
-            //console.log('this.disDates.days: ',this.disDates.days);
-            //this.disDates.days.push(fnDates.days);
-            //this.disDates.months.push(fnDates.months);
-            //this.disDates.years.push(fnDates.years);
             return fnDates;
         }
         // getters
@@ -1954,15 +1618,27 @@ var dsq = function () {
             formats = {
                 yyyy: dateObj.getFullYear(), // 1900, 1901, ..., 2099
                 yy: dateObj.getFullYear().toString().slice(2), //  00, 01, ..., 99
-                mmmm: dateObj.toLocaleString('en-gb', { month: "long" }), // January, February, ..., December
-                mmm: dateObj.toLocaleString('en-gb', { month: "short" }), // Jan, Feb, ..., Dec
+                mmmm: dateObj.toLocaleString('en-gb', {
+                    month: "long"
+                }), // January, February, ..., December
+                mmm: dateObj.toLocaleString('en-gb', {
+                    month: "short"
+                }), // Jan, Feb, ..., Dec
                 mm: leadingZero(dateObj.getMonth() + 1), // 01, 02, ..., 12
                 mx: ordinalSuffix(dateObj.getMonth() + 1), // 1st, 2nd, ..., 12th
                 m: dateObj.getMonth() + 1, // 1, 2, ..., 12
-                wwww: dateObj.toLocaleString('en-gb', { weekday: "long" }), // Sunday, Monday, ..., Saturday
-                www: dateObj.toLocaleString('en-gb', { weekday: "short" }), // Sun, Mon, ..., Sat
-                ww: dateObj.toLocaleString('en-gb', { weekday: "short" }).slice(0, 2), // Su, Mo, ..., Sa
-                w: dateObj.toLocaleString('en-gb', { weekday: "narrow" }), // S, M, ..., S
+                wwww: dateObj.toLocaleString('en-gb', {
+                    weekday: "long"
+                }), // Sunday, Monday, ..., Saturday
+                www: dateObj.toLocaleString('en-gb', {
+                    weekday: "short"
+                }), // Sun, Mon, ..., Sat
+                ww: dateObj.toLocaleString('en-gb', {
+                    weekday: "short"
+                }).slice(0, 2), // Su, Mo, ..., Sa
+                w: dateObj.toLocaleString('en-gb', {
+                    weekday: "narrow"
+                }), // S, M, ..., S
                 dddd: leadingZero(dsq.dayOfYear(dateObj), 3), // 001, 002, ..., 366
                 dddx: ordinalSuffix(dsq.dayOfYear(dateObj)), // 1st, 2nd, ..., 366th
                 ddd: dsq.dayOfYear(dateObj), // 1, 2, ..., 366
