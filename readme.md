@@ -1,9 +1,7 @@
 # dateSquirrel
 A date picker with a nutty tang
-Version: 0.1.0 (Bangs mountain - alpha)
-
-![alt text][dateSquirrel_demo]
-[dsq_Timeline2]: https://preview.ibb.co/e1FFz6/date_Squirrel_demo.gif "dateSquirrel"
+##### Version: 0.1.0 (Bangs mountain - alpha)
+![alt text](https://preview.ibb.co/e1FFz6/date_Squirrel_demo.gif "dateSquirrel")
 
 ## TODO - This is an alpha-stage project
 - [x] Make dsq stay in viewport when opened at edges
@@ -46,7 +44,6 @@ Version: 0.1.0 (Bangs mountain - alpha)
     * [Cloning & installation](#Cloning)
     * [Building for production](#Building)
 
-<a name="About"/></a>
 ## About
 
 dateSquirrel is a date picker with calendar dates. It's modal-free, dependency-free and free-free. The aim is to put the date picking into a single field and make it so you can pick any date in three clicks. It is not trying to be better than the Google style modal or the Bootstrap calendar style drop down, dateSquirrel is for wide date possibilities (like date of birth) that are a pain to pick when you have to navigate through several decades worth of months to get to the date you want.
