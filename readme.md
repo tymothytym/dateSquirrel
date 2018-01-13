@@ -1,7 +1,7 @@
 # dateSquirrel
 A date picker with a nutty tang
 ##### Version: 0.1.0 (Bangs mountain - alpha)
-![alt text](https://preview.ibb.co/e1FFz6/date_Squirrel_demo.gif "dateSquirrel")
+![dateSquirrel Demo](https://preview.ibb.co/e1FFz6/date_Squirrel_demo.gif)
 
 ## TODO - This is an alpha-stage project
 - [x] Make dsq stay in viewport when opened at edges
