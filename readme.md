@@ -1,7 +1,16 @@
 # dateSquirrel
 A date picker with a nutty tang
-##### Version: 0.1.0 (Bangs mountain - alpha)
+##### Version: 0.1.0 (Bangs's mountain - alpha)
 ![dateSquirrel Demo](https://media.giphy.com/media/l0HUo04xCeDlNmVeU/giphy.gif)
+
+| File | Type | Size |
+| :---- | :---- | :---- |
+| dsq.css | style | 14.1 KB |
+| dsq.min.css | style | 10.1 KB |
+| dsq.min.css.gz | style | 1.76 KB |
+| dsq.js | functions | 81.0 KB |
+| dsq.min.js | functions | 32.8 KB |
+| dsq.min.js.gz | functions | 7.99 KB |
 
 ## TODO - This is an alpha-stage project
 - [x] Make dsq stay in viewport when opened at edges
