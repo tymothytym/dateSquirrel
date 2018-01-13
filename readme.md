@@ -1,7 +1,7 @@
 # dateSquirrel
 A date picker with a nutty tang
 ##### Version: 0.1.0 (Bangs mountain - alpha)
-![dateSquirrel Demo](https://preview.ibb.co/e1FFz6/date_Squirrel_demo.gif)
+![dateSquirrel Demo](https://media.giphy.com/media/l0HUo04xCeDlNmVeU/giphy.gif)
 
 ## TODO - This is an alpha-stage project
 - [x] Make dsq stay in viewport when opened at edges
@@ -24,7 +24,7 @@ A date picker with a nutty tang
 
 \*Sadly no polyfill for the general user experience
 
-##### Table of Contents
+## Table of Contents
 - [About](#About)
 - [Before you get started](#warning)
     * [Months start at 0](#monthsStart)
@@ -34,9 +34,31 @@ A date picker with a nutty tang
     * [Deployment](#Deployment)
     * [Conditions](#Conditions)
 - [Options](#Options)
+    * [`start` & `end` (array, function, Date)](#startEnd)
+    * [`pattern` & `patternSave` (text)](#pattern)
+    * [`day`](#day)
+    * [`month`](#month)
+    * [`disableDates`](#disableDates)
+    * [`markToday`](#markToday)
+    * [`primaryColour`](#primaryColour)
+    * [`primaryTextColour`](#primaryTextColour)
+    * [`textOnPrimaryColour`](#textOnPrimaryColour)
+    * [`hideScrollbars`](#hideScrollbars)
+    * [`activation`](#activation)
+    * [`callback`](#callback)
 - [Date output formatting](#formatting)
-- [Methods](#Methods)
+- [Methods & Getters](#Methods)
+    * [Destroy an instance](#destroy)
+    * [Get the current value](#getValue)
 - [Helper functions](#Helper)
+    * [Change date by `n` months](#modMonths)
+    * [Count months between dates](#countMonths)
+    * [Check if a date is between two other dates](#isBetweenDates)
+    * [Check if two dates are the same day](#isSameDay)
+    * [Get days in a month](#daysInMonth)
+    * [Get the day of the year](#dayOfYear)
+    * [Get days between two dates](#daysBetween)
+    * [Format a date](#format)
 - [Setup (for development)](#Setup)
     * [Build requirements](#requirements)
     * [Cloning & installation](#Cloning)
@@ -44,8 +66,8 @@ A date picker with a nutty tang
     * [Cloning & installation](#Cloning)
     * [Building for production](#Building)
 
+<a name="About"/></a>
 ## About
-
 dateSquirrel is a date picker with calendar dates. It's modal-free, dependency-free and free-free. The aim is to put the date picking into a single field and make it so you can pick any date in three clicks. It is not trying to be better than the Google style modal or the Bootstrap calendar style drop down, dateSquirrel is for wide date possibilities (like date of birth) that are a pain to pick when you have to navigate through several decades worth of months to get to the date you want.
 
 <a name="warning"/></a>
@@ -158,7 +180,6 @@ new dsq('#myDateInput', {
 });
 ```
 
-
 <a name="Conditions"/>
 ### Conditions for use
 
@@ -167,7 +188,7 @@ new dsq('#myDateInput', {
 - Styling for fallbacks or [non-activating](#Activation) scenarios is not included, so you have to add your own (S)CSS for that
 - Resetting and / or normalisation of your page styles is assumed (you can copy the reset used for the demo [here](#reset-file) if you don't have one)
 
-<a name="Options"/>
+<a name="Options"/></a>
 ## Options
 
 ```javascript
@@ -198,7 +219,8 @@ defaults = {
     callback: function() {}, // optional callback fired on date completion
 ```
 
-#### `start` & `end` (array, function, Date)
+<a name="startEnd"/></a>
+### `start` & `end` (array, function, Date)
 The start and end of the range the user can select from. The range **includes** the start and end day.
 
 Can be set with:
@@ -259,7 +281,8 @@ Or via a date object:
     // note: Months are expected as: 0 = Jan, 1 = Feb, 2 = Mar..., 11 = Dec
 ```
 
-#### `pattern` & `patternSave` (text)
+<a name="pattern"/></a>
+### `pattern` & `patternSave` (text)
 Sets the pattern that is displayed in the `<input>` (`pattern`) or the pattern saved to the `data-dsq-date` attribute of the `<input>`. [Pattern syntax and available formats](#formatting)
 
 ```javascript
@@ -269,15 +292,19 @@ Sets the pattern that is displayed in the `<input>` (`pattern`) or the pattern s
     });
 ```
 
-#### `day` (boolean)
+<a name="day"/></a>
+### `day` (boolean)
 If set to `false` dateSquirrel **won't** prompt the user for a day and will assume that it should be the 1st of any selected month for the purposes of any callback or output. You can remove the day from the output with `pattern` &/or `patternSave`. (default `true`)
 
-#### `month` (boolean)
+
+<a name="month"/></a>
+### `month` (boolean)
 If set to `false` dateSquirrel **won't** prompt the user for a month and will assume that it should be the 1st of January for any selected year for the purposes of any callback or output. You can remove the month (& day) from the output with `pattern` &/or `patternSave`. Setting `month` to `false` also sets `day` to `false`. (default `true`)
 
 N.B. There is no "year" option as you can disable that by setting the range (`start` & `end`) to be less than a year
 
-#### `disableDates` (array [number, Date, text])
+<a name="disableDates"/></a>
+### `disableDates` (array [number, Date, text])
 Disable days, months, years, date ranges and recurring dates within the `start` & `end` range so they can't be selected by the user. Ranges and / or recurring dates can overlap.
 
 ```javascript
@@ -293,7 +320,7 @@ new dsq('#eg4', {
 });
 ```
 
-##### text (recurring days and dates)
+#### text (recurring days and dates)
 Dates that occur at regular intervals can be disabled either by day of the week - in the format `www` - or date - in the format `mm/dd`. These disable all instances of that day or date throughout the available range (between `start` & `end`).
 
 ```javascript
@@ -305,7 +332,7 @@ new dsq('#eg5', {
 });
 ```
 
-##### number (Whole years and recurring months)
+#### number (Whole years and recurring months)
 Disables the whole of a month (recurring) or year so it (and its child-days) can't be selected by the user.
 
 ```javascript
@@ -317,7 +344,7 @@ new dsq('#eg6', {
 });
 ```
 
-##### Single Date objects and ranges specified by Date objects
+#### Single Date objects and ranges specified by Date objects
 Specifies a single day to be disabled.
 
 ```javascript
@@ -328,7 +355,7 @@ new dsq('#eg7', {
 });
 ```
 
-##### Date ranges specified by Date objects
+#### Date ranges specified by Date objects
 Specifies a continuous range of days to be disabled.
 
 ```javascript
@@ -341,10 +368,12 @@ new dsq('#eg7', {
 
 N.B. inclusive of start and end dates
 
-#### `markToday` (boolean)
+<a name="markToday"/></a>
+### `markToday` (boolean)
 If set to `false` the indicator on the list of days showing the current day is disabled. (default `true`)
 
-#### `primaryColour` (text => CSS colour)
+<a name="primaryColour"/></a>
+### `primaryColour` (text => CSS colour)
 The background highlighting colour for items that are highlighted or selected. Accepts all valid CSS colours as a text string.
 
 ```javascript
@@ -353,7 +382,8 @@ new dsq('#eg8', {
 });
 ```
 
-#### `primaryTextColour` (text => CSS colour)
+<a name="primaryTextColour"/></a>
+### `primaryTextColour` (text => CSS colour)
 The colour of the text when it is selected on a 'white' background. Accepts all valid CSS colours as a text string.
 
 ```javascript
@@ -362,7 +392,8 @@ new dsq('#eg9', {
 });
 ```
 
-#### `textOnPrimaryColour` (text => CSS colour)
+<a name="textOnPrimaryColour"/></a>
+### `textOnPrimaryColour` (text => CSS colour)
 The colour of the text when its background is highlighted or selected (i.e. when on `primaryColour`). Accepts all valid CSS colours as a text string.
 
 ```javascript
@@ -371,7 +402,8 @@ new dsq('#eg10', {
 });
 ```
 
-#### `hideScrollbars` (boolean)
+<a name="hideScrollbars"/></a>
+### `hideScrollbars` (boolean)
 If set to `true`; hides the native scrollbars inside dateSquirrel.
 
 ```javascript
@@ -382,7 +414,8 @@ new dsq('#eg10', {
 
 **WARNING - Disabling scrollbars without replacement indicators / functionality can damage user experience**
 
-#### `activation` (function)
+<a name="activation"/></a>
+### `activation` (function)
 dateSquirrel checks this function to see if it should activate when it first loads. If the function returns `true` then it activates.
 
 ```javascript
@@ -399,7 +432,8 @@ new dsq('#eg11', {
 
 N.B. This function only runs on initial activation, not on resize.
 
-#### `callback` (function)
+<a name="callback"/></a>
+### `callback` (function)
 A custom function fired when a user finishes changing the date.
 
 ```javascript
@@ -414,17 +448,17 @@ new dsq('#eg12', {
 });
 ```
 
-##### Constants available in the callback function
+#### Constants available in the callback function
 
 | Constant | Description | Type | Example |
-| :---- | :---- | :---- |
+| :---- | :---- | :---- | :---- |
 | `this.date` | Date set | Date | 'Wed Nov 13 2024 00:00:00 GMT+0000 (GMT Standard Time)' |
 | `this.input` | The `<input>` element | DOM element | <input type="text" id="eg12"... | 
 | `this.wrapper` | The `<div>` element added by dateSquirrel | DOM element | <div class="dsq"... | 
 | `this.human` | The date set in the format specified by `pattern` | text | "13th Nov 2024" | 
 | `this.save` | The date set in the format specified by `patternSave` | text | "2024,11,13" | 
 
-<a name="formatting"/>
+<a name="formatting"/></a>
 ## Date output formatting
 
 | Syntax | Description | Example |
@@ -446,16 +480,16 @@ new dsq('#eg12', {
 
 **N.B. The dateSquirrel parser returns dates in human-readable formats. e.g. January = 1 or 01**
 
-<a name="Methods"/>
-## Methods (Getters)
+<a name="Methods"/></a>
+## Methods & Getters
 
-dateSquirrel has a few methods you can use to modify an existing instance. All methods assume you have attached the instance to a JavaScript variable like so:
+dateSquirrel has a few ways you can use to modify an existing instance or get things from it. All methods assume you have attached the instance to a JavaScript variable like so:
 
 ```javascript
 const myDsq = new dsq('#theInputsId', options);
 ```
 
-<a name="destroy"/>
+<a name="destroy"/></a>
 ### Destroy an instance
 
 ```javascript
@@ -463,7 +497,7 @@ myDsq.destroy();
 ``` 
 
 | Argument | Description | Type | Example |
-| :---- | :---- | :---- |
+| :---- | :---- | :---- | :---- |
 | none | nemo | keiner | hakuna |
 
 Removes all listeners and additional HTML added by dateSquirrel and returns the `<input>` field and `<label>` to the state it found them in. Doesn't accept arguments.
@@ -473,7 +507,7 @@ const myDsq = new dsq('#theInputsId', options);
 myDsq.destroy();
 ```  
 
-<a name="getValue"/>
+<a name="getValue"/></a>
 ### Get the current value 
 
 ```javascript
@@ -481,7 +515,7 @@ myDsq.getValue([pattern]);
 ``` 
 
 | Argument | Description | Type | Example |
-| :---- | :---- | :---- |
+| :---- | :---- | :---- | :---- |
 | pattern | The date to modify | text string | `'dx of mmmm, yyyy'` |
 
 dateSquirrel doesn't mess with the standard `element.value` so you can use that to get the human-readable value (same format as `options.pattern`) if you like. However you might want something a bit spicier so you can get the `Date` object with:
@@ -504,20 +538,23 @@ console.log(myDsq.getValue('wwww the dx')); // e.g. 'Wednesday the 6th'
 
 ``` 
 
-<a name="Helper"/>
+<a name="Helper"/></a>
 ## Helper functions
 
 dateSquirrel uses a bunch of micro-functions to work out dates and ranges and stuff like that. Since they are not doing anything in particular in their downtime, they have been exposed so you can use them in your own code as date helpers. All these functions operate with no impact on any instance of dateSquirrel and don't require an instance on the page to work.
 
-<a name="modMonths"/>
-### `dsq.modMonths(date, add)`
+<a name="modMonths"/></a>
+### Change date by `n` months
+```javascript
+dsq.modMonths(date, modBy)
+```
 
 Modifies a date by a number of months (positive or negative).
 
 | Argument | Description | Type | Example |
-| :---- | :---- | :---- |
+| :---- | :---- | :---- | :---- |
 | date | The date to modify | Date Object | `new Date()` |
-| add | The number of months to increase (+) or decrease (-) by | number | -n, ..., -2, -1, 1, 2, 3, ..., n |
+| modBy | The number of months to increase (+) or decrease (-) by | number | -n, ..., -2, -1, 1, 2, 3, ..., n |
 
 
 ```javascript
@@ -526,13 +563,16 @@ const someDay = new Date(2000, 0, 1);
 console.log(dsq.modMonths(someDay, -1)); // Wed Dec 01 1999
 ```
 
-<a name="countMonths"/>
-### `dsq.countMonths(startDate, endDate [, whole])`
+<a name="countMonths"/></a>
+### Count months between dates
+```javascript
+dsq.countMonths(startDate, endDate [, whole])
+```
 
 Counts the number of (optionally whole) calendar months between two dates. 
 
 | Argument | Description | Type | Example |
-| :---- | :---- | :---- |
+| :---- | :---- | :---- | :---- |
 | startDate | The date to count from | Date Object | `new Date()` |
 | endDate | The date to count to | Date Object | `new Date()` |
 | whole | Whether to return whole months (1st to nth) or months (yth to yth) counted | boolean | `true` or `false` |
@@ -548,13 +588,16 @@ console.log(dsq.countMonths(someDay, someOtherDay, true)); // 46
 console.log(dsq.countMonths(someDay, someOtherDay, false)); // 47
 ```
 
-<a name="isBetweenDates"/>
-### `dsq.isBetweenDates(test,start,end)`
+<a name="isBetweenDates"/></a>
+### Check if a date is between two other dates
+```javascript
+dsq.isBetweenDates(test,start,end)
+```
 
 Checks to see if a date falls between two other dates and returns `true` if it is. Being on the first or last day is considered within the range.
 
 | Argument | Description | Type | Example |
-| :---- | :---- | :---- |
+| :---- | :---- | :---- | :---- |
 | test | The date to check | Date Object | `new Date()` |
 | start | The start of the range to check | Date Object | `new Date()` |
 | end | The end of the range to check | Date Object | `new Date()` |
@@ -567,13 +610,16 @@ const someDay = new Date(2000, 0, 20),
 console.log(dsq.isBetweenDates(thatDay,someDay,someOtherDay)); // true
 ```
 
-<a name="isSameDay"/>
-### `dsq.isSameDay(date1,date2)`
+<a name="isSameDay"/></a>
+### Check if two dates are the same day
+```javascript
+dsq.isSameDay(date1,date2)
+```
 
 Checks to see if a date is the on the same **day** (and same month & year) as another date and returns `true` if it is.
 
 | Argument | Description | Type | Example |
-| :---- | :---- | :---- |
+| :---- | :---- | :---- | :---- |
 | date1 | The first date to check | Date Object | `new Date()` |
 | date2 | The second date to check | Date Object | `new Date()` |
 
@@ -583,13 +629,16 @@ const someDay = new Date(2000, 0, 20),
 console.log(dsq.isSameDay(someDay,someOtherDay)); // false
 ```
 
-<a name="daysInMonth"/>
-### `dsq.daysInMonth(year,month)`
+<a name="daysInMonth"/></a>
+### Get days in a month
+```javascript
+dsq.daysInMonth(year,month)
+```
 
 Returns the number of days in any given month. It accounts for leap years. 
 
 | Argument | Description | Type | Example |
-| :---- | :---- | :---- |
+| :---- | :---- | :---- | :---- |
 | year | The year containing the month to check | Number | 1899, 1900, 1901, ..., 2999 |
 | month | The month to check | Number | 0, 1, 2,..., 11 |
 
@@ -599,13 +648,16 @@ const year = 2000,
 console.log(dsq.daysInMonth(year,month)); // 29 (Leap year)
 ```
 
-<a name="dayOfYear"/>
-### `dsq.dayOfYear(date)`
+<a name="dayOfYear"/></a>
+### Get the day of the year
+```javascript
+dsq.dayOfYear(date)
+```
 
 Returns the number of a day in its year from a date object, between 1 and 366 (where January the 1st === `1`, December the 31st in 2000 would return `366` [leap year] & while December 31st 2003 would return `365`.
 
 | Argument | Description | Type | Example |
-| :---- | :---- | :---- |
+| :---- | :---- | :---- | :---- |
 | date | The date to check | Date Object | `new Date()` |
 
 ```javascript
@@ -615,13 +667,16 @@ console.log(dsq.dayOfYear(someDay)); // 20
 console.log(dsq.dayOfYear(someOtherDay)); // 355
 ```
 
-<a name="daysBetween"/>
-### `dsq.daysBetween(startDate, endDate)`
+<a name="daysBetween"/></a>
+### Get days between two dates
+```javascript
+dsq.daysBetween(startDate, endDate)
+```
 
 Returns the number of days between two dates (accounting for leap years).
 
 | Argument | Description | Type | Example |
-| :---- | :---- | :---- |
+| :---- | :---- | :---- | :---- |
 | startDate | The date to count from | Date Object | `new Date()` |
 | endDate | The date to count to | Date Object | `new Date()` |
 
@@ -631,13 +686,16 @@ const someDay = new Date(2000, 0, 20),
 console.log(dsq.daysBetween(someDay, someOtherDay)); // 1431
 ```
 
-<a name="format"/>
-### `dsq.format(date, format)`
+<a name="format"/></a>
+### Format a date
+```javascript
+dsq.format(date, format)
+```
 
 Formats the given date according to the dateSquirrel [date formats](#formatting). N.B. Output formats are human-readable (i.e. January = 1)
 
 | Argument | Description | Type | Example |
-| :---- | :---- | :---- |
+| :---- | :---- | :---- | :---- |
 | date | The date to format | Date Object | `new Date()` |
 | format | The desired output format | Text string | 'wwww, dd/mm/yyyy' |
 
@@ -647,27 +705,10 @@ const someDay = new Date(2000, 0, 20),
 console.log(dsq.daysBetween(someDay, someOtherDay)); // 1431
 ```
 
-<a name="format"/>
-### `dsq.format(date, format)`
-
-Formats the given date according to the dateSquirrel [date formats](#formatting). N.B. Output formats are human-readable (i.e. January = 1)
-
-| Argument | Description | Type | Example |
-| :---- | :---- | :---- |
-| date | The date to format | Date Object | `new Date()` |
-| format | The desired output format | Text string | 'wwww, dd/mm/yyyy' |
-
-```javascript
-const someDay = new Date(2000, 0, 20),
-    someOtherDay = new Date(2003, 11, 21);
-console.log(dsq.daysBetween(someDay, someOtherDay)); // 1431
-```
-
-
-<a name="Setup"/>
+<a name="Setup"/></a>
 ## Setup (for development)
 
-<a name="requirements"/>
+<a name="requirements"/></a>
 ### Build requirements
 
 To use the build environment, your computer needs:
@@ -676,7 +717,7 @@ To use the build environment, your computer needs:
 - [Git](https://git-scm.com/)
 - Gulp version 4 or greater must be installed globally (e.g. `npm install gulpjs/gulp#4.0 -g`) before installing locally (["Why do we need to install gulp globally and locally?" - Stack Overflow](https://stackoverflow.com/questions/22115400/why-do-we-need-to-install-gulp-globally-and-locally))
 
-<a name="Cloning"/>
+<a name="Cloning"/></a>
 ### Cloning & installation
 
 ```bash
@@ -687,7 +728,7 @@ cd [your_project_name]
 npm install
 ```
 
-<a name="Developing"/>
+<a name="Developing"/></a>
 ### Developing locally
 
 To create uncompressed assets and fire up Gulp, Webpack et al on a local webserver:
@@ -708,7 +749,7 @@ A test site site will be created in a folder called `dist`. To view; navigate to
 http://localhost:8042
 ```
 
-<a name="Building"/>
+<a name="Building"/></a>
 ### Building for production
 
 To create compressed assets:
