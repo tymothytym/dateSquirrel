@@ -1,6 +1,6 @@
 {
   "name": "dateSquirrel",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A date picker with a nutty tang",
   "main": "gulpfile.js",
   "scripts": {

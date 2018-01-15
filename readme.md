@@ -1,27 +1,28 @@
 # dateSquirrel
 A date picker with a nutty tang
-##### Version: 0.1.0 (Bangs's mountain - alpha)
+##### Release: Version: 0.1.0 (Bangs's mountain - alpha)
+##### In master: Version: 0.1.1
 ![dateSquirrel Demo](https://media.giphy.com/media/l0HUo04xCeDlNmVeU/giphy.gif)
 
 | File | Type | Size |
 | :---- | :---- | :---- |
 | dsq.css | style | 14.1 KB |
 | dsq.min.css | style | 10.1 KB |
-| **dsq.min.css.gz | style | 1.76 KB** |
+| **dsq.min.css.gz** | **style** | **1.76 KB** |
 | dsq.js | functions | 81.0 KB |
 | dsq.min.js | functions | 32.8 KB |
-| **dsq.min.js.gz | functions | 7.99 KB** |
+| **dsq.min.js.gz** | **functions** | **7.99 KB** |
 
 ## TODO - This is an alpha-stage project
 - [x] Make dsq stay in viewport when opened at edges
 - [x] Add min / max check from input data attr
-- [x] Add keyboard navigation in lists
 - [x] Hide keyboard on mobile (tested on android)
 - [x] Fix bug with new colours being ditched when closing dsq (move SCSS to JS)
 - [x] Fix bug re-opened lists do not have previous selection set to active
 - [x] Non-activation error message when resizing browser (investigate "Uncaught Browser doesn't meet the minimum dateSquirrel activation requirements")
 - [ ] Uncrappify open and close animation
-- [ ] Tidy up readme
+- [ ] Fix keyboard navigation
+- [ ] Tidy up / correct readme
 - [ ] Optimise
 
 ## IE11 bugs remaining
@@ -98,7 +99,7 @@ const myDate = new Date(1983,2,7) // Mon Mar 07 1983 00:00:00
 
 However if you were to get the same date back from a user (via dateSquirrel) in, say, `dd/mm/yyyy` [format](#formatting)), then you would get `07/03/1983` (Monday 7th March 1983).
 
-It's not because dateSquirrel was created by a crazy person (that's simply a coincidence), it's one of the legacy hangups of JavaScript. [Blame `java.util.Date` apparently](https://stackoverflow.com/questions/2552483/why-does-the-month-argument-range-from-0-to-11-in-javascripts-date-constructor#answer-41992352).
+It's not because dateSquirrel was made by a crazy person (that's simply a coincidence), it's one of the legacy hangups of JavaScript. [Blame `java.util.Date` apparently](https://stackoverflow.com/questions/2552483/why-does-the-month-argument-range-from-0-to-11-in-javascripts-date-constructor#answer-41992352).
 
 <a name="dsqWhut"/></a>
 ### dateSquirrel sees days as indivisible
@@ -118,13 +119,12 @@ const today = new Date(),
     // 3 days hence at 00:00:00
 ```
 
-![alt text][dsq_Timeline2]
-[dsq_Timeline2]: https://s14.postimg.org/erp1c8gxt/dsq_Timeline2.jpg "Difference between Date.prototype and dateSquirrel"
+![Difference between Date.prototype and dateSquirrel](https://s14.postimg.org/erp1c8gxt/dsq_Timeline2.jpg)
 
 <a name="Browser"/></a>
 ### Browser support
 
-dateSquirrel supports recent(ish) browsers but needs access to the newer (but not bleeding-edge) JavaScript DOM methods & properties; [`Element.querySelector()`](https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelector), [`EventTarget.addEventListener()`](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener), [`Element.closest()`](), [`Element.classList`]() and [`Node.insertBefore()`]()
+dateSquirrel supports recent(ish) browsers but needs access to the newer (but not bleeding-edge) JavaScript DOM methods & properties; [`Element.querySelector()`](https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelector), [`EventTarget.addEventListener()`](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener) and [`Element.classList`](https://developer.mozilla.org/en-US/docs/Web/API/Element/classList).
 
 <a name="Use"/></a>
 ## Use
@@ -139,12 +139,11 @@ Include the script tag in the `<body>` (or `<head>` tag) and add the css to the 
 
 ```html
 <body>
-	<head>
-		<link rel="stylesheet" href="path/to/dsq.min.css">
-	</head>
+    <head>
+        <link rel="stylesheet" href="path/to/dsq.min.css">
+    </head>
 	<!-- page HTML -->
-	<label for="#myDateInput">
-        My label
+	<label for="#myDateInput">My label
         <input id="myDateInput" type="date" min="2017-04-01" max="2017-04-30" placeholder="Pick a date">
     </label>
 	<!-- more page HTML -->
@@ -226,14 +225,16 @@ defaults = {
         }
     },
     callback: function() {}, // optional callback fired on date completion
+}
 ```
 
 <a name="startEnd"/></a>
 ### `start` & `end` (array, function, Date)
 The start and end of the range the user can select from. The range **includes** the start and end day.
 
-Can be set with:
-Literal dates (numbers) - d = day, m = month, y = year
+#### Can be set with...
+##### Numbers 
+Where `d` = day, `m` = month and `y` = year
 
 ```javascript
     // with literal dates
@@ -251,7 +252,7 @@ Literal dates (numbers) - d = day, m = month, y = year
     });
 ```
 
-Via individual functions that return numbers:
+##### Functions (that return numbers)
 
 ```javascript
     var today = new Date();
@@ -266,10 +267,11 @@ Via individual functions that return numbers:
     // note: dsq automatically changes impossible dates **downward** to the nearest possible value 
     {
         d: 31, // becomes => 29
-        m: 2, // March
+        m: 1, // February
         y: 2364 // leap year
-        // result = 29th Mar 2364
+        // result = 29th Feb 2364
     } 
+    // or even:
     {
         d: 34, // becomes => 31
         m: 15, // becomes => 11 (December)
@@ -278,7 +280,7 @@ Via individual functions that return numbers:
     } 
 ```
 
-Or via a date object:
+##### `Date()` objects
 
 ```javascript
     new dsq('#eg2', {
@@ -484,8 +486,8 @@ new dsq('#eg12', {
 | mm | The month with leading zero if required. | 01, 02, ..., 12 | 
 | mmm | The month abbreviated to three letters | Jan, Feb, ..., Dec |  
 | mmmm | The month unabbreviated | "Monday" to "Sunday" | 
-| yy | The month of the year between 1-12. | "1" to "12" | 
-| yyyy | The month of the year with leading zero if required. | January, February, ..., December | 
+| yy | The year abbreviated | "1" to "12" | 
+| yyyy | The year unabbreviated | January, February, ..., December | 
 
 **N.B. The dateSquirrel parser returns dates in human-readable formats. e.g. January = 1 or 01**
 
