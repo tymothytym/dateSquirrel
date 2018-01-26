@@ -485,9 +485,9 @@ new dsq('#eg12', {
 | mx | The month with ordinal suffix | 1st, 2nd, ..., 12th | 
 | mm | The month with leading zero if required. | 01, 02, ..., 12 | 
 | mmm | The month abbreviated to three letters | Jan, Feb, ..., Dec |  
-| mmmm | The month unabbreviated | "Monday" to "Sunday" | 
-| yy | The year abbreviated | "1" to "12" | 
-| yyyy | The year unabbreviated | January, February, ..., December | 
+| mmmm | The month unabbreviated | January, February, ..., December | 
+| yy | The year abbreviated | 00, 01, 02, ..., 99 | 
+| yyyy | The year unabbreviated | 1900, 1901, 1902, ..., 1999 | 
 
 **N.B. The dateSquirrel parser returns dates in human-readable formats. e.g. January = 1 or 01**
 
