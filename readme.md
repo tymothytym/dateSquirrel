@@ -188,7 +188,7 @@ new dsq('#myDateInput', {
 });
 ```
 
-<a name="Conditions"/>
+<a name="Conditions"/></a>
 ### Conditions for use
 
 - Each instance of dateSquirrel must have a unique ID (on the `<input>`)
