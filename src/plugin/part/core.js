@@ -1354,9 +1354,7 @@ class dsq {
 				ww: dateObj.toLocaleString('en-gb', {
 					weekday: "short"
 				}).slice(0, 2), // Su, Mo, ..., Sa
-				w: dateObj.toLocaleString('en-gb', {
-					weekday: "narrow"
-				}), // S, M, ..., S
+				w: dateObj.getDay(), // 0, 1, ..., 6
 				dddd: leadingZero(dsq.dayOfYear(dateObj), 3), // 001, 002, ..., 366
 				dddx: ordinalSuffix(dsq.dayOfYear(dateObj)), // 1st, 2nd, ..., 366th
 				ddd: dsq.dayOfYear(dateObj), // 1, 2, ..., 366
