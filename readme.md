@@ -711,9 +711,8 @@ Formats the given date according to the dateSquirrel [date formats](#formatting)
 | format | The desired output format | Text string | 'wwww, dd/mm/yyyy' |
 
 ```javascript
-const someDay = new Date(2000, 0, 20),
-    someOtherDay = new Date(2003, 11, 21);
-console.log(dsq.daysBetween(someDay, someOtherDay)); // 1431
+const someDay = new Date(2000, 0, 20);
+console.log(dsq.format(someDay, 'dd/mm/yy')); // 20/01/00
 ```
 
 <a name="Setup"/></a>
@@ -732,7 +731,7 @@ To use the build environment, your computer needs:
 ### Cloning & installation
 
 ```bash
-git clone https://bitbucket.org/tymothtym/datesquirrel.git [your_project_name]
+git clone https://github.com/tymothtym/dateSquirrel.git [your_project_name]
 
 cd [your_project_name]
 
