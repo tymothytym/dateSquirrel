@@ -19,7 +19,7 @@
     "autoprefixer": "9.0.1",
     "babel-brunch": "~6.1",
     "babel-preset-env": "^1.7.0",
-    "brunch": "2.10.12",
+    "brunch": "2.10.15",
     "brunch-static": "1.2.1",
     "clean-css-brunch": "2.10.0",
     "html-brunch-static": "1.4.0",
