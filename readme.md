@@ -1,7 +1,7 @@
 # dateSquirrel
 A date picker with a nutty tang
-##### Release: Version: 0.1.0 (Bangs's mountain - alpha)
-##### In master: Version: 0.1.1
+##### Release: Version: 0.2.0
+##### In master: Version: 0.2.1
 ![dateSquirrel Demo](https://media.giphy.com/media/l0HUo04xCeDlNmVeU/giphy.gif)
 
 | File | Type | Size |
@@ -14,25 +14,10 @@ A date picker with a nutty tang
 | **dsq.min.js.gz** | **functions** | **7.99 KB** |
 
 ## TODO - This is an alpha-stage project
-- [x] Make dsq stay in viewport when opened at edges
-- [x] Add min / max check from input data attr
-- [x] Hide keyboard on mobile (tested on android)
-- [x] Fix bug with new colours being ditched when closing dsq (move SCSS to JS)
-- [x] Fix bug re-opened lists do not have previous selection set to active
-- [x] Non-activation error message when resizing browser (investigate "Uncaught Browser doesn't meet the minimum dateSquirrel activation requirements")
 - [ ] Uncrappify open and close animation
-- [ ] Fix keyboard navigation
+- [ ] Fix keyboard navigation (tab out)
 - [ ] Tidy up / correct readme
 - [ ] Optimise
-
-## IE11 bugs remaining
-- [x] Polyfill for Element.closest
-- [x] Polyfill for Array.from
-- [x] Polyfill for childNode.remove
-- [ ] Lists not adjusting so end up being displayed partly off-page if field is close to `window` edge
-- [ ] When resetting date, year and month both show at once - This should probably be made a general feature
-
-\*Sadly no polyfill for the general user experience
 
 ## Table of Contents
 - [About](#About)
@@ -45,14 +30,12 @@ A date picker with a nutty tang
     * [Conditions](#Conditions)
 - [Options](#Options)
     * [`start` & `end` (array, function, Date)](#startEnd)
+    * [`initial` (text)](#initial)
     * [`pattern` & `patternSave` (text)](#pattern)
     * [`day`](#day)
     * [`month`](#month)
     * [`disableDates`](#disableDates)
     * [`markToday`](#markToday)
-    * [`primaryColour`](#primaryColour)
-    * [`primaryTextColour`](#primaryTextColour)
-    * [`textOnPrimaryColour`](#textOnPrimaryColour)
     * [`hideScrollbars`](#hideScrollbars)
     * [`activation`](#activation)
     * [`callback`](#callback)
@@ -60,6 +43,7 @@ A date picker with a nutty tang
 - [Methods & Getters](#Methods)
     * [Destroy an instance](#destroy)
     * [Get the current value](#getValue)
+    * [Set the current value](#setValue)
 - [Helper functions](#Helper)
     * [Change date by `n` months](#modMonths)
     * [Count months between dates](#countMonths)
@@ -291,6 +275,18 @@ Where `d` = day, `m` = month and `y` = year
     // note: ranges INCLUDE start and end day
     // note: Months are expected as: 0 = Jan, 1 = Feb, 2 = Mar..., 11 = Dec
 ```
+<a name="initial"/></a>
+### `initial` (text)
+The initial date (visible to the user and programatically set) an input will be set to.
+
+```javascript
+    new dsq('#eg03', {
+        initial: '4/12/2022', // e.g. Monday, 4th December 2022
+    });
+```
+##### Caveats!
+- dateSquirrel doesn't check to see if the initial date is within the range specified (you can use the [`isBetweenDates`](#isBetweenDates) function to check prior to passing to dateSquirrel if you need to)
+- dateSquirrel will try and parse the entered date using it's internal parser: this __only__ accepts a **UK date format** like dd-mm-yyyy, dd mm yyyy, dd/mm/yy
 
 <a name="pattern"/></a>
 ### `pattern` & `patternSave` (text)
@@ -382,36 +378,6 @@ N.B. inclusive of start and end dates
 <a name="markToday"/></a>
 ### `markToday` (boolean)
 If set to `false` the indicator on the list of days showing the current day is disabled. (default `true`)
-
-<a name="primaryColour"/></a>
-### `primaryColour` (text => CSS colour)
-The background highlighting colour for items that are highlighted or selected. Accepts all valid CSS colours as a text string.
-
-```javascript
-new dsq('#eg8', {
-    primaryColour: 'hsla(340, 82%, 52%, 0.95)'
-});
-```
-
-<a name="primaryTextColour"/></a>
-### `primaryTextColour` (text => CSS colour)
-The colour of the text when it is selected on a 'white' background. Accepts all valid CSS colours as a text string.
-
-```javascript
-new dsq('#eg9', {
-    primaryTextColour: 'rgba(160, 12, 62, 1)'
-});
-```
-
-<a name="textOnPrimaryColour"/></a>
-### `textOnPrimaryColour` (text => CSS colour)
-The colour of the text when its background is highlighted or selected (i.e. when on `primaryColour`). Accepts all valid CSS colours as a text string.
-
-```javascript
-new dsq('#eg10', {
-    textOnPrimaryColour: '#fbfffe'
-});
-```
 
 <a name="hideScrollbars"/></a>
 ### `hideScrollbars` (boolean)
@@ -507,9 +473,9 @@ const myDsq = new dsq('#theInputsId', options);
 myDsq.destroy();
 ``` 
 
-| Argument | Description | Type | Example |
-| :---- | :---- | :---- | :---- |
-| none | nemo | keiner | hakuna |
+| Argument | Description | Type | Example | Returns |
+| :---- | :---- | :---- | :---- | :---- |
+| none | nemo | keiner | hakuna | nada |
 
 Removes all listeners and additional HTML added by dateSquirrel and returns the `<input>` field and `<label>` to the state it found them in. Doesn't accept arguments.
 
@@ -525,9 +491,9 @@ myDsq.destroy();
 myDsq.getValue([pattern]);
 ``` 
 
-| Argument | Description | Type | Example |
-| :---- | :---- | :---- | :---- |
-| pattern | The date to modify | text string | `'dx of mmmm, yyyy'` |
+| Argument | Description | Type | Example | Returns |
+| :---- | :---- | :---- | :---- | :---- |
+| pattern | The date to modify | text string | `'dx of mmmm, yyyy'` | date object or string |
 
 dateSquirrel doesn't mess with the standard `element.value` so you can use that to get the human-readable value (same format as `options.pattern`) if you like. However you might want something a bit spicier so you can get the `Date` object with:
 
@@ -535,18 +501,41 @@ dateSquirrel doesn't mess with the standard `element.value` so you can use that 
 const myDsq = new dsq('#theInputsId', options);
 
 console.log(myDsq.getValue());
-
 ``` 
 
 #### But wait; there's more
 
-As dateSquirrel has a date parser, like, [right there](#format), it seemed churlish to not to use it. Pass a [pattern](#formatting) as a parameter (e.g. `'dd-mm-yy'`) and dateSquirrel will format the value before it returns it.
+As dateSquirrel has a date formatter, like, [right there](#format), it seemed churlish to not to use it. Pass a [pattern](#formatting) as a parameter (e.g. `'dd-mm-yy'`) and dateSquirrel will format the value before it returns it.
 
 ```javascript
 const myDsq = new dsq('#theInputsId', options);
 
 console.log(myDsq.getValue('wwww the dx')); // e.g. 'Wednesday the 6th'
+``` 
+<a name="setValue"/></a>
+### Set the current value 
 
+```javascript
+myDsq.setValue(valueAsString);
+``` 
+***This function expects a human readable date (01/02/2003, 1st Feb 2003) - it will do its best to interpret it***
+
+| Argument | Description | Type | Example | Returns |
+| :---- | :---- | :---- | :---- |
+| valueAsString | The date to set | text string | `'1-1-01'` | none |
+
+This function simply sets the visible and programatic values of the input filed and dateSquirrel to the given date. It expects a string but you can use the [inbuilt parser](#format) if you need to convert from an object.
+
+```javascript
+const myDsq = new dsq('#theInputsId', options);
+
+myDsq.setValue('01.01.2001'); // 1st Jan 2001
+
+// or with a Date object
+
+const newDate = new Date(1,0,2001);
+
+myDsq.setValue(dsq.format(newDate,'dd/mm/yyyy')); // 1st Jan 2001
 ``` 
 
 <a name="Helper"/></a>
@@ -723,12 +712,14 @@ console.log(dsq.format(someDay, 'dd/mm/yy')); // 20/01/00
 
 To use the build environment, your computer needs:
 
-- [NodeJS](https://nodejs.org/en/) (v6.xx or greater)
+- [Node.js v6.xx or greater](http://nodejs.org) (On mac, you can install via [homebrew](http://brew.sh/): `brew install node`)
+- [Brunch](http://brunch.io): Install brunch globally `npm install -g brunch` or `sudo npm install -g brunch`
 - [Git](https://git-scm.com/)
-- Gulp version 4 or greater must be installed globally (e.g. `npm install gulpjs/gulp#4.0 -g`) before installing locally (["Why do we need to install gulp globally and locally?" - Stack Overflow](https://stackoverflow.com/questions/22115400/why-do-we-need-to-install-gulp-globally-and-locally))
 
 <a name="Cloning"/></a>
 ### Cloning & installation
+
+This will create a local instance of the repo on your machine using the Master branch
 
 ```bash
 git clone https://github.com/tymothtym/dateSquirrel.git [your_project_name]
@@ -741,22 +732,21 @@ npm install
 <a name="Developing"/></a>
 ### Developing locally
 
-To create uncompressed assets and fire up Gulp, Webpack et al on a local webserver:
+To create uncompressed assets and fire the HTTP server and watch processes via Brunch:
 
 ```bash
-gulp
+npm run start
+
+# or
+
+brunch watch --server --port 4444
 ```
+This will also launch HTTP server with [pushState](https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Manipulating_the_browser_history) at [localhost:4444](http://localhost:4444)
 
-or
-
-```bash
-npm start
-```
-
-A test site site will be created in a folder called `dist`. To view; navigate to this URL (it should pop up in your default browser on it's own when you first run the command):
+The test site is created in a folder called `public` and includes a page of simple tests to see if the build is working correctly. You can see the site by navigating to:
 
 ```
-http://localhost:8042
+http://localhost:4444
 ```
 
 <a name="Building"/></a>
@@ -765,14 +755,22 @@ http://localhost:8042
 To create compressed assets:
 
 ```bash
-gulp build --production
-```
-
-or
-
-```bash
 npm run build
+
+#or
+
+brunch build --production
 ```
 
-These will be put into a the `dist` folder
+These will be put into a the `public/` folder. The dateSquirrel plugin files are all in `public/dist`
 
+### Other notes:
+* `public/` directory is auto-generated and served by HTTP server.  Make your changes in the `app/` directory.
+* Place static files you want to be copied in `app/assets/`. These will be copied (untouched) to `public/`.
+
+### Plugins used:
+* [Brunch](http://brunch.io), [Getting started guide](https://github.com/brunch/brunch-guide#readme)
+* [SASS](http://sass-lang.com/), using the scss syntax and the [7-1 architecture pattern](http://sass-guidelin.es/#architecture) and sticking to [Sass Guidelines](http://sass-guidelin.es) writing conventions.
+* [html-brunch-static](https://github.com/bmatcuk/html-brunch-static) enables [handlebars](http://handlebarsjs.com/) precompiled templates.
+* [Handlebars](http://handlebarsjs.com) Static site templating structure is written in `layouts`, `partials`, and `pages` (part of html-brunch-static).
+* [postcss](https://github.com/postcss/postcss) inc. [autoprefixer](https://github.com/postcss/autoprefixer) which uses [can-i-use](http://caniuse.com/) to vendor-prefix more current (S)CSS to be backward compatible with the last 3 major browser versions.

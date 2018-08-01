@@ -1,64 +1,31 @@
 {
   "name": "dateSquirrel",
-  "version": "0.1.1",
   "description": "A date picker with a nutty tang",
-  "main": "gulpfile.js",
-  "scripts": {
-    "start": "gulp",
-    "build": "gulp build --production"
-  },
-  "author": "Tim O'Donoghue",
-  "license": "MIT",
-  "dependencies": {
-    "clipboard": "^1.7.1",
-    "coffeekraken-gridle": "^3.0.0-rc.4",
-    "prismjs": "^1.9.0"
-  },
-  "devDependencies": {
-    "babel-core": "^6.24.1",
-    "babel-loader": "^7.1.2",
-    "babel-preset-env": "^1.6.1",
-    "babel-register": "^6.7.2",
-    "browser-sync": "^2.23.5",
-    "css-reset-and-normalize-sass": "^0.1.2",
-    "eslint": "^4.15.0",
-    "gulp": "^4.0.0",
-    "gulp-autoprefixer": "^4.1.0",
-    "gulp-babel": "^7.0.0",
-    "gulp-cli": "^2.0.0",
-    "gulp-concat": "^2.5.2",
-    "gulp-extname": "^0.2.0",
-    "gulp-if": "^2.0.0",
-    "gulp-imagemin": "^4.1.0",
-    "gulp-load-plugins": "^1.1.0",
-    "gulp-postcss": "^7.0.1",
-    "gulp-rename": "^1.2.2",
-    "gulp-sass": "^3.1.0",
-    "gulp-sourcemaps": "^2.6.3",
-    "gulp-uglify": "^3.0.0",
-    "gulp-wait": "0.0.2",
-    "js-yaml": "^3.4.6",
-    "panini": "^1.3.0",
-    "postcss-clean": "^1.1.0",
-    "postcss-uncss": "^0.16.1",
-    "rimraf": "^2.4.3",
-    "uncss": "^0.16.1",
-    "vinyl-named": "^1.1.0",
-    "webpack": "^3.10.0",
-    "webpack-stream": "^4.0.0",
-    "yargs": "^10.1.1"
-  },
+  "author": "tymothytym",
+  "version": "0.2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://tymothtym@bitbucket.org/tymothtym/dateSquirrel.git"
+    "url": "https://github.com/tymothytym/dateSquirrel.git"
   },
-  "bugs": {
-    "url": "https://bitbucket.org/tymothtym/dateSquirrel/issues?status=new&status=open"
+  "scripts": {
+    "start": "brunch watch --server --port 4444",
+    "build": "brunch build --production"
   },
-  "babel": {
-    "presets": [
-      "env"
-    ]
+  "dependencies": {
+    "npm": "^6.1.0"
   },
-  "private": true
+  "devDependencies": {
+    "auto-reload-brunch": "2.7.1",
+    "autoprefixer": "9.0.1",
+    "babel-brunch": "~6.1",
+    "babel-preset-env": "^1.7.0",
+    "brunch": "2.10.12",
+    "brunch-static": "1.2.1",
+    "clean-css-brunch": "2.10.0",
+    "html-brunch-static": "1.4.0",
+    "postcss-brunch": "2.1.0",
+    "sass-brunch": "2.10.4",
+    "uglify-js-brunch": "2.10.0"
+  },
+  "license": "MIT"
 }

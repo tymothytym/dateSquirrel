@@ -1,0 +1,77 @@
+//  settings
+//  -----------------------------
+
+// version (dsq)
+$dsq-version: "0.2.0";
+
+// css prefix
+$dsq-prefix: "dsq-";
+
+// core colours
+$dsq-primary: #454545 !default;
+$dsq-on-primary: #fbfffe !default;
+$dsq-white: #ffffff !default;
+$dsq-black: #444444 !default;
+
+// grey colours
+$dsq-grey-0: #666666 !default;
+$dsq-grey-1: lighten($dsq-grey-0, 5%) !default;
+$dsq-grey-2: lighten($dsq-grey-0, 15%) !default;
+$dsq-grey-3: lighten($dsq-grey-0, 35%) !default;
+$dsq-grey-4: lighten($dsq-grey-0, 45%) !default;
+
+// derivative colours
+$dsq-disabled-colour: $dsq-grey-2;
+$dsq-disabled-bgcolour: rgba($dsq-grey-4, 0.36);
+
+// fonts
+// Credit: https://www.smashingmagazine.com/2015/11/using-system-ui-fonts-practical-guide/
+$dsq-base-font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans" !default;
+$dsq-fallback-font-family: "Helvetica Neue", sans-serif !default;
+$dsq-font-family: $dsq-base-font-family, $dsq-fallback-font-family !default;
+
+// font sizes
+$dsq-std-text-size: 17px !default;
+$dsq-lg-text-size: 20px !default;
+$dsq-sm-text-size: 16px !default;
+$dsq-xs-text-size: 13px !default;
+
+// dimensions
+$dsq-list-row-height: 40px; // in JS change > this.rowHeight
+$dsq-list-height: calc((6 * #{$dsq-list-row-height}) + (#{$dsq-list-row-height} / 2) + (#{$dsq-list-row-height}));  //calc((6 * #{$dsq-list-row-height}) + (#{$dsq-list-row-height} / 2)); // in JS change > this.listHeight
+$dsq-list-height-max: calc((6 * #{$dsq-list-row-height}) + (#{$dsq-list-row-height} / 2) + (#{$dsq-list-row-height}));
+$dsq-list-height-min: calc((6 * #{$dsq-list-row-height}) + (#{$dsq-list-row-height} / 2) + (#{$dsq-list-row-height})); //calc((6 * #{$dsq-list-row-height}) + (#{$dsq-list-row-height} / 2) - (#{$dsq-list-row-height}));
+$dsq-month-width: 80px;
+$dsq-max-width: 600px;
+$dsq-min-width: 250px;
+
+// labels
+$dsq-indicator-label-text-month: "Month" !default;
+$dsq-indicator-label-text-year: "Year" !default;
+$dsq-indicator-label-text-today: "Today" !default;
+
+// breakpoint
+$dsq-size-lg: 960px !default;
+
+// z-index
+$dsq-zix-x: -1 !default;
+$dsq-zix-0: 1 !default;
+$dsq-zix-1: 100 !default;
+$dsq-zix-2: 200 !default;
+$dsq-zix-3: 300 !default;
+$dsq-zix-4: 400 !default;
+
+// shadows
+$dsq-box-0: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24) !default;
+$dsq-box-1: 0 0 5px rgba(81, 203, 238, 1);
+$dsq-box-2: inset 0px 3px 15px 3px rgba(51, 51, 51, 0.3), inset 0px 1px 3px 1px rgba(51, 51, 51, 0.4) !default;
+
+// animations
+//$dsq-slide: cubic-bezier(.03, .56, .52, .99);
+$dsq-ease-in-out: cubic-bezier(.76, .1, .46, .92);
+//$dsq-snap-out: cubic-bezier(.35, 0, .25, 1);
+//$dsq-ease: cubic-bezier(.16,-0.05, .99, .74);
+
+// border
+$dsq-selected-border-width: 1px !default;
+$dsq-selected-border-colour: $dsq-grey-4 !default; //rgba(81, 203, 238, 1) !default;

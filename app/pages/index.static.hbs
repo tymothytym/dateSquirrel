@@ -1,0 +1,25 @@
+---
+title: home
+
+_options:
+  layout: app/layouts/main.static.hbs
+  partials:
+    - app/partials/getstarted.static.hbs
+    - app/partials/egs.static.hbs
+---
+
+<section class="splash columns">
+    <header id="home" class="intro column col-12 col-mx-auto">
+        <h1>dateSquirrel&nbsp;<span>a datepicker with a nutty tang</span></h1>
+    </header>
+    <div class="quiz-box example column col-8 col-md-10 col-sm-12 col-mx-auto">
+        <label for="eg0">Default settings, no customisation</label>
+        <input id="eg0" type="date" placeholder="Pick a date">
+    </div>
+</section>
+{{>getstarted}}
+{{>egs}}
+<footer>
+	<p>&copy; tymothytym 2018</p>
+    <a class="navigation-icon" href="#home">Back to top</a>
+</footer>
