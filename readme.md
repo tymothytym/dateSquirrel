@@ -9,10 +9,10 @@ dateSquirrel is a date picker with calendar dates. It's modal-free, dependency-f
 
 | File | Type | Size |
 | :---- | :---- | :---- |
-| dsq.css | style | 11.8 KB |
-| **dsq.css.gz** | **style** | **1.95 KB** |
-| dsq.js | script | 31.6 KB |
-| **dsq.min.js.gz** | **script** | **7.82 KB** |
+| dsq.css | style | 12.5 KB |
+| **dsq.css.gz** | **style** | **2.04 KB** |
+| dsq.js | script | 31.7 KB |
+| **dsq.min.js.gz** | **script** | **7.88 KB** |
 
 ## TODO - This is an alpha-stage project
 - [ ] Add keyboard navigation (tab out & catch return for parsing)
