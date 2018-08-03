@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+    <head>
+    	{{#ifpage 'index'}}
+			<link rel="stylesheet" type="text/css" href="https://unpkg.com/spectre.css/dist/spectre.min.css" />
+	    	<link rel="stylesheet" href="{{root}}test/vendor/prism.css" />
+	    	<link rel="stylesheet" href="{{root}}test/test.css" />
+    	{{/ifpage}}
+	    <link rel="stylesheet" href="{{root}}dateSquirrel/dsq.css" />
+    </head>
+    <body class="dateSquirrelled">
+    	<main id="dsqTests" class="">
+			<noscript><p>Sorry, dateSquirrel requires JavaScript to work</p><a href="/">Back to the home page</a></noscript>
+			<div class="app">
+				<div id="dsqApp">
+        			{{> body}}
+        		</div>
+			</div>
+		</main>
+		{{#ifpage 'index'}}
+			<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+			<script src="{{root}}test/vendor/prism.js"></script>
+		    <script src="{{root}}test/test.js"></script>
+    	{{/ifpage}}
+		<script src="{{root}}dateSquirrel/dsq.js"></script>
+  </body>
+</html>

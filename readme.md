@@ -1,21 +1,18 @@
 # dateSquirrel
 A date picker with a nutty tang
-##### Release: Version: 0.2.0
-##### In master: Version: 0.2.1
+##### Release: Version: 0.3.0
+##### In master: Version: 0.3.1
 ![dateSquirrel Demo](https://media.giphy.com/media/l0HUo04xCeDlNmVeU/giphy.gif)
 
 | File | Type | Size |
 | :---- | :---- | :---- |
-| dsq.css | style | 14.1 KB |
-| dsq.min.css | style | 10.1 KB |
-| **dsq.min.css.gz** | **style** | **1.76 KB** |
-| dsq.js | functions | 81.0 KB |
-| dsq.min.js | functions | 32.8 KB |
-| **dsq.min.js.gz** | **functions** | **7.99 KB** |
+| dsq.css | style | 11.8 KB |
+| **dsq.css.gz** | **style** | **1.95 KB** |
+| dsq.js | script | 31.6 KB |
+| **dsq.min.js.gz** | **script** | **7.82 KB** |
 
 ## TODO - This is an alpha-stage project
-- [ ] Uncrappify open and close animation
-- [ ] Fix keyboard navigation (tab out)
+- [ ] Add keyboard navigation (tab out & catch return for parsing)
 - [ ] Tidy up / correct readme
 - [ ] Optimise
 
@@ -39,6 +36,8 @@ A date picker with a nutty tang
     * [`hideScrollbars`](#hideScrollbars)
     * [`activation`](#activation)
     * [`callback`](#callback)
+    * [`parse`, `parseDelay` & `parseEvent`](#parse)
+    * [`overlay`](#overlay)
 - [Date output formatting](#formatting)
 - [Methods & Getters](#Methods)
     * [Destroy an instance](#destroy)
@@ -116,8 +115,11 @@ dateSquirrel supports recent(ish) browsers but needs access to the newer (but no
 <a name="Deployment"/></a>
 ### Deployment
 
-#### ES5
-As dateSquirrel has no dependencies and setup is pretty simple. 
+#### Add the library
+
+dateSquirrel has no dependencies and you can initialise it in a number of flavours to suit your build.
+
+##### Via HTML tag
 
 Include the script tag in the `<body>` (or `<head>` tag) and add the css to the `<head>` tag then add your date inputs to the `<body>`.
 
@@ -127,19 +129,46 @@ Include the script tag in the `<body>` (or `<head>` tag) and add the css to the 
         <link rel="stylesheet" href="path/to/dsq.min.css">
     </head>
 	<!-- page HTML -->
-	<label for="#myDateInput">My label
-        <input id="myDateInput" type="date" min="2017-04-01" max="2017-04-30" placeholder="Pick a date">
-    </label>
+	<label for="#myDateInput">My label</label>
+    <input id="myDateInput" type="date" min="2017-04-01" max="2017-04-30" placeholder="Pick a date">
 	<!-- more page HTML -->
-	<script>path/to/dsq.min.js</script>
+	<script>path/to/dsq.js</script>
 	<!-- other scripts that are dependent on dsq -->
+	<script>
+		new dsq('#myDateInput');
+	</script>
 </body>
 ```
 
-Initialise dateSquirrel in your JavaScript: 
+##### ES2015 (formerly known as ES6) module import
 
 ```javascript
+import dsq from './path/to/dsq.js';
 new dsq('#myDateInput');
+```
+
+##### CommonJS module require
+
+```javascript
+var dsq = require('./path/to/dsq.min.js');
+new dsq('#myDateInput');
+```
+
+##### AMD module require
+
+```javascript
+require(['dsq'], function (dsq) {
+  // ...
+  new dsq('#myDateInput');
+});
+```
+
+#### Initialising dateSquirrel in your JavaScript: 
+
+```javascript
+new dsq('#myDateInput'); // as a static entity
+
+var myDateSquirrel = new dsq('#myDateInput'); // as a manipulable object
 ```
 
 N.B. It's recommended that you wrap the initialisation code in a listener that waits for the DOM to load before triggering if your input(s) are dynamically created
@@ -148,20 +177,6 @@ N.B. It's recommended that you wrap the initialisation code in a listener that w
 document.addEventListener("DOMContentLoaded", function() { // Listen for DOM to be ready
 	new dsq('#myDateInput'); // create new dateSquirrel instance
 });
-```
-
-#### ES6
-
-```javascript
-import dsq from './path/to/dsq.min.js';
-new dsq('#myDateInput');
-```
-
-#### CommonJS (untested!)
-
-```javascript
-var dsq = require('./path/to/dsq.min.js');
-new dsq('#myDateInput');
 ```
 
 Don't forget to [set your options](#Options) if you don't like the defaults.
@@ -184,32 +199,36 @@ new dsq('#myDateInput', {
 ## Options
 
 ```javascript
-defaults = {
+const defaults = { // dsq defaults
     start: new Date(), // first selectable day
     end: { // last selectable day
         d: new Date().getDate(),
         m: new Date().getMonth(),
         y: new Date().getFullYear() + 10
     },
+    initial: false, // set the value the field should be set to on initialisation (before user input)
     pattern: 'dx mmm yyyy', // visual output format (displayed in the input) 
     patternSave: 'yyyy,mm,dd', // data-date value output format 
     day: true, // if true then a day is selectable
     month: true, // if true then a month is selectable
     disableDates: false, // a list of Date objects or ranges [from, to] that define days to exclude as selectable
     markToday: true, // if true then the "today" indicator is shown
-    primaryColour: '#1976d2', // sets main hover and CTA colour
-    primaryTextColour: '#002171', // sets link and selected text colour
-    textOnPrimaryColour: '#e1f5fe', // sets text colour when over CTA colour
-    hideScrollbars: false, // if true then a scrollbars on year and month list are hidden (visual effect only)
-    activation: function() { // if the function evaluates to true then dateSquirrel activates
-        if (window.screen.width > 319) {
+    classPrefix: 'dsq-', // prefix JS-added classes - if changed scss variable "$dsq-prefix" must be updated too
+    hideScrollbars: false, // if true then a scrollbars on year and month list are hidden (visual effect)
+    activation: function() { // if the function evaluates to true when DOM loads then dateSquirrel activates
+        if (window.screen.width > 250) {
             return true;
         } else {
             return false;
         }
     },
     callback: function() {}, // optional callback fired on date completion
-}
+    parse: false, // if true dateSquirrel will (after [parseDelay]ms) parse, format and rewrite a user given date
+    parseDelay: 100, // the delay in ms before dateSquirrel will parse, format and rewrite a user given date
+    parseEvent: 'change', // the type of event dateSquirrel will listen for before parsing >> https://developer.mozilla.org/en-US/docs/Web/Events
+    overlay: false, // if true dateSquirrel will position the generated submenus absolutely
+    monthList: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] // The list of months
+};
 ```
 
 <a name="startEnd"/></a>
@@ -407,7 +426,7 @@ new dsq('#eg11', {
 });
 ```
 
-N.B. This function only runs on initial activation, not on resize.
+N.B. This function only runs on initial activation, not on window resize.
 
 <a name="callback"/></a>
 ### `callback` (function)
@@ -457,10 +476,33 @@ new dsq('#eg12', {
 
 **N.B. The dateSquirrel parser returns dates in human-readable formats. e.g. January = 1 or 01**
 
-<a name="Methods"/></a>
-## Methods & Getters
+<a name="parse"/></a>
+### `parse`, `parseDelay` & `parseEvent` (boolean, number, text)
 
-dateSquirrel has a few ways you can use to modify an existing instance or get things from it. All methods assume you have attached the instance to a JavaScript variable like so:
+dateSquirrel can attempt to parse a date into your [requested format](#pattern) on an input event (`parseEvent` - e.g. 'change' or 'blur'). You can also optionally specify a delay (`parseDelay`) in milliseconds (1000ms === 1s) before parsing happens. If this option is set to `true` dateSquirrel will also try and parse the input immediately when a user presses the return key, regardless of any delay set.
+
+```javascript
+new dsq('#eg18', {
+	parse: true,
+	parseDelay: 200, // 200ms === 0.2s
+	parseEvent: 'change' // when a user commits a change
+});
+```
+
+<a name="overlay"/></a>
+### `overlay` (boolean)
+
+dateSquirrel likes to keep all its submenus in the page to aid accessibility and because it's neat. If you'd prefer to have floaty stuff doing it's thing, then you can change the submenus to absolutely positioned overlays by setting `overlay: true`
+
+```javascript
+new dsq('#eg19', {
+	overlay: true
+});
+```
+<a name="Methods"/></a>
+## Methods, setters & Getters
+
+dateSquirrel has a few ways you can use to modify an existing instance or get things from it. **All methods assume you have attached the instance to a JavaScript variable like so**:
 
 ```javascript
 const myDsq = new dsq('#theInputsId', options);
@@ -469,15 +511,26 @@ const myDsq = new dsq('#theInputsId', options);
 <a name="destroy"/></a>
 ### Destroy an instance
 
+#### Use
+
 ```javascript
 myDsq.destroy();
 ``` 
+#### Returns
 
-| Argument | Description | Type | Example | Returns |
-| :---- | :---- | :---- | :---- | :---- |
-| none | nemo | keiner | hakuna | nada |
+Sense of foreboding
+
+#### Arguments
+
+| Argument | Description | Type | Example |
+| :---- | :---- | :---- | :---- |
+| none | nemo | keiner | hakuna |
+
+#### Description
 
 Removes all listeners and additional HTML added by dateSquirrel and returns the `<input>` field and `<label>` to the state it found them in. Doesn't accept arguments.
+
+#### Example
 
 ```javascript
 const myDsq = new dsq('#theInputsId', options);
@@ -487,15 +540,26 @@ myDsq.destroy();
 <a name="getValue"/></a>
 ### Get the current value 
 
+#### Use
+
 ```javascript
 myDsq.getValue([pattern]);
 ``` 
+#### Returns
 
-| Argument | Description | Type | Example | Returns |
+Date object or string
+
+#### Arguments
+
+| Argument | Description | Type | Example |
 | :---- | :---- | :---- | :---- | :---- |
-| pattern | The date to modify | text string | `'dx of mmmm, yyyy'` | date object or string |
+| pattern | The date to modify | text string | `'dx of mmmm, yyyy'` |
+
+#### Description
 
 dateSquirrel doesn't mess with the standard `element.value` so you can use that to get the human-readable value (same format as `options.pattern`) if you like. However you might want something a bit spicier so you can get the `Date` object with:
+
+#### Example
 
 ```javascript
 const myDsq = new dsq('#theInputsId', options);
@@ -503,9 +567,9 @@ const myDsq = new dsq('#theInputsId', options);
 console.log(myDsq.getValue());
 ``` 
 
-#### But wait; there's more
+##### But wait; there's more
 
-As dateSquirrel has a date formatter, like, [right there](#format), it seemed churlish to not to use it. Pass a [pattern](#formatting) as a parameter (e.g. `'dd-mm-yy'`) and dateSquirrel will format the value before it returns it.
+As dateSquirrel has a date formatter, like, [right there](#format), it seemed churlish to not to use it. Pass a [pattern](#formatting) as a parameter (e.g. `'dd-mm-yy'`) and dateSquirrel will format the value and return it as a string.
 
 ```javascript
 const myDsq = new dsq('#theInputsId', options);
@@ -515,21 +579,33 @@ console.log(myDsq.getValue('wwww the dx')); // e.g. 'Wednesday the 6th'
 <a name="setValue"/></a>
 ### Set the current value 
 
-```javascript
-myDsq.setValue(valueAsString);
-``` 
-***This function expects a human readable date (01/02/2003, 1st Feb 2003) - it will do its best to interpret it***
+**This function expects a human readable date in UK format (01/02/2003, 1st Feb 2003, 01.02.03) by default**
 
-| Argument | Description | Type | Example | Returns |
+```javascript
+myDsq.setValue(valueAsString [, zoneOrder]);
+``` 
+
+#### Returns
+
+`true` if successful & `false` if unsuccessful
+
+#### Arguments
+
+| Argument | Description | Type | Example |
 | :---- | :---- | :---- | :---- |
-| valueAsString | The date to set | text string | `'1-1-01'` | none |
+| valueAsString | The date to set | text string | `'1-1-01'` |
+| zoneOrder | day, month, year order expected | 3 char text string | `'dmy'` |
+
+#### Description
 
 This function simply sets the visible and programatic values of the input filed and dateSquirrel to the given date. It expects a string but you can use the [inbuilt parser](#format) if you need to convert from an object.
 
-```javascript
-const myDsq = new dsq('#theInputsId', options);
+#### Examples
 
-myDsq.setValue('01.01.2001'); // 1st Jan 2001
+```javascript
+const myDsq = new dsq('#theInputsId');
+
+myDsq.setValue('31.01.2001'); // 31st Jan 2001
 
 // or with a Date object
 
@@ -537,7 +613,15 @@ const newDate = new Date(1,0,2001);
 
 myDsq.setValue(dsq.format(newDate,'dd/mm/yyyy')); // 1st Jan 2001
 ``` 
+If you're expecting the user to enter a date in another format then you can alter the parsers behaviour based on the expected syntax. Basically if you're expecting an American style date (June 4th 2009, 6/4/09, 06 04 2009, etc.) you would set `zoneOrder` to `'mdy'` or "month" then "day" then "year". If you only cater for people in the ISO compliance department then maybe you'd opt for `'ymd'` (year > month > day). You must include `y`, `m` & `d` with `zoneOrder`. You will probably also want to set the output [`pattern`](#pattern) when changing `zoneOrder` as dateSquirrel will otherwise return the standard (UK) `pattern`.
 
+```javascript
+const myDsq = new dsq('#theInputsId', {
+		pattern: mmm dx yyyy
+	});
+
+myDsq.setValue('01/31/2001', 'mdy'); // Jan 31st 2001
+``` 
 <a name="Helper"/></a>
 ## Helper functions
 
@@ -712,14 +796,12 @@ console.log(dsq.format(someDay, 'dd/mm/yy')); // 20/01/00
 
 To use the build environment, your computer needs:
 
-- [Node.js v6.xx or greater](http://nodejs.org) (On mac, you can install via [homebrew](http://brew.sh/): `brew install node`)
-- [Brunch](http://brunch.io): Install brunch globally `npm install -g brunch` or `sudo npm install -g brunch`
+- [NodeJS](https://nodejs.org/en/) (v6.xx or greater)
 - [Git](https://git-scm.com/)
+- Gulp version 4 or greater must be installed globally (e.g. `npm install gulpjs/gulp#4.0 -g`) before installing locally (["Why do we need to install gulp globally and locally?" - Stack Overflow](https://stackoverflow.com/questions/22115400/why-do-we-need-to-install-gulp-globally-and-locally))
 
 <a name="Cloning"/></a>
 ### Cloning & installation
-
-This will create a local instance of the repo on your machine using the Master branch
 
 ```bash
 git clone https://github.com/tymothtym/dateSquirrel.git [your_project_name]
@@ -732,21 +814,22 @@ npm install
 <a name="Developing"/></a>
 ### Developing locally
 
-To create uncompressed assets and fire the HTTP server and watch processes via Brunch:
+To create uncompressed assets and fire up Gulp, Webpack et al on a local webserver:
+
+```bash
+gulp
+```
+
+or
 
 ```bash
 npm run start
-
-# or
-
-brunch watch --server --port 4444
 ```
-This will also launch HTTP server with [pushState](https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Manipulating_the_browser_history) at [localhost:4444](http://localhost:4444)
 
-The test site is created in a folder called `public` and includes a page of simple tests to see if the build is working correctly. You can see the site by navigating to:
+A test site will be created in a folder called `dist`. To view; [navigate to this URL](http://localhost:8042) (it should pop up in your default browser on it's own when you first run the command):
 
 ```
-http://localhost:4444
+http://localhost:8042
 ```
 
 <a name="Building"/></a>
@@ -755,22 +838,14 @@ http://localhost:4444
 To create compressed assets:
 
 ```bash
-npm run build
-
-#or
-
-brunch build --production
+gulp build --production
 ```
 
-These will be put into a the `public/` folder. The dateSquirrel plugin files are all in `public/dist`
+or
 
-### Other notes:
-* `public/` directory is auto-generated and served by HTTP server.  Make your changes in the `app/` directory.
-* Place static files you want to be copied in `app/assets/`. These will be copied (untouched) to `public/`.
+```bash
+npm run build
+```
 
-### Plugins used:
-* [Brunch](http://brunch.io), [Getting started guide](https://github.com/brunch/brunch-guide#readme)
-* [SASS](http://sass-lang.com/), using the scss syntax and the [7-1 architecture pattern](http://sass-guidelin.es/#architecture) and sticking to [Sass Guidelines](http://sass-guidelin.es) writing conventions.
-* [html-brunch-static](https://github.com/bmatcuk/html-brunch-static) enables [handlebars](http://handlebarsjs.com/) precompiled templates.
-* [Handlebars](http://handlebarsjs.com) Static site templating structure is written in `layouts`, `partials`, and `pages` (part of html-brunch-static).
-* [postcss](https://github.com/postcss/postcss) inc. [autoprefixer](https://github.com/postcss/autoprefixer) which uses [can-i-use](http://caniuse.com/) to vendor-prefix more current (S)CSS to be backward compatible with the last 3 major browser versions.
+These will be put into a the `dist` folder
+

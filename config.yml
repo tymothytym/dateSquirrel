@@ -1,0 +1,45 @@
+# Project's server will run on http://localhost:PORT
+PORT: 8042
+
+# Autoprefixer will make sure CSS works with these browsers
+COMPATIBILITY:
+  - "last 2 versions"
+  - "ie >= 11"
+  - "ios >= 8"
+
+# UnCSS settings
+UNCSS_OPTIONS:
+  html:
+    - "src/**/*.html"
+  ignore:
+    - !!js/regexp ^\.is-.*
+    - !!js/regexp ^\.dsq-.*
+    - !!js/regexp ^\.dsq.*
+
+# CleanCSS settings
+CLEAN_OPTIONS:
+  compatibility: 
+    - 'ie11'
+
+# Gulp will reference these paths when it copies files
+PATHS:
+  # Path to dist folder
+  dist: "dist"
+  # Paths to static assets that aren't images, CSS, fonts or JavaScript
+  assets:
+    - "src/assets/**/*"
+    #- "!src/assets/{img,scss,js,fonts}/**/*"
+  # Paths to static vendor assets that aren't images, CSS, fonts
+  vendor:
+    - "src/assets/vendor/**/*"
+    - "!src/assets/vendor/{img,scss,fonts}/**/*"
+  # Paths to Sass libraries, which can then be loaded with @import
+  sass:
+  #  - "node_modules/gridle/sass/gridle"
+  #  - "node_modules/css-reset-and-normalize-sass/scss"
+  # Paths to JavaScript entry points for webpack to bundle modules
+  entries:
+    - "src/assets/js/app.js"
+  #  - "src/assets/js/lib/*.js"
+  plugin:
+    - "src/plugin/dsq.js"

@@ -23,3 +23,11 @@ Initial release.
 * Replace animations
 * Update readme
 * add parse date function
+
+## Version 0.3.0 (August 03, 2018)
+
+* Revert to Webpack & Gulp
+* Add overlay option
+* Add parse options
+* Add additional SCSS styling options
+* Add ES2015, AMD, CommonJS & script tag initialisation support
