@@ -100,8 +100,6 @@ const today = new Date(),
     // 3 days hence at 00:00:00
 ```
 
-![Difference between Date.prototype and dateSquirrel](https://s14.postimg.org/erp1c8gxt/dsq_Timeline2.jpg)
-
 <a name="Browser"/></a>
 ### Browser support
 
