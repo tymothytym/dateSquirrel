@@ -2,7 +2,10 @@
 A date picker with a nutty tang
 ##### Release: Version: 0.3.0
 ##### In master: Version: 0.3.1
-![dateSquirrel Demo](https://media.giphy.com/media/l0HUo04xCeDlNmVeU/giphy.gif)
+
+dateSquirrel is a date picker with calendar dates. It's modal-free, dependency-free, library-free and free-free. The aim is to put the date picking into a single field and make it so you can pick any date in three clicks. It's not trying to be better than other date pickers, just a bit different. dateSquirrel is for wide date possibilities (like date of birth) that are a pain to pick when you have to navigate through several decades worth of months to get to the date you want.
+
+## Build size 
 
 | File | Type | Size |
 | :---- | :---- | :---- |
@@ -17,7 +20,6 @@ A date picker with a nutty tang
 - [ ] Optimise
 
 ## Table of Contents
-- [About](#About)
 - [Before you get started](#warning)
     * [Months start at 0](#monthsStart)
     * [dateSquirrel sees days as indivisible](#dsqWhut)
@@ -58,10 +60,6 @@ A date picker with a nutty tang
     * [Developing locally](#Developing)
     * [Cloning & installation](#Cloning)
     * [Building for production](#Building)
-
-<a name="About"/></a>
-## About
-dateSquirrel is a date picker with calendar dates. It's modal-free, dependency-free, library-free and free-free. The aim is to put the date picking into a single field and make it so you can pick any date in three clicks. It's not trying to be better than other date pickers, just a bit different. dateSquirrel is for wide date possibilities (like date of birth) that are a pain to pick when you have to navigate through several decades worth of months to get to the date you want.
 
 <a name="warning"/></a>
 ## Before you get started
