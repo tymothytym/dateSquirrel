@@ -31,3 +31,6 @@ Initial release.
 * Add parse options
 * Add additional SCSS styling options
 * Add ES2015, AMD, CommonJS & script tag initialisation support
+* Add basic scrollbar formatting
+
+## Version 0.3.1 (August xx, 2018)

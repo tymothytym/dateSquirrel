@@ -14,7 +14,7 @@ dateSquirrel is a date picker with calendar dates. It's modal-free, dependency-f
 | dsq.js | script | 31.7 KB |
 | **dsq.min.js.gz** | **script** | **7.88 KB** |
 
-## TODO - This is an alpha-stage project
+## To do
 - [ ] Add keyboard navigation (tab out & catch return for parsing)
 - [ ] Tidy up / correct readme
 - [ ] Optimise
@@ -41,7 +41,7 @@ dateSquirrel is a date picker with calendar dates. It's modal-free, dependency-f
     * [`parse`, `parseDelay` & `parseEvent`](#parse)
     * [`overlay`](#overlay)
 - [Date output formatting](#formatting)
-- [Methods & Getters](#Methods)
+- [Methods, setters & getters](#Methods)
     * [Destroy an instance](#destroy)
     * [Get the current value](#getValue)
     * [Set the current value](#setValue)
@@ -496,7 +496,7 @@ new dsq('#eg19', {
 });
 ```
 <a name="Methods"/></a>
-## Methods, setters & Getters
+## Methods, setters & getters
 
 dateSquirrel has a few ways you can use to modify an existing instance or get things from it. **All methods assume you have attached the instance to a JavaScript variable like so**:
 
@@ -548,7 +548,7 @@ Date object or string
 #### Arguments
 
 | Argument | Description | Type | Example |
-| :---- | :---- | :---- | :---- | :---- |
+| :---- | :---- | :---- | :---- |
 | pattern | The date to modify | text string | `'dx of mmmm, yyyy'` |
 
 #### Description

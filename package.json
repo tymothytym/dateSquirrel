@@ -1,6 +1,6 @@
 {
   "name": "dateSquirrel",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A date picker with a nutty tang",
   "main": "dist/dsq.js",
   "scripts": {
