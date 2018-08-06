@@ -47,6 +47,13 @@
     font-family: $dsq-base-font-family;
     box-sizing: border-box;
     text-rendering: optimizeLegibility;
+    transition: border 200ms $dsq-ease-in-out, box-shadow 200ms $dsq-ease-in-out;
+    border-top: $dsq-selected-border-width solid $dsq-grey-3;
+    border-left: $dsq-selected-border-width solid $dsq-grey-3;
+    border-right: $dsq-selected-border-width solid $dsq-grey-3;
+    border-bottom: $dsq-selected-border-width solid $dsq-grey-3;
+    border-bottom-right-radius: 2px;
+    border-bottom-left-radius: 2px;
     * {
         box-sizing: border-box;
     }
@@ -55,30 +62,22 @@
     }
     >input {
         width: 100%;
-        border-top: $dsq-selected-border-width solid $dsq-grey-3;
-        border-left: $dsq-selected-border-width solid $dsq-grey-3;
-        border-right: $dsq-selected-border-width solid $dsq-grey-3;
-        border-bottom: $dsq-selected-border-width solid $dsq-grey-3;
-        transition: border 200ms $dsq-ease-in-out; //, box-shadow 200ms $dsq-ease-in-out;
     }
     >.#{$dsq-prefix}lists {
-        border-top: none;
-        border-left: $dsq-selected-border-width solid transparent;
-        border-right: $dsq-selected-border-width solid transparent;
-        border-bottom: none;
+        //border-top: none;
+        //border-left: $dsq-selected-border-width solid transparent;
+        //border-right: $dsq-selected-border-width solid transparent;
+        //border-bottom: none;
         width: 100%;
         position: relative;
         background-color: $dsq-white;
         overflow: hidden;
         //max-height: $dsq-list-height;
-        border-bottom-right-radius: 2px;
-        border-bottom-left-radius: 2px;
         z-index: $dsq-zix-0; 
         // animation
         transition: max-height 175ms $dsq-ease-in-out;
         max-height: 0;
-       	margin-top: -1px;
-        //box-shadow: $dsq-box-2;
+       	//margin-top: -1px;
         //border-bottom: 1px solid $dsq-grey-4;
         //border-left: 1px solid $dsq-grey-4;
         //border-right: 1px solid $dsq-grey-4;
@@ -90,11 +89,10 @@
 	    	position: absolute;
     		top: auto;
     		left: auto;
-    		&.#{$dsq-prefix}active {
-		        border-left: $dsq-selected-border-width solid $dsq-selected-border-colour;
-		        border-right: $dsq-selected-border-width solid $dsq-selected-border-colour;
-		        border-bottom: $dsq-selected-border-width solid $dsq-selected-border-colour;
-		    }
+	        border-left: $dsq-selected-border-width solid transparent;
+	        border-right: $dsq-selected-border-width solid transparent;
+	        border-bottom: none;
+	        border-top: none;
 	    }
 	    a.#{$dsq-prefix}noh:hover {
 	    	text-decoration: none;
@@ -323,23 +321,25 @@
         }
     }
     &.#{$dsq-prefix}active {
+        box-shadow: $dsq-box-1;
+        border-top: $dsq-selected-border-width solid $dsq-selected-border-colour;
+        border-left: $dsq-selected-border-width solid $dsq-selected-border-colour;
+        border-right: $dsq-selected-border-width solid $dsq-selected-border-colour;
+        border-bottom: $dsq-selected-border-width solid $dsq-selected-border-colour;
+		.#{$dsq-prefix}overlay {
+	        border-left: $dsq-selected-border-width solid $dsq-selected-border-colour;
+	        border-right: $dsq-selected-border-width solid $dsq-selected-border-colour;
+	        border-bottom: $dsq-selected-border-width solid $dsq-selected-border-colour;
+	    }
 	    >input {
 	    	&:not(:focus) {
 	    		background-color: $dsq-input-highlight;
     			//box-shadow: $dsq-box-1;
 	    	}
-	        border-top: $dsq-selected-border-width solid $dsq-selected-border-colour;
-	        border-left: $dsq-selected-border-width solid $dsq-selected-border-colour;
-	        border-right: $dsq-selected-border-width solid $dsq-selected-border-colour;
-	        border-bottom: $dsq-selected-border-width solid $dsq-grey-4;
 	    }
         .#{$dsq-prefix}lists {
         	//transition: margin 100ms $dsq-ease-in-out;
     		//box-shadow: $dsq-box-1;
-	        border-top: none;
-	        border-left: $dsq-selected-border-width solid $dsq-selected-border-colour;
-	        border-right: $dsq-selected-border-width solid $dsq-selected-border-colour;
-	        border-bottom: $dsq-selected-border-width solid $dsq-selected-border-colour;
             //box-shadow: $dsq-box-2;
             // animation
             max-height: $dsq-list-height;

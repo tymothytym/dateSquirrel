@@ -266,9 +266,12 @@ window.onload = function() {
         boxB = new dsq('#eg17');
 
     new dsq('#eg18', {
-    	parse: true,
-    	parseDelay: 200,
-    	parseEvent: 'change'
+    	parse: {
+	    	active: true, // if true dateSquirrel will (after [parseDelay]ms) parse, format and rewrite a user given date
+	    	delay: 100, // the delay in ms before dateSquirrel will parse, format and rewrite a user given date
+	    	etype: 'change', // the type of event dateSquirrel will listen for before parsing >> https://developer.mozilla.org/en-US/docs/Web/Events
+	    	rule: 'dmy' // the expected order a user will input a date (default = day > month > year)
+	    },
     });
     //window.uberTest = 
     new dsq('#eg19', {

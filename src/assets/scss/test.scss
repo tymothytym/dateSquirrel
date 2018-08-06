@@ -199,12 +199,14 @@ legend {
     margin: 0 auto;
     label {
     	font-size: 18px;
+    	display: block; 
+    	margin-bottom: 4px;
     }
     input {
         text-align: center;
         border-radius: 2px;
         //box-shadow: inset 0 1px 2px rgba(0,0,0,.39), 0 -1px 1px #{$demo-white}, 0 1px 0 #{$demo-white};
-        margin-top: 2px;
+        //margin-top: 2px;
     }
     .dsq {
         margin-top: 1em;

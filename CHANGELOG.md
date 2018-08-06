@@ -34,3 +34,7 @@ Initial release.
 * Add basic scrollbar formatting
 
 ## Version 0.3.1 (August xx, 2018)
+
+* Remove all Label manipulation
+* Change parse options structure to accommodate standard callback
+* Make parsing default

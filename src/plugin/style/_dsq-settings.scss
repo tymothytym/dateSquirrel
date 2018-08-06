@@ -52,11 +52,11 @@ $dsq-list-row-height: 40px; // in JS change > this.rowHeight
 $dsq-list-height: calc((6 * #{$dsq-list-row-height}) + (#{$dsq-list-row-height} / 2) + (#{$dsq-list-row-height}));  //calc((6 * #{$dsq-list-row-height}) + (#{$dsq-list-row-height} / 2)); // in JS change > this.listHeight
 //$dsq-list-height-max: calc((6 * #{$dsq-list-row-height}) + (#{$dsq-list-row-height} / 2) + (#{$dsq-list-row-height}));
 //$dsq-list-height-min: calc((6 * #{$dsq-list-row-height}) + (#{$dsq-list-row-height} / 2) + (#{$dsq-list-row-height})); //calc((6 * #{$dsq-list-row-height}) + (#{$dsq-list-row-height} / 2) - (#{$dsq-list-row-height}));
-$dsq-month-width: 80px;
-$dsq-max-width: 600px;
-$dsq-min-width: 250px;
-$dsq-selected-border-width: 2px !default;
-$dsq-scrollbar-width: 6px;
+$dsq-month-width: 80px !default;
+$dsq-max-width: 600px !default;
+$dsq-min-width: 250px !default;
+$dsq-selected-border-width: 1px !default;
+$dsq-scrollbar-width: 6px !default;
 
 // labels
 $dsq-indicator-label-text-month: "Month" !default;
@@ -76,12 +76,12 @@ $dsq-zix-4: 400 !default;
 
 // shadows
 $dsq-box-0: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24) !default;
-$dsq-box-1: 0 0 5px rgba(81, 203, 238, 1);
+$dsq-box-1: 0 0 7px $dsq-selected !default;
 $dsq-box-2: inset 0px 3px 15px 3px rgba(51, 51, 51, 0.3), inset 0px 1px 3px 1px rgba(51, 51, 51, 0.4) !default;
 
 // animations
 //$dsq-slide: cubic-bezier(.03, .56, .52, .99);
-$dsq-ease-in-out: cubic-bezier(.76, .1, .46, .92);
+$dsq-ease-in-out: cubic-bezier(.76, .1, .46, .92) !default;
 //$dsq-snap-out: cubic-bezier(.35, 0, .25, 1);
 //$dsq-ease: cubic-bezier(.16,-0.05, .99, .74);
 

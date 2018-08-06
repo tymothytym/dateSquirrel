@@ -5,17 +5,9 @@ A date picker with a nutty tang
 
 dateSquirrel is a date picker with calendar dates. It's modal-free, dependency-free, library-free and free-free. The aim is to put the date picking into a single field and make it so you can pick any date in three clicks. It's not trying to be better than other date pickers, just a bit different. dateSquirrel is for wide date possibilities (like date of birth) that are a pain to pick when you have to navigate through several decades worth of months to get to the date you want.
 
-## Build size 
-
-| File | Type | Size |
-| :---- | :---- | :---- |
-| dsq.css | style | 12.5 KB |
-| **dsq.css.gz** | **style** | **2.04 KB** |
-| dsq.js | script | 31.7 KB |
-| **dsq.min.js.gz** | **script** | **7.88 KB** |
-
 ## To do
 - [ ] Add keyboard navigation (tab out & catch return for parsing)
+- [ ] Add styling options to readme
 - [ ] Tidy up / correct readme
 - [ ] Optimise
 
@@ -26,7 +18,7 @@ dateSquirrel is a date picker with calendar dates. It's modal-free, dependency-f
     * [Browser support](#Browser)
 - [Use](#Use)
     * [Deployment](#Deployment)
-    * [Conditions](#Conditions)
+    * [Usage in your build FYIs](#FYIs)
 - [Options](#Options)
     * [`start` & `end` (array, function, Date)](#startEnd)
     * [`initial` (text)](#initial)
@@ -183,11 +175,9 @@ new dsq('#myDateInput', {
 });
 ```
 
-<a name="Conditions"/></a>
-### Conditions for use
+<a name="FYIs"/></a>
+### Usage in your build FYIs
 
-- Each instance of dateSquirrel must have a unique ID (on the `<input>`)
-- A `<label>` must wrap the `<input>`
 - Styling for fallbacks or [non-activating](#Activation) scenarios is not included, so you have to add your own (S)CSS for that
 - Resetting and / or normalisation of your page styles is assumed (you can copy the reset used for the demo [here](#reset-file) if you don't have one)
 
@@ -204,24 +194,24 @@ const defaults = { // dsq defaults
     },
     initial: false, // set the value the field should be set to on initialisation (before user input)
     pattern: 'dx mmm yyyy', // visual output format (displayed in the input) 
-    patternSave: 'yyyy,mm,dd', // data-date value output format 
+    patternSave: 'yyyy-mm-dd', // data-date value output format 
     day: true, // if true then a day is selectable
     month: true, // if true then a month is selectable
     disableDates: false, // a list of Date objects or ranges [from, to] that define days to exclude as selectable
     markToday: true, // if true then the "today" indicator is shown
     classPrefix: 'dsq-', // prefix JS-added classes - if changed scss variable "$dsq-prefix" must be updated too
     hideScrollbars: false, // if true then a scrollbars on year and month list are hidden (visual effect)
-    activation: function() { // if the function evaluates to true when DOM loads then dateSquirrel activates
-        if (window.screen.width > 250) {
-            return true;
-        } else {
-            return false;
-        }
-    },
+    activation: function() {return true}, // if the function evaluates to true when DOM loads then dateSquirrel activates
     callback: function() {}, // optional callback fired on date completion
-    parse: false, // if true dateSquirrel will (after [parseDelay]ms) parse, format and rewrite a user given date
-    parseDelay: 100, // the delay in ms before dateSquirrel will parse, format and rewrite a user given date
-    parseEvent: 'change', // the type of event dateSquirrel will listen for before parsing >> https://developer.mozilla.org/en-US/docs/Web/Events
+        //console.log('Date set: ', this.date);
+        //console.log('The input element: ', this.input);
+        //console.log('The dateSquirrel wrapper: ', this.wrapper);
+    parse: {
+    	active: true, // if true dateSquirrel will (after [parseDelay]ms) parse, format and rewrite a user given date
+    	delay: 100, // the delay in ms before dateSquirrel will parse, format and rewrite a user given date
+    	etype: 'change', // the type of event dateSquirrel will listen for before parsing >> https://developer.mozilla.org/en-US/docs/Web/Events
+    	rule: 'dmy' // the expected order a user will input a date (default = day > month > year)
+    },
     overlay: false, // if true dateSquirrel will position the generated submenus absolutely
     monthList: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] // The list of months
 };
@@ -292,7 +282,7 @@ Where `d` = day, `m` = month and `y` = year
 ```
 <a name="initial"/></a>
 ### `initial` (text)
-The initial date (visible to the user and programatically set) an input will be set to.
+The initial date (visible to the user and programatically set) an input will be set to. dateSquirrel will use the `pattern` option to determine the visual and stored formats.
 
 ```javascript
     new dsq('#eg03', {
@@ -301,7 +291,7 @@ The initial date (visible to the user and programatically set) an input will be 
 ```
 ##### Caveats!
 - dateSquirrel doesn't check to see if the initial date is within the range specified (you can use the [`isBetweenDates`](#isBetweenDates) function to check prior to passing to dateSquirrel if you need to)
-- dateSquirrel will try and parse the entered date using it's internal parser: this __only__ accepts a **UK date format** like dd-mm-yyyy, dd mm yyyy, dd/mm/yy
+- dateSquirrel will try and parse the entered date using it's internal parser: this accepts a **UK date format** like dd-mm-yyyy, dd mm yyyy, dd/mm/yy by default but can be changed via the `parse.rule` option to accomodate other syntaxes
 
 <a name="pattern"/></a>
 ### `pattern` & `patternSave` (text)
@@ -426,16 +416,16 @@ N.B. This function only runs on initial activation, not on window resize.
 
 <a name="callback"/></a>
 ### `callback` (function)
-A custom function fired when a user finishes changing the date.
+A custom function fired when and attempt is made (successful or otherwise) to set a date. Provides five key constants from dateSquirrel as set at the time of the callback.
 
 ```javascript
 new dsq('#eg12', {
     callback: function() {
-        console.log('Date set: ', this.date);
+        console.log('Date set: ', this.date); // undefined if unsuccessful
         console.log('The input element: ', this.input);
         console.log('The dateSquirrel wrapper: ', this.wrapper);
-        console.log('Date in human format: ', this.human);
-        console.log('Date in save format: ', this.save);
+        console.log('Date in human format: ', this.human); // undefined if unsuccessful
+        console.log('Date in save format: ', this.save); // undefined if unsuccessful
     }
 });
 ```
@@ -470,18 +460,23 @@ new dsq('#eg12', {
 | yy | The year abbreviated | 00, 01, 02, ..., 99 | 
 | yyyy | The year unabbreviated | 1900, 1901, 1902, ..., 1999 | 
 
-**N.B. The dateSquirrel parser returns dates in human-readable formats. e.g. January = 1 or 01**
+**N.B. The dateSquirrel formatter returns dates in human-readable formats. e.g. January = 1 or 01**
 
 <a name="parse"/></a>
-### `parse`, `parseDelay` & `parseEvent` (boolean, number, text)
+### `parse` (object)
 
-dateSquirrel can attempt to parse a date into your [requested format](#pattern) on an input event (`parseEvent` - e.g. 'change' or 'blur'). You can also optionally specify a delay (`parseDelay`) in milliseconds (1000ms === 1s) before parsing happens. If this option is set to `true` dateSquirrel will also try and parse the input immediately when a user presses the return key, regardless of any delay set.
+dateSquirrel can attempt to parse a date into your [requested format](#pattern) on an input event (`parse.etype` - e.g. 'change' or 'blur'). You can also optionally specify a delay (`parse.delay`) in milliseconds (1000ms === 1s) before parsing happens. If this option is set to `true` (default) dateSquirrel will also try and parse the input immediately when a user presses the return key, regardless of any delay set.
+
+`parse` assumes a user wouldn't put in the day of the week (e.g. Wednesday) when asked for a date and would only use date (e.g. 1st), month & year when typing in an answer.
 
 ```javascript
 new dsq('#eg18', {
-	parse: true,
-	parseDelay: 200, // 200ms === 0.2s
-	parseEvent: 'change' // when a user commits a change
+	parse: {
+    	active: true, // if true dateSquirrel will parse, format and rewrite a user given date
+    	delay: 100, // the delay in ms before dateSquirrel will parse, format and rewrite
+    	etype: 'change', // the type of event dateSquirrel will listen for
+    	rule: 'dmy' // the expected order a user will input a date in (default = day > month > year)
+    },
 });
 ```
 
