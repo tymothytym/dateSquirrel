@@ -403,27 +403,28 @@ class dsq {
 		if (this.hasYear) {
 			for (let y = this.options.start.y; y < this.options.end.y + 1; y++) {
 				let cl = document.createElement('li');
-				if (this.disDates.years !== false && this.disDates.years.has(y)) {
+				/*if (this.disDates.years !== false && this.disDates.years.has(y)) {
 					cl.className = this.options.classPrefix + 'disabled';
 					cl.tabIndex = -1;
 				} else {
 					cl.tabIndex = 0;
-				}
+				}*/
 				cl.id = `${this.uid}_y_${y}`;
 				cl.dataset.year = y;
+				cl.tabIndex = -1;
 				cl.setAttribute('role', 'option');
 				cl.innerHTML = `${y}`;
 				this.lists.years.insertBefore(cl, this.lists.years.firstChild);
 			}
 		} else {
-			this.lists.years.insertAdjacentHTML('afterbegin', '<li id="' + this.uid + '_y_0" class="' + this.options.classPrefix + 'active" data-year="' + this.options.start.y + '" tabindex="0" role="option">' + this.options.start.y + '</li>');
+			this.lists.years.insertAdjacentHTML('afterbegin', '<li id="' + this.uid + '_y_0" class="' + this.options.classPrefix + 'active" data-year="' + this.options.start.y + '" tabindex="-1" role="option">' + this.options.start.y + '</li>');
 		}
 		if (this.hasMonth) {
 			for (let m = 0; m < 12; m++) {
-				this.lists.months.insertAdjacentHTML('beforeend', '<li id="' + this.uid + '_m_' + m + '" data-month="' + m + '" tabindex="0" role="option">' + this.options.monthList[m] + '</li>');
+				this.lists.months.insertAdjacentHTML('beforeend', '<li id="' + this.uid + '_m_' + m + '" data-month="' + m + '" tabindex="-1" role="option">' + this.options.monthList[m] + '</li>');
 			}
 		} else {
-			this.lists.months.insertAdjacentHTML('beforeend', '<li id="' + this.uid + '_m_0" class="' + this.options.classPrefix + 'active" data-month="' + dsq.format(this.options.start, 'mmm') + '" tabindex="0" role="option">' + dsq.format(this.options.start, 'mmm') + '</li>');
+			this.lists.months.insertAdjacentHTML('beforeend', '<li id="' + this.uid + '_m_0" class="' + this.options.classPrefix + 'active" data-month="' + dsq.format(this.options.start, 'mmm') + '" tabindex="-1" role="option">' + dsq.format(this.options.start, 'mmm') + '</li>');
 			// generate days early
 			this.addDays();
 		}
@@ -687,10 +688,26 @@ class dsq {
 							e.preventDefault();
 							e.target.click();
 							that.clearFocus(); // clear all focus
+							// close list
+							if (this.wrapper.classList.contains(this.options.classPrefix + 'active')) {
+								this.wrapper.classList.remove(this.options.classPrefix + 'active');
+							}
+							if (that.options.parse.active) {
+								that.setValue(that.o.value, that.options.parse.rule);
+							}
+							
 							break;
 						}
 						case 9: {
-							let focusedOn = that.findFocus(blocks);
+							// close list
+							if (this.wrapper.classList.contains(this.options.classPrefix + 'active')) {
+								this.wrapper.classList.remove(this.options.classPrefix + 'active');
+							}
+							// parse
+							if (that.options.parse.active) {
+								that.setValue(that.o.value, that.options.parse.rule);
+							}
+							/*let focusedOn = that.findFocus(blocks);
 							firstTime = false;
 							blockOn = focusedOn[1];
 							if (e.shiftKey === false) {
@@ -713,7 +730,7 @@ class dsq {
 								} else {
 									that.clearFocus();
 								}
-							}
+							}*/
 							break;
 						}
 						case 8: {
@@ -872,7 +889,7 @@ class dsq {
 			let theDay = daysOfWeek[new Date(this.selectedYear, this.selectedMonth, d).getDay()];
 			if (dsq.isBetweenDates(new Date(this.selectedYear, this.selectedMonth, d), this.options.start, this.options.end) && (this.disDates.days === false || (!this.disDates.days.has(this.selectedYear + '/' + this.selectedMonth + '/' + d) && !this.disDates.recurringDays.has(theDay) && !this.disDates.recurringDates.has(this.selectedYear + '/' + this.selectedMonth + '/' + d)))) {
 				//console.log('Date ' + d + ' enabled (' + theDay + ')');
-				this.lists.days.insertAdjacentHTML('beforeend', '<li id="' + this.uid + '_d_' + d + '" data-day="' + d + '" tabindex="0" role="option">' + d + '</li>');
+				this.lists.days.insertAdjacentHTML('beforeend', '<li id="' + this.uid + '_d_' + d + '" data-day="' + d + '" tabindex="-1" role="option">' + d + '</li>');
 			} else {
 				this.lists.days.insertAdjacentHTML('beforeend', '<li id="' + this.uid + '_d_' + d + '" class="' + this.options.classPrefix + 'disabled" data-day="' + d + '" tabindex="-1" role="option">' + d + '</li>');
 			}
@@ -1021,6 +1038,11 @@ class dsq {
 				this.lists.classList.remove(this.options.classPrefix + 'day', this.options.classPrefix + 'month');
 			}, delay);
 		} else {
+			// close UI and blur
+			if (this.wrapper.classList.contains(this.options.classPrefix + 'active')) {
+				this.wrapper.classList.remove(this.options.classPrefix + 'active');
+			}
+
 			// make callback
 			this.makeCallback();
 		}
@@ -1232,11 +1254,11 @@ class dsq {
 		}
 		return extended;
 	}
-	newId() {
+	/*newId() {
 		return '_' + Math.random().toString(36).substr(2, 9);
 	}
 	//https://stackoverflow.com/questions/842336/is-there-a-way-to-select-sibling-nodes#answer-842346
-	/*getChildren(n, skipMe) {
+	getChildren(n, skipMe) {
 		var r = [];
 		for (; n; n = n.nextSibling)
 			if (n.nodeType == 1 && n != skipMe)
@@ -1415,6 +1437,7 @@ class dsq {
 		if (fnDates.days.length === 0) {
 			fnDates.days = false;
 		}
+		this.disArray = fnDates;
 		return fnDates;
 	}
 	// getters & setters

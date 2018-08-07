@@ -1,12 +1,11 @@
 # dateSquirrel
 A date picker with a nutty tang
 ##### Release: Version: 0.3.0
-##### In master: Version: 0.3.1
+##### In master: Version: 0.3.2
 
 dateSquirrel is a date picker with calendar dates. It's modal-free, dependency-free, library-free and free-free. The aim is to put the date picking into a single field and make it so you can pick any date in three clicks. It's not trying to be better than other date pickers, just a bit different. dateSquirrel is for wide date possibilities (like date of birth) that are a pain to pick when you have to navigate through several decades worth of months to get to the date you want.
 
 ## To do
-- [ ] Add keyboard navigation (tab out & catch return for parsing)
 - [ ] Add styling options to readme
 - [ ] Tidy up / correct readme
 - [ ] Optimise

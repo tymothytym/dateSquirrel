@@ -33,8 +33,12 @@ Initial release.
 * Add ES2015, AMD, CommonJS & script tag initialisation support
 * Add basic scrollbar formatting
 
-## Version 0.3.1 (August xx, 2018)
+## Version 0.3.1 (August 06, 2018)
 
 * Remove all Label manipulation
 * Change parse options structure to accommodate standard callback
 * Make parsing default
+
+## Version 0.3.2 (August 07, 2018)
+
+* Fix tab and return press actions
