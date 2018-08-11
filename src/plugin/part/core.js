@@ -236,25 +236,15 @@ class dsq {
 		this.listHeight = (6 * this.rowHeight) + (this.rowHeight / 2);
 
 		// wrap input field
-		if (!this.options.dontWrap) {
-			this.wrap();
-		}
+		this.wrap();
 
 		// change to text field
 		this.o.setAttribute('type', 'text');
 
-		// add colours to page
-		/*
-		if (this.options.primaryTextColour !== defaults.primaryTextColour) {
-			cssRules += primaryTextCss;
-		}
-		if (this.options.primaryColour !== defaults.primaryColour || this.options.textOnPrimaryColour !== defaults.textOnPrimaryColour) {
-			cssRules += primaryColourCss;
-		}
+		// scrollbar hide class
 		if (this.options.hideScrollbars) {
-			cssRules += instanceId + ' .' + this.options.classPrefix + 'lists > .' + this.options.classPrefix + 'list-years{width:calc(100% + 30px)}' + instanceId + ' .' + this.options.classPrefix + 'lists > .' + this.options.classPrefix + 'list-months{left:calc(100% + 30px);width:calc(100% - 50px);}';
+			this.wrapper.classList.add(this.options.classPrefix + 'noscrl');
 		}
-		this.injectCss(cssClass, cssRules);*/
 
 		// specify activation
 		this.isActive = true;

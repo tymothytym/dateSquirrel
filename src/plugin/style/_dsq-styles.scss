@@ -63,6 +63,15 @@
     >input {
         width: 100%;
     }
+    &.#{$dsq-prefix}noscrl {
+    	>.#{$dsq-prefix}lists .#{$dsq-prefix}list-years {
+    		width: calc(100% + 30px)
+    	}
+    	>.#{$dsq-prefix}lists .#{$dsq-prefix}list-months {
+    		left: calc(100% + 30px);
+    		width: calc(100% - 50px);
+    	}
+    }
     >.#{$dsq-prefix}lists {
         //border-top: none;
         //border-left: $dsq-selected-border-width solid transparent;

@@ -43,7 +43,8 @@ Initial release.
 
 * Fix tab and return press actions
 
-## Version 0.3.3 ***August xx, 2018***
+## Version 0.3.3 ***August 11, 2018***
 
 * Link changelog to readme
 * Fix that / this bug in keyboard tasks
+* Extend keyboard integration
