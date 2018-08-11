@@ -192,15 +192,8 @@ window.onload = function() {
         primaryTextColour: 'rgba(160, 12, 62, 1)',
         textOnPrimaryColour: '#fbfffe'
     });
-    var egtest = new dsq('#eg11', {
-            activation: function() {
-                if (window.innerWidth > 1024) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        });
+    //var egtest = 
+    new dsq('#eg11');
 	//console.log('Date egtest: ', egtest.getValue('dd/mm/yy'));
     //egtest.destroy();
     new dsq('#eg12', {

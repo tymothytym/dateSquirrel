@@ -49,6 +49,10 @@ p {
     color: $demo-white;
 }
 
+#splashLogo {
+	width: 100%;
+	max-width: 825px;
+}
 section {
     padding: 2em 0;
     &.light {
@@ -129,14 +133,14 @@ legend {
     min-height: 35px;
 }
 .splash {
-    height: 100vh;
+    //height: 100vh;
     background: $demo-primary-colour;
     padding: 0;
 	&>header {
 	    height: 45vh;
 	    color: $demo-white;
-	    margin: 0 auto;
-	    padding: 20vh 50px 0px 50px;
+	    //margin: 0 auto;
+	    padding: 15vh 5px 0 5px;
 	    background: rgba(0, 0, 0, 0.05);
 	    a {
 	        color: #566473;
@@ -153,6 +157,11 @@ legend {
 	        padding: 0 0 0.6em 0.1em;
 	    }
 	}
+	&>.quiz-box {
+	    height: 55vh;
+	    padding-top: 30px;
+	}
+
 }
 // demo inputs & select
 /*.example {
