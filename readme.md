@@ -192,7 +192,7 @@ new dsq('#myDateInput', {
 ### Usage in your build FYIs
 
 - Styling for fallbacks or [non-activating](#Activation) scenarios is not included, so you have to add your own (S)CSS for that
-- Resetting and / or normalisation of your page styles is assumed (you can copy the reset used for the demo [here](#reset-file) if you don't have one)
+- Resetting and / or normalisation of your page styles is assumed
 
 <a name="Options"/></a>
 ## Options
