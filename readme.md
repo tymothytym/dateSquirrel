@@ -3,7 +3,7 @@
 </p>
 <p align="center">
     <img src="https://rawgit.com/tymothytym/dateSquirrel/master/static/mit.svg" alt="licence" />
-    <img src="https://rawgit.com/tymothytym/dateSquirrel/master/static/.svg" alt="build status" />
+    <img src="https://rawgit.com/tymothytym/dateSquirrel/master/static/beta.svg" alt="build status" />
     <img src="https://rawgit.com/tymothytym/dateSquirrel/master/static/squirrelicity.svg" alt="squirrelicity"/>
 </p>
 
