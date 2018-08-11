@@ -5,7 +5,7 @@
 // A date picker with a nutty tang
 // https://github.com/tymothytym/dateSquirrel
 // License MIT
-// (c) Tim O'Donoghue 2018
+// (c) tymothytym 2018
 // --------------------------------------------------------
 
 // --------------------------------------------------------
@@ -588,50 +588,61 @@ class dsq {
 				// space === 32
 				// tab === 9
 				// backspace === 8
+				let blocks,
+					unit,
+					unitId;
+				//console.log('--------------------------------');
+				//console.log('e.target: ', e.target);
+				//console.log('e.which: ', e.which);
+				//console.log('that.o.id: ', that.o.id);
+				//console.log('document.activeElement: ', document.activeElement);
+				//console.log('SAME: ', that.o === document.activeElement);
+				//console.log('document.activeElement.nodeName: ', document.activeElement.nodeName);
 
+				// which list is active
+				if (that.lists.classList.contains(that.options.classPrefix + 'day')) {
+					unit = that.lists.days;
+					unitId = 2;
+					// active blocks (days)
+					blocks = unit.querySelectorAll('li[data-day]:not(.' + that.options.classPrefix + 'disabled):not(.' + that.options.classPrefix + 'padding)');
+					that.lists.months.removeAttribute('aria-activedescendant');
+					that.lists.years.removeAttribute('aria-activedescendant');
+				} else if (that.lists.classList.contains(that.options.classPrefix + 'month')) {
+					unit = that.lists.months;
+					unitId = 1;
+					// active blocks (months)
+					blocks = unit.querySelectorAll('li:not(.' + that.options.classPrefix + 'disabled)');
+					that.lists.days.removeAttribute('aria-activedescendant');
+					that.lists.years.removeAttribute('aria-activedescendant');
+				} else {
+					unit = that.lists.years;
+					unitId = 0;
+					// active blocks (years)
+					blocks = unit.querySelectorAll('li:not(.' + that.options.classPrefix + 'disabled)');
+					that.lists.days.removeAttribute('aria-activedescendant');
+					that.lists.months.removeAttribute('aria-activedescendant');
+				}
+
+				// find any existing focus
+				let blockOn = that.findFocus(blocks),
+					refocus = true;
+					//firstTime = focusedOn[0],
+					//blockOn = focusedOn[1];
+				console.log('blockOn: ', blockOn);
 				// check user is not typing a date
-				if (document.activeElement.id !== 'INPUT') {
-					let blocks,
-						unit,
-						firstTime = true,
-						blockOn = 0,
-						unitId;
-
-					// which list is active
-					if (that.lists.classList.contains(that.options.classPrefix + 'day')) {
-						unit = that.lists.days;
-						unitId = 2;
-						// active blocks (days)
-						blocks = unit.querySelectorAll('li[data-day]:not(.' + that.options.classPrefix + 'disabled):not(.' + that.options.classPrefix + 'padding)');
-						that.lists.months.removeAttribute('aria-activedescendant');
-						that.lists.years.removeAttribute('aria-activedescendant');
-					} else if (that.lists.classList.contains(that.options.classPrefix + 'month')) {
-						unit = that.lists.months;
-						unitId = 1;
-						// active blocks (months)
-						blocks = unit.querySelectorAll('li:not(.' + that.options.classPrefix + 'disabled)');
-						that.lists.days.removeAttribute('aria-activedescendant');
-						that.lists.years.removeAttribute('aria-activedescendant');
-					} else {
-						unit = that.lists.years;
-						unitId = 0;
-						// active blocks (years)
-						blocks = unit.querySelectorAll('li:not(.' + that.options.classPrefix + 'disabled)');
-						that.lists.days.removeAttribute('aria-activedescendant');
-						that.lists.months.removeAttribute('aria-activedescendant');
-					}
-
-					// find any existing focus
-					let focusedOn = that.findFocus(blocks);
-					firstTime = focusedOn[0];
-					blockOn = focusedOn[1];
-
+				if (document.activeElement.id !== that.o.id) {
+					//console.log('If -------------------->: ', e.which);
 
 					// key action modification
 					switch (e.which) {
 						case 40: {
+							//console.log('focusedOn: ', focusedOn);
+							//console.log('blockOn: ', blockOn);
+							//console.log('firstTime: ', firstTime);
+							//console.log('e.shiftKey: ', e.shiftKey);
+							//console.log('unitId: ', unitId);
 							e.preventDefault();
-							if (blockOn !== blocks.length - 1 && !firstTime) {
+							if (blockOn !== blocks.length - 1) {// && !firstTime) {
 								if (unitId !== 2) {
 									blockOn++;
 								} else {
@@ -650,12 +661,12 @@ class dsq {
 						}
 						case 39: {
 							e.preventDefault();
-							if (blockOn !== blocks.length - 1 && !firstTime && unitId === 2) blockOn++;
+							if (blockOn !== blocks.length - 1 && unitId === 2) blockOn++;
 							break;
 						}
-						case 38: {
+						case 38: { // up
 							e.preventDefault();
-							if (blockOn !== 0 && !firstTime) {
+							if (blockOn !== 0) {// && !firstTime) {
 								if (unitId !== 2) {
 									blockOn--;
 								} else {
@@ -669,14 +680,21 @@ class dsq {
 									}
 									blockOn = blockOn - 7 + disCheck > -1 ? blockOn - 7 + disCheck : 0;
 								}
+							} else {
+								// back to input
+								//console.log('back to input');
+								//document.activeElement.blur();
+								that.o.focus();
+								that.o.select();
+								refocus = false;
 							}
 							break;
 						}
-						case 37: {
+						case 37: { // left
 							e.preventDefault();
-							if (blockOn !== 0 && !firstTime && unitId === 2) {
+							if (blockOn !== 0 && unitId === 2) {// && !firstTime ) {
 								blockOn--;
-							} else if (!firstTime && unitId === 1 && that.hasYear) {
+							} else if (unitId === 1 && that.hasYear) {// && !firstTime ) {
 								that.goToYear();
 								let lastActive = that.lists.years.querySelector('.' + that.options.classPrefix + 'active');
 								that.lists.years.setAttribute('aria-activedescendant', lastActive.id);
@@ -688,28 +706,19 @@ class dsq {
 							e.preventDefault();
 							e.target.click();
 							that.clearFocus(); // clear all focus
-							// close list
-							if (this.wrapper.classList.contains(this.options.classPrefix + 'active')) {
-								this.wrapper.classList.remove(this.options.classPrefix + 'active');
-							}
-							if (that.options.parse.active) {
-								that.setValue(that.o.value, that.options.parse.rule);
-							}
 							
 							break;
 						}
 						case 9: {
-							// close list
-							if (this.wrapper.classList.contains(this.options.classPrefix + 'active')) {
-								this.wrapper.classList.remove(this.options.classPrefix + 'active');
-							}
-							// parse
-							if (that.options.parse.active) {
-								that.setValue(that.o.value, that.options.parse.rule);
-							}
+							//console.log('blocks[blockOn].id: ', blocks[blockOn].id);
 							/*let focusedOn = that.findFocus(blocks);
 							firstTime = false;
 							blockOn = focusedOn[1];
+							console.log('focusedOn: ', focusedOn);
+							console.log('blockOn: ', blockOn);
+							console.log('firstTime: ', firstTime);
+							console.log('e.shiftKey: ', e.shiftKey);
+							console.log('unitId: ', unitId);
 							if (e.shiftKey === false) {
 								if (blockOn === blocks.length - 1) {
 									if (unitId !== 2) {
@@ -731,26 +740,69 @@ class dsq {
 									that.clearFocus();
 								}
 							}*/
+							that.removeActive(0);
+							// remove keyboard listener from window
+							that.rmEvt(window, 'keydown', that.keydownFn, false);
+							// parse
+							if (that.options.parse.active) {
+								that.setValue(that.o.value, that.options.parse.rule);
+							}
 							break;
 						}
 						case 8: {
-							//document.body.click();
+							document.body.click();
 							break;
 						}
 						default: {
 							// go on merry way
 						}
 					}
-					if (e.which >= 37 && e.which <= 40) {
+					if (e.which >= 37 && e.which <= 40 && refocus) {
 						// set parent to active
 						unit.setAttribute('aria-activedescendant', blocks[blockOn].id);
 						// focus block
 						that.setFocus(blocks[blockOn]);
 					}
 				} else {
-					if (e.which === 8) {
+					//console.log('Else -------------------->: ', e.which);
+					if (e.which === 8) { // backspace
 						// clear previous data
 						that.clearStored();
+					} else if (e.which === 13) { // return
+						e.preventDefault();
+						e.target.click();
+						that.clearFocus(); // clear all focus
+						// close list
+						if (that.wrapper.classList.contains(that.options.classPrefix + 'active')) {
+							that.wrapper.classList.remove(that.options.classPrefix + 'active');
+						}
+						if (that.options.parse.active) {
+							that.setValue(that.o.value, that.options.parse.rule);
+						}
+					} else if (e.which === 9) { // tab
+						// close list
+						that.removeActive(300);
+						// remove keyboard listener from window
+						that.rmEvt(window, 'keydown', that.keydownFn, false);
+						/*if (that.wrapper.classList.contains(that.options.classPrefix + 'active')) {
+							that.wrapper.classList.remove(that.options.classPrefix + 'active');
+						}*/
+						// parse
+						if (that.options.parse.active) {
+							that.setValue(that.o.value, that.options.parse.rule);
+						}
+					} else if (e.which === 40) { // down
+						e.preventDefault();
+						//console.log('blockOn: ', blockOn);
+						//console.log('blocks.length: ', blocks.length);
+						//console.log('firstTime: ', firstTime);
+						//console.log('unit: ', unit);
+						//console.log('blocks[blockOn].id: ', blocks[blockOn].id);
+
+						// set parent to active
+						unit.setAttribute('aria-activedescendant', blocks[blockOn].id);
+						// focus block
+						that.setFocus(blocks[blockOn]);
 					}
 				}
 			}
@@ -809,13 +861,12 @@ class dsq {
 		}
 	}
 	findFocus(blocks) {
-		let i = 0;
-		for (; i < blocks.length; i++) {
+		for (let i = 0; i < blocks.length; i++) {
 			if (blocks[i] === document.activeElement) {
-				return [false, i];
+				return i;
 			}
 		}
-		return [true, 0];
+		return 0;
 	}
 	setFocus(el, startNext) {
 		this.clearFocus();
@@ -862,7 +913,7 @@ class dsq {
 				let daysInCurrentMonth = dsq.daysInMonth(this.selectedYear, m);
 				if ((dsq.isBetweenDates(new Date(this.selectedYear, m, 1), this.options.start, this.options.end) || dsq.isBetweenDates(new Date(this.selectedYear, m, daysInCurrentMonth), this.options.start, this.options.end)) && (this.disDates.months === false || !this.disDates.months.has(this.selectedYear + '/' + m))) {
 					this.lists.querySelectorAll('.dsq-list-months li')[m].classList.remove(this.options.classPrefix + 'disabled');
-					this.lists.querySelectorAll('.dsq-list-months li')[m].setAttribute('tabindex', '0');
+					this.lists.querySelectorAll('.dsq-list-months li')[m].setAttribute('tabindex', '-1');
 					if (firstActive === false) {
 						firstActive = m * this.rowHeight;
 					}
