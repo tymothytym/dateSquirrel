@@ -618,7 +618,7 @@ class dsq {
 					refocus = true;
 					//firstTime = focusedOn[0],
 					//blockOn = focusedOn[1];
-				console.log('blockOn: ', blockOn);
+				//console.log('blockOn: ', blockOn);
 				// check user is not typing a date
 				if (document.activeElement.id !== that.o.id) {
 					//console.log('If -------------------->: ', e.which);

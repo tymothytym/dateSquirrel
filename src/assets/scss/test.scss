@@ -53,6 +53,22 @@ p {
 	width: 100%;
 	max-width: 825px;
 }
+
+// loading
+
+#dsqTests {
+	opacity: 1;
+	transition: opacity 150ms ease-in-out;
+}
+.dateSquirrelled.loading.loading-lg {
+	&:after {
+		position: fixed;
+	}
+	#dsqTests {
+		opacity: 0;
+		overflow: hidden;
+	}
+}
 section {
     padding: 2em 0;
     &.light {
@@ -140,7 +156,7 @@ legend {
 	    height: 45vh;
 	    color: $demo-white;
 	    //margin: 0 auto;
-	    padding: 15vh 5px 0 5px;
+	    padding: 15vh 20px 0 20px;
 	    background: rgba(0, 0, 0, 0.05);
 	    a {
 	        color: #566473;

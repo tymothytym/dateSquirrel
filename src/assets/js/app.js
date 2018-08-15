@@ -273,4 +273,6 @@ window.onload = function() {
     });
     //uberTest.setValue('march 2nd 2010', 'mdy');
 	//console.log('Date set: ', uberTest.getValue())
+	document.querySelector('body.dateSquirrelled').classList.remove('loading');
+	document.querySelector('body.dateSquirrelled').classList.remove('loading-lg');
 };
