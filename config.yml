@@ -25,9 +25,9 @@ CLEAN_OPTIONS:
 PATHS:
   # Path to dist folder
   dist: "dist"
-  # Paths to static assets that aren't images, CSS, fonts or JavaScript
+  # Paths to static assets
   assets:
-    - "src/assets/**/*"
+    - "src/assets/raw/**/*"
     #- "!src/assets/{img,scss,js,fonts}/**/*"
   # Paths to static vendor assets that aren't images, CSS, fonts
   vendor:

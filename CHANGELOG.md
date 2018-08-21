@@ -48,3 +48,10 @@ Initial release.
 * Link changelog to readme
 * Fix that / this bug in keyboard tasks
 * Extend keyboard integration
+
+## Version 0.3.4 ***August 21, 2018***
+
+* clearStored changed from dataset to attribute
+* Fix callback firing unneccessarily when using mouse
+* Add logo to test page
+* Tidy up test page scss

@@ -286,6 +286,9 @@ class dsq {
 			// html
 			this.rmEvt(document.documentElement, 'click', this.htmlClickFn, false);
 
+			// dataset
+			this.o.removeAttribute('data-dsq-date');
+
 			// reset to date
 			this.o.setAttribute('type', 'date');
 
@@ -294,11 +297,15 @@ class dsq {
 
 			// remove data
 			this.removeData(this);
+
+			// delete callback & options
+			delete this.options.callback;
+			delete this.options;
 		}
 		// purge associations
-		this.o = null;
+		//this.o = null;
 		//this.label = null;
-		this.uid = null;
+		//this.uid = null;
 	}
 	// construction functions
 	makeLists() {
@@ -434,9 +441,6 @@ class dsq {
 				if (that.wrapper.classList.contains('dsq-touch')) {
 					that.o.setAttribute('readonly', 'readonly');
 				}
-				
-				// add window event to watch hardware keyboard
-				that.addEvt(window, 'keydown', that.keydownFn, false);
 
 				// if not open... open!
 				if (!that.wrapper.classList.contains(that.options.classPrefix + 'active')) {
@@ -450,19 +454,13 @@ class dsq {
 					} else if (!that.hasYear && !that.hasMonth) {
 						that.lists.classList.add(that.options.classPrefix + 'month', that.options.classPrefix + 'day');
 					} else {
-						that.o.focus();
+						//that.o.focus();
 					}
-					//that.listHeightCalc();
-					// check for lists opening offscreen and invert if required
-					/*let listPos = that.wouldBeInView(that.lists, true);
-					if (listPos === 'above') {
-						that.lists.classList.add(that.options.classPrefix + 'down');
-					} else if (listPos === 'below') {
-						that.lists.classList.add(that.options.classPrefix + 'up');
-					} else { // in view or error
-						that.lists.classList.remove(that.options.classPrefix + 'up', that.options.classPrefix + 'down');
-					}*/
 				}
+				
+				// add window event to watch hardware keyboard
+				that.addEvt(window, 'keydown', that.keydownFn, false);
+				// ...and to shut
 				that.addEvt(document.documentElement, 'click', that.htmlClickFn, false);
 
 			}
@@ -486,9 +484,10 @@ class dsq {
 		};*/
 		this.yrClickFn = {
 			handleEvent: function (e) {
+
 				if (!e.target.classList.contains(that.options.classPrefix + 'disabled')) {
 					e.stopPropagation();
-					// clear previous data
+					// clear saved date as must be starting again
 					that.clearStored();
 					// remove previous selection indicator
 					let yearRows = that.lists.years.querySelectorAll('li'),
@@ -807,15 +806,16 @@ class dsq {
 		this.eventFn = {
 			handleEvent: function (e) {
 				delay(function() {
-					if (dsq.isValidDate(that.parseDateString(e.target.value, that.options.parse.rule))) {
-						//console.log('True parse fn: ', that.parseDateString(e.target.value, that.options.parse.rule));
-						that.setValue(e.target.value, that.options.parse.rule);
-					} else {
-						//console.log('False parse fn: ', that.parseDateString(e.target.value, that.options.parse.rule));
-						that.clearStored();
-						that.makeCallback();
-					}
-			    	
+					if (!that.wrapper.classList.contains(that.options.classPrefix + 'active')) {
+						if (dsq.isValidDate(that.parseDateString(e.target.value, that.options.parse.rule))) {
+							//console.log('True parse fn: ', that.parseDateString(e.target.value, that.options.parse.rule));
+							that.setValue(e.target.value, that.options.parse.rule);
+						} else {
+							//console.log('False parse fn: ', that.parseDateString(e.target.value, that.options.parse.rule));
+							that.clearStored();
+							that.makeCallback();
+						}
+			    	}
 			    }, that.options.parse.delay);
 			}
 		};
@@ -874,7 +874,7 @@ class dsq {
 		}
 	}
 	clearStored() {
-		this.o.dataset.dsqDate = '';
+		this.o.removeAttribute('data-dsq-date');
 		this.setDate = undefined;
 	}
 	clearFocus() {
@@ -1028,7 +1028,7 @@ class dsq {
 	}
 	finishUp(makeDate, zoneOrder) {
 		const delay = 300; // ms
-		//console.log('makeDate: ', new Date(makeDate));
+		//console.log('makeDate: ', makeDate);
 		if (makeDate === undefined) {
 			if (typeof this.selectedDay === 'undefined') {
 				// month only
@@ -1061,12 +1061,12 @@ class dsq {
 		this.o.setAttribute('data-dsq-date', this.setDate.save);
 		// value attr
 		//this.o.setAttribute('value', this.selectedYear + '-' + (this.selectedMonth + 1) + '-' + this.selectedDay);
-		// set status to done
-		this.wrapper.classList.add(this.options.classPrefix + 'done');
 		// remove active class
 		//that.wrapper.classList.remove(that.options.classPrefix + 'active');
 		// update UI
 		if (makeDate === undefined) {
+			// set status to done
+			this.wrapper.classList.add(this.options.classPrefix + 'done');
 			this.removeActive(delay);
 			// remove listener
 			this.rmEvt(document.documentElement, 'click', this.htmlClickFn, false);
@@ -1098,6 +1098,7 @@ class dsq {
 				human: this.setDate ? this.setDate.human : undefined,
 				save: this.setDate ? this.setDate.save : undefined
 			};
+		//console.log('callback args: ', args);
 		callback = this.options.callback.call(args);
 
 		if (typeof this.options.callback === 'function') {

@@ -35,7 +35,7 @@ function loadConfig() {
 
 // Build the "dist" folder by running all of the below tasks
 gulp.task('build',
-    gulp.series(clean, gulp.parallel(pages, sass, javascript, images, copy, dsqScss)));
+    gulp.series(clean, gulp.parallel(pages, sass, javascript, images, copy, vendor, dsqScss)));
 
 // Build the site, run the server, and watch for file changes
 gulp.task('default',
@@ -47,10 +47,14 @@ function clean(done) {
     rimraf(PATHS.dist, done);
 }
 
-// Copy vendor files out of the assets folder
-function copy() {
+// Copy vendor & other files out of the assets folder
+function vendor() {
     return gulp.src(PATHS.vendor)
         .pipe(gulp.dest(PATHS.dist + '/test/vendor'));
+}
+function copy() {
+    return gulp.src(PATHS.assets)
+        .pipe(gulp.dest(PATHS.dist));
 }
 
 // Copy page templates into finished HTML files
@@ -253,7 +257,8 @@ function reload(done) {
 
 // Watch for changes to static assets, pages, Sass, and JavaScript
 function watch() {
-    gulp.watch('src/assets/vendor', copy);
+    gulp.watch('src/assets/vendor', vendor);
+    gulp.watch('src/assets/raw', copy);
     gulp.watch('src/pages/**/*.html').on('all', gulp.series(pages, browser.reload));
     gulp.watch('src/{layouts,partials}/**/*.html').on('all', gulp.series(resetPages, pages, browser.reload));
     gulp.watch('src/assets/scss/**/*.scss').on('all', sass);

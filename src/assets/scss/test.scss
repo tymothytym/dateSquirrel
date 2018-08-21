@@ -153,10 +153,10 @@ legend {
     background: $demo-primary-colour;
     padding: 0;
 	&>header {
-	    height: 45vh;
+	    height: 35vh;
 	    color: $demo-white;
 	    //margin: 0 auto;
-	    padding: 15vh 20px 0 20px;
+	    padding: 10vh 20px 0 20px;
 	    background: rgba(0, 0, 0, 0.05);
 	    a {
 	        color: #566473;
@@ -174,7 +174,7 @@ legend {
 	    }
 	}
 	&>.quiz-box {
-	    height: 55vh;
+	    height: 65vh;
 	    padding-top: 30px;
 	}
 
@@ -240,51 +240,34 @@ legend {
     }
 }
 .quiz-btns {
-	margin: 26px 0;
 	text-align: center;
+	height: 25vh;
 }
-.btn {
+.btn-gh {
 	position: relative;
-  	-webkit-font-smoothing: antialiased;
-	height: 55px;
-  	margin: 0 10px 0 0;
-	border-radius: 4px;
-	font-size: 20px;
-	font-weight: 300;
-	text-decoration: none;
-  	max-width: 250px;
-  	width: 100%;
-  	display: inline-block;
-  	cursor: pointer;
-	color: $demo-white;
-	background-color: #4d7caa;
-	border-bottom: 5px solid #3d648e;
-	text-shadow: 0px -2px #3d648e;
-	transition: all 150ms;
-	line-height: 50px;
-	&:after {
-		transition: transform 250ms ease-in;
-		font-family: iconsqrl;
-		content: $iconsqrl-cached;
-		display: inline-block;
-		width: 30px;
-		height: 30px;
-		line-height: 30px;
-		transform-origin: 50% 50%;
-		font-size: 26px;
-		margin-left: 10px;
-		vertical-align: middle;
-		margin-top: -3px;
-	}
+    -webkit-font-smoothing: antialiased;
+    padding: 10px 5px;
+    margin: 0 1%;
+    border-radius: 4px;
+    font-size: 20px;
+    font-weight: 600;
+    text-decoration: none;
+    max-width: 250px;
+    width: 30%;
+    display: inline-block;
+    cursor: pointer;
+    color: #fefefe;
+    background-color: #fb9e3d;
+    border-bottom: 5px solid #b76935;
+    text-shadow: 0 2px #b76935;
+    height: auto;
+    transition: background-color 175ms ease;
 	&:active {
-		transform: translate(0px,5px);
 		border-bottom: 1px solid #3d648e;
 	}
-	&:focus,
-	&:hover {
-		&:after {
-			transform: rotate(180deg);
-		}
+	&:hover,
+	&:focus {
+		background-color: #ffb700;
 	}
 }
 a.light-link {
@@ -351,4 +334,20 @@ footer {
 	.github-corner .octo-arm {
 		animation:octocat-wave 560ms ease-in-out
 	}
+}
+
+// prism mods
+
+section div.code-toolbar > .toolbar a:hover, 
+section div.code-toolbar > .toolbar a:focus, 
+section div.code-toolbar > .toolbar button:hover, 
+section div.code-toolbar > .toolbar button:focus, 
+section div.code-toolbar > .toolbar span:hover, 
+section div.code-toolbar > .toolbar span:focus {
+	color: $demo-white;
+}
+section div.code-toolbar > .toolbar a, 
+section div.code-toolbar > .toolbar button, 
+section div.code-toolbar > .toolbar span {
+	padding: 0.3em .7em;
 }
