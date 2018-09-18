@@ -2,13 +2,19 @@
 //  -----------------------------
 
 // version (dsq)
-$dsq-version: "0.3.4";
+$dsq-version: "0.4.0";
 
 // css prefix
 $dsq-prefix: "dsq-";
 
+// functions
+// bypass IE calc issue(s)
+@function height-calc($row-height) {  
+ 	@return (6 * $row-height) + ($row-height / 2) + $row-height;  
+}
+
 // core colours
-$dsq-primary: #454545 !default;
+$dsq-primary: #384f88 !default;
 $dsq-on-primary: #fbfffe !default;
 $dsq-white: #ffffff !default;
 $dsq-black: #444444 !default;
@@ -22,18 +28,35 @@ $dsq-grey-3: lighten($dsq-grey-0, 35%) !default;
 $dsq-grey-4: lighten($dsq-grey-0, 45%) !default;
 
 // derivative colours
-$dsq-disabled-colour: $dsq-grey-2 !default;
+// -- disabled
+$dsq-disabled-colour: $dsq-grey-3 !default;
 $dsq-disabled-bgcolour: rgba($dsq-grey-4, 0.36) !default;
+// -- input
 $dsq-input-highlight: lighten($dsq-selected, 40%) !default;
 $dsq-selected-border-colour: rgba($dsq-selected, 0.8) !default;
+// -- years
 $dsq-year-bkgnd: $dsq-white !default;
 $dsq-year-text: $dsq-black !default;
-$dsq-month-bkgnd: $dsq-white !default;
-$dsq-month-text: $dsq-black !default;
+$dsq-year-bkgnd-active: $dsq-primary !default;
+$dsq-year-text-active: $dsq-on-primary !default;
+$dsq-year-bkgnd-focus: rgba($dsq-primary, 0.25) !default;
+// -- months
+$dsq-month-bkgnd: $dsq-primary !default;
+$dsq-month-text: $dsq-on-primary !default;
+$dsq-month-bkgnd-active: lighten($dsq-primary, 10%) !default;
+$dsq-month-text-active: $dsq-on-primary !default;
+$dsq-month-bkgnd-focus: rgba($dsq-primary, 0.25) !default;
+// -- days
 $dsq-day-bkgnd: $dsq-white !default;
 $dsq-day-text: $dsq-black !default;
-$dsq-reminder-bkgnd: $dsq-primary !default;
-$dsq-reminder-text: $dsq-on-primary !default;
+$dsq-day-bkgnd-active: $dsq-primary !default;
+$dsq-day-text-active: $dsq-on-primary !default;
+$dsq-day-bkgnd-focus: rgba($dsq-primary, 0.25) !default;
+// -- reminder
+$dsq-reminder-bkgnd: $dsq-on-primary !default;
+$dsq-reminder-text: lighten($dsq-primary, 1%) !default;
+$dsq-reminder-bkgnd-active: $dsq-primary !default;
+$dsq-reminder-text-active: $dsq-on-primary !default;
 
 // fonts
 // Credit: https://www.smashingmagazine.com/2015/11/using-system-ui-fonts-practical-guide/
@@ -49,9 +72,7 @@ $dsq-xs-text-size: 13px !default;
 
 // dimensions
 $dsq-list-row-height: 40px; // in JS change > this.rowHeight
-$dsq-list-height: calc((6 * #{$dsq-list-row-height}) + (#{$dsq-list-row-height} / 2) + (#{$dsq-list-row-height}));  //calc((6 * #{$dsq-list-row-height}) + (#{$dsq-list-row-height} / 2)); // in JS change > this.listHeight
-//$dsq-list-height-max: calc((6 * #{$dsq-list-row-height}) + (#{$dsq-list-row-height} / 2) + (#{$dsq-list-row-height}));
-//$dsq-list-height-min: calc((6 * #{$dsq-list-row-height}) + (#{$dsq-list-row-height} / 2) + (#{$dsq-list-row-height})); //calc((6 * #{$dsq-list-row-height}) + (#{$dsq-list-row-height} / 2) - (#{$dsq-list-row-height}));
+$dsq-list-height: height-calc($dsq-list-row-height);
 $dsq-month-width: 80px !default;
 $dsq-max-width: 600px !default;
 $dsq-min-width: 250px !default;
@@ -80,8 +101,7 @@ $dsq-box-1: 0 0 7px $dsq-selected !default;
 $dsq-box-2: inset 0px 3px 15px 3px rgba(51, 51, 51, 0.3), inset 0px 1px 3px 1px rgba(51, 51, 51, 0.4) !default;
 
 // animations
-//$dsq-slide: cubic-bezier(.03, .56, .52, .99);
+$dsq-slide: cubic-bezier(.03, .56, .52, .99);
 $dsq-ease-in-out: cubic-bezier(.76, .1, .46, .92) !default;
-//$dsq-snap-out: cubic-bezier(.35, 0, .25, 1);
-//$dsq-ease: cubic-bezier(.16,-0.05, .99, .74);
-
+$dsq-snap-out: cubic-bezier(.35, 0, .25, 1) !default;
+$dsq-cruise: cubic-bezier(0.63, 0.52, 0.02, 0.94) !default;

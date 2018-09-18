@@ -1,13 +1,5 @@
 "use strict";
 
-// --------------------------------------------------------
-// Imports
-// --------------------------------------------------------
-
-//import dsq from '../../plugin/dsq';
-
-console.log('app.js');
-
 //******************************************
 // page functions
 //******************************************
@@ -85,8 +77,6 @@ function randomKey(data) {
 //******************************************
 // page runtime
 //******************************************
-
-//console.log('page.js');
 
 //******************************************
 // onload
@@ -273,6 +263,8 @@ window.onload = function() {
     });
     //uberTest.setValue('march 2nd 2010', 'mdy');
 	//console.log('Date set: ', uberTest.getValue())
-	document.querySelector('body.dateSquirrelled').classList.remove('loading');
-	document.querySelector('body.dateSquirrelled').classList.remove('loading-lg');
+	setTimeout(() => {
+		document.querySelector('body.dateSquirrelled').classList.remove('loading');
+		document.querySelector('body.dateSquirrelled').classList.remove('loading-lg');
+	}, 50);
 };

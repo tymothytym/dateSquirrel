@@ -55,3 +55,10 @@ Initial release.
 * Fix callback firing unneccessarily when using mouse
 * Add logo to test page
 * Tidy up test page scss
+
+## Version 0.4.0 ***August xx, 2018***
+
+* IE11 "fixes"
+* Change SCSS open, close & stack methods (for IE11)
+* Change reminder to be narrower and make clickable
+* Extend SCSS variables to cover backgrounds & hover / focus

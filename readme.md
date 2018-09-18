@@ -7,7 +7,9 @@
     <img src="https://rawgit.com/tymothytym/dateSquirrel/master/static/squirrelicity.svg" alt="squirrelicity"/>
 </p>
 
-dateSquirrel is a date picker with calendar dates. It's modal-free, dependency-free, library-free and free-free. The aim is to put the date picking into a single field and make it so you can pick any date in three clicks. It's not trying to be better than other date pickers, just a bit different. dateSquirrel is for wide date possibilities (like date of birth) that are a pain to pick when you have to navigate through several decades worth of months to get to the date you want.
+dateSquirrel is a date picker with calendar dates. It's modal-free, dependency-free, library-free and asterisk-free. This project was created in response to a request for an app date picker that fitted inside a single input field and didn't launch modals or spawn additional inputs but was still: versatile enough to pick a date or just a month, was easily (re)brandable, didn't mess with the inputs styles, supported IE11 and could be destroyed & reset with new date ranges. 
+
+Obviously this repo is Plan B. Plan A is still to repeatedly tell people it isn't possible with increasingly wild gesticulations.
 
 **[Try the demo](https://tymothytym.com/datesquirrel/)**
 
@@ -16,7 +18,6 @@ dateSquirrel is a date picker with calendar dates. It's modal-free, dependency-f
 
 ## To do
 - [ ] Add styling options to readme
-- [ ] Tidy up / correct readme
 - [ ] Optimise
 
 ## Table of Contents
@@ -54,6 +55,7 @@ dateSquirrel is a date picker with calendar dates. It's modal-free, dependency-f
     * [Get the day of the year](#dayOfYear)
     * [Get days between two dates](#daysBetween)
     * [Format a date](#format)
+- [Styling dateSquirrel](#Styling)
 - [Setup (for development)](#Setup)
     * [Build requirements](#requirements)
     * [Cloning & installation](#Cloning)
@@ -69,7 +71,7 @@ dateSquirrel gets all it's information from the JavaScripts [Date.prototype](htt
 
 1. `Date` objects are in the format: YEAR, MONTH, DAY
 2. YEAR, MONTH & DAY are all **numbers**
-3. **Months start at 0 when using** `Date` objects - January === 0 and December === 11 
+3. **Months start at 0 when using** `Date` **objects** - January === 0 and December === 11 
 4. (But dateSquirrel will parse the dates it outputs as you [specify](#formatting))
 
 So if you wanted to have the 7th of March 1983 as a `Date` object:
@@ -89,16 +91,7 @@ When you give dateSquirrel a date it assumes two things right off the bat:
 1. You mean the **whole** of that day regardless of any time you may indicate
 2. You want to **include** that day in whatever circumstance you're identifying (e.g day-a to day-n **includes** both day-a and day-n)
 
-This means that if you asked for a range from now to 5 days hence, but excluding the third day, you would only need to indicate a point at any time during a day to indicate the whole day. e.g.
-
-```javascript
-const today = new Date(),
-    // current time and date
-    endDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 5),
-    // 5 days hence at 00:00:00
-    dayThree = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 3),
-    // 3 days hence at 00:00:00
-```
+This means that if you asked for a range from now to 5 days hence, but excluding the third day, you would only need to indicate a point at any time during a day to indicate the whole day. Effectively this just means you should ignore the time parts of a Date object when dealing with dateSquirrel. It's always midnight in the land of the squirre... ah nuts; I should have called it dateNight.
 
 <a name="Browser"/></a>
 ### Browser support
@@ -188,6 +181,7 @@ new dsq('#myDateInput', {
 
 - Styling for fallbacks or [non-activating](#Activation) scenarios is not included, so you have to add your own (S)CSS for that
 - Resetting and / or normalisation of your page styles is assumed
+- Default fonts used for dateSquirrel are the fonts available on the users machine via this neat method [Using UI System Fonts In Web Design: A Quick Practical Guide](https://www.smashingmagazine.com/2015/11/using-system-ui-fonts-practical-guide/) but you can change in the SCSS settings file.
 
 <a name="Options"/></a>
 ## Options
@@ -786,6 +780,87 @@ Formats the given date according to the dateSquirrel [date formats](#formatting)
 const someDay = new Date(2000, 0, 20);
 console.log(dsq.format(someDay, 'dd/mm/yy')); // 20/01/00
 ```
+
+<a name="Styling"/></a>
+## Styling dateSquirrel
+
+<a name="structure"/></a>
+
+### HTML structure
+```html
+<div class="dsq"> <!-- JS-added wrapper -->
+	<input type="text" placeholder="Prepare your d'oh face" id="myDateInput" min="2017-04-01" max="2017-04-30"> <!-- Original input (type modified) -->
+	<div class="dsq-lists"> <!-- JS-added lists wrapper -->
+		<ul class="dsq-list-years"> <!-- JS-added year list -->
+			<li id="_dsq__myDateInput_y_2028" data-year="2028" tabindex="-1" role="option">2028</li> <!-- id =  '_dsq__' + input id + '_y_' + value -->
+			<!-- etc -->
+		</ul>
+		<ul class="dsq-list-months">
+			<li id="_dsq__myDateInput_m_0" data-month="0" tabindex="-1" role="option">Jan</li> <!-- id =  '_dsq__' + input id + '_m_' + index -->
+			<!-- etc -->
+		</ul>
+		<div class="dsq-days">
+			<span class="dsq-side">
+				<a class="dsq-reminder">
+					<span class="dsq-reminder-month">Jan</span>&nbsp;<span class="dsq-reminder-year">2026</span>
+				</a>
+			</span>
+			<ul class="dsq-list-days">
+				<li class="dsq-dow-header">Mon</li>
+				<!-- etc -->
+				<li class="dsq-padding"></li> <!-- # depends when 1st of month falls -->
+				<!-- etc -->
+				<li id="_dsq__myDateInput_d_1" data-day="1" tabindex="-1" role="option">1</li>  <!-- id =  '_dsq__' + input id + '_d_' + value -->
+				<!-- etc -->
+			</ul>
+		</div>
+	</div>
+</form>
+```
+
+n.b. the `dsq-` prefix can be changed in the JavaScript & SCSS settings files but the wrapper is always `.dsq`
+
+<a name="css"/></a>
+### CSS
+If you're including the stock build (css & js) and want to fancy that up some then you can! dateSquirrel tries to be as non-judgemental as possible and due to [speci...ifi..ciftit..y](https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity)(?) you can override any styles by making yours more specificifiky. Or in english; give your form or overall container an ID, then reference it in your rules to override the defaults. 
+
+```html
+<form id="myForm">
+	<label>Pick from huge range of sexy dates!</label>
+	<input type="date" placeholder="Prepare your d'oh face" id="myDateInput" min="2017-04-01" max="2017-04-30">
+
+	<label>Pick the fruitiest date</label>
+	<input type="date" placeholder="No bad dates here" id="myOtherDateInput" min="2013-11-31" max="2018-07-21">
+</form>
+```
+
+```css
+#myForm .dsq-list-years > li {
+	color: red; // all years in red for both inputs
+}
+
+/* or */
+
+#myOtherDateInput + .dsq-lists ul > li {
+	background-color: green; // all lists have green background but only for one input
+}
+
+```
+
+Who says programming is full of niche, inpenetrable and hard to spell words? Everyone. That's who. Literally everyone.
+
+<a name="scss"/></a>
+### SCSS
+
+There are three approaches you can take. 
+
+1. CSS+ which is the same as the above, but in SCSS. 
+2. Change the global settings in `_dsq-settings.scss` and generate your own custom styled build
+3. Copy `src/plugin/dsq.scss` and the folder `src/plugin/style` to your own build system (maintaining directory structure) and have it bundled up with your other (S)CSS automatically
+
+Or you can mix and match.
+
+What settings set which styles is indicated in `_dsq-settings.scss`.
 
 <a name="Setup"/></a>
 ## Setup (for development)

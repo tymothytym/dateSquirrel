@@ -365,6 +365,7 @@ class dsq {
 				} else if (typeof this.options.disabledDates[item] === 'number') {
 					// range of dates
 					if (this.options.disabledDates[item].toString().length > 2) { // year
+						console.log('YEAR!');
 						this.disDates.years.push(this.options.disabledDates[item]);
 					} else { // month
 						for (let x = this.options.start.getFullYear(); x < this.options.end.getFullYear(); x++) {
@@ -388,6 +389,7 @@ class dsq {
 			this.disDates.years = new Set(this.uniqBy(this.disDates.years, JSON.stringify));
 			this.disDates.recurringDays = new Set(this.uniqBy(this.disDates.recurringDays, JSON.stringify));
 			this.disDates.recurringDates = new Set(this.uniqBy(this.disDates.recurringDates, JSON.stringify));
+			console.log('this.disDates.years: ', this.disDates.years);
 		} else {
 			//this.disDates = false;
 			this.disDates.days = false;
@@ -400,12 +402,9 @@ class dsq {
 		if (this.hasYear) {
 			for (let y = this.options.start.y; y < this.options.end.y + 1; y++) {
 				let cl = document.createElement('li');
-				/*if (this.disDates.years !== false && this.disDates.years.has(y)) {
+				if (this.disDates.years !== false && this.disDates.years.has(y)) {
 					cl.className = this.options.classPrefix + 'disabled';
-					cl.tabIndex = -1;
-				} else {
-					cl.tabIndex = 0;
-				}*/
+				}
 				cl.id = `${this.uid}_y_${y}`;
 				cl.dataset.year = y;
 				cl.tabIndex = -1;
@@ -919,7 +918,11 @@ class dsq {
 		let numberOfDays = dsq.daysInMonth(this.selectedYear, this.selectedMonth),
 			daysOfWeek = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'],
 			firstOfMonth;
-		this.reminder.innerHTML = '<a class="' + this.options.classPrefix + 'reminder-month">' + this.options.monthList[this.selectedMonth] + '</a>&nbsp;<a class="' + this.options.classPrefix + 'reminder-year">' + this.selectedYear + '</a>';
+
+		//this.reminder = document.createElement('a');
+		//this.reminder.classList.add(this.options.classPrefix + 'reminder-month')
+		this.reminder.innerHTML = '<span class="' + this.options.classPrefix + 'reminder-month">' + this.options.monthList[this.selectedMonth] + '</span>&nbsp;<span class="' + this.options.classPrefix + 'reminder-year">' + this.selectedYear + '</span>';
+
 		this.lists.days.innerHTML = '<li class="' + this.options.classPrefix + 'dow-header">Mon</li><li class="' + this.options.classPrefix + 'dow-header">Tue</li><li class="' + this.options.classPrefix + 'dow-header">Wed</li><li class="' + this.options.classPrefix + 'dow-header">Thu</li><li class="' + this.options.classPrefix + 'dow-header">Fri</li><li class="' + this.options.classPrefix + 'dow-header">Sat</li><li class="' + this.options.classPrefix + 'dow-header">Sun</li>';
 		firstOfMonth = new Date(this.selectedYear, this.selectedMonth, 1).getDay() === 0 ? 6 : new Date(this.selectedYear, this.selectedMonth, 1).getDay() - 1;
 		// set container size & 1st of month
@@ -945,7 +948,7 @@ class dsq {
 		this.dayClickFn = {
 			handleEvent: function (e) {
 				e.stopPropagation();
-				if (!e.target.classList.contains(that.options.classPrefix + 'disabled')) {
+				if (!e.target.classList.contains(that.options.classPrefix + 'disabled') && !e.target.classList.contains(that.options.classPrefix + 'padding')) {
 					that.selectedDay = e.target.getAttribute('data-day') * 1;
 					that.finishUp();
 
@@ -997,7 +1000,7 @@ class dsq {
 		}
 
 		// add "return to month or year" event if applicable
-		if (this.hasYear) {
+		/*if (this.hasYear) {
 			this.addEvt(this.lists.querySelector('.dsq-reminder-year'), 'click', this.reminderFn, false);
 		} else {
 			// remove css click indicators / hovers
@@ -1008,6 +1011,11 @@ class dsq {
 		} else {
 			// remove css click indicators / hovers
 			this.lists.querySelector('.dsq-reminder-month').classList.add(this.options.classPrefix + 'noh');
+		}*/
+		if (this.hasYear || this.hasMonth) {
+			this.addEvt(this.reminder, 'click', this.reminderFn, false);
+		} else {
+			this.reminder.classList.add(this.options.classPrefix + 'noh');
 		}
 	}
 	goToYear() {
@@ -1228,7 +1236,8 @@ class dsq {
 		this.lists.daySide = document.createElement('span');
 		this.lists.daySide.className = `${this.options.classPrefix}side`;
 		// reminder
-		this.reminder = document.createElement('p');
+		//this.reminder = document.createElement('p');
+		this.reminder = document.createElement('a');
 		this.reminder.className = `${this.options.classPrefix}reminder`;
 		// month list
 		this.lists.months = document.createElement('ul');

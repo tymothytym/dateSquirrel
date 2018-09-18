@@ -9,7 +9,7 @@
     opacity: 0;
 }
 // @mixins
-@mixin colourSet($bkgnd, $txt, $bkgnd-active, $txt-active, $bkgnd-focus) {
+@mixin colourSet($bkgnd, $txt) {
     background-color: $bkgnd;
 	&::-webkit-scrollbar {
     	width: $dsq-scrollbar-width;
@@ -19,24 +19,22 @@
 	}
 	&::-webkit-scrollbar-thumb {
 	  	background-color: $dsq-grey-3;
-	  	outline: 1px solid $bkgnd-focus;
+	  	outline: 1px solid $dsq-black;
 	}
     li {
-    	//transition: color 75ms $dsq-ease-in-out,
-    				//background-color 100ms $dsq-ease-in-out;
 	    color: $txt;
-		&:not(.#{$dsq-prefix}dow-header):not(.#{$dsq-prefix}disabled):not(.#{$dsq-prefix}noh):not(.#{$dsq-prefix}padding) {
+		&:not(.#{$dsq-prefix}dow-header):not(.#{$dsq-prefix}disabled):not(.#{$dsq-prefix}noh) {
 	        @media only screen and (min-width: #{$dsq-size-lg}) {
 	            &:hover,
 	            &:active {
-	                background-color: $bkgnd-active;
-	                color: $txt-active;
+	                background-color: $txt;
+	                color: $bkgnd;
 	            }
 	        }
 	    }
 	    &:focus,
 	    &.#{$dsq-prefix}focused {
-	        background-color: $bkgnd-focus;
+	        background-color: rgba($txt, 0.25);
 	    }
 	}
 }
@@ -78,12 +76,13 @@
         //border-bottom: none;
         width: 100%;
         position: relative;
-        //background-color: $dsq-white;
+        background-color: $dsq-white;
         overflow: hidden;
         //max-height: $dsq-list-height;
         z-index: $dsq-zix-0; 
-        transition: height 175ms $dsq-ease-in-out;
-        height: 0;
+        // animation
+        transition: max-height 175ms $dsq-ease-in-out;
+        max-height: 0;
        	//margin-top: -1px;
         //border-bottom: 1px solid $dsq-grey-4;
         //border-left: 1px solid $dsq-grey-4;
@@ -101,21 +100,16 @@
 	        border-bottom: none;
 	        border-top: none;
 	    }
-	    .#{$dsq-prefix}noh {
-	    	pointer-events: none;
-	    	&:hover {
-	    		text-decoration: none;
-	    	}
+	    a.#{$dsq-prefix}noh:hover {
+	    	text-decoration: none;
 	    }
         ul {
             list-style: none;
         	background-color: transparent;
             li {
                 font-size: $dsq-sm-text-size;
+                cursor: pointer;
                 position: relative;
-                &:not(.#{$dsq-prefix}padding) {
-                	cursor: pointer;
-                }
                 @media only screen and (min-width: #{$dsq-size-lg}) {
                     font-size: $dsq-std-text-size;
                 }
@@ -133,7 +127,7 @@
             }
         }
         .#{$dsq-prefix}list-years {
-        	//transition: height 150ms $dsq-ease-in-out;
+        	transition: height 150ms $dsq-ease-in-out;
             height: $dsq-list-height;
             overflow-y: auto;
             text-align: left;
@@ -143,7 +137,7 @@
             padding: 0;
             margin: 0;
             z-index: $dsq-zix-1;
-            @include colourSet($dsq-year-bkgnd, $dsq-year-text, $dsq-year-bkgnd-active, $dsq-year-text-active, $dsq-year-bkgnd-focus);
+            @include colourSet($dsq-year-bkgnd, $dsq-year-text);
             &:before {
                 @extend %labelPosition;
                 content: $dsq-indicator-label-text-year;
@@ -163,29 +157,23 @@
                 }
             }
         }
-        &.#{$dsq-prefix}month > .#{$dsq-prefix}list-months {
-            left: $dsq-month-width;
-        }
         .#{$dsq-prefix}list-months {
-        	//background-color: $dsq-month-bkgnd;
+        	background-color: $dsq-month-bkgnd;
             overflow-y: auto; //position: absolute;
             //background-color: $dsq-white; //left: 100%;
             //top: 0;
-            width: 100%;
-        	position: absolute;
-		    top: 0;
-		    left: 100%;
+            width: calc(100% - #{$dsq-month-width});
+        	transition: height 150ms $dsq-ease-in-out;
             height: $dsq-list-height;
             padding: 0;
             margin: 0;
-
-            @include colourSet($dsq-month-bkgnd, $dsq-month-text, $dsq-month-bkgnd-active, $dsq-month-text-active, $dsq-month-bkgnd-focus);
+            @include colourSet($dsq-month-bkgnd, $dsq-month-text);
             //z-index: $dsq-zix-2;
             &:before {
                 @extend %labelPosition;
             }
             li {
-                //color: $dsq-black;
+                color: $dsq-black;
                 line-height: $dsq-list-row-height;
                 text-align: left;
                 margin: 0;
@@ -195,29 +183,25 @@
                 }
             }
         }
-        &.#{$dsq-prefix}day > .#{$dsq-prefix}days {
-            top: 0;
-        }
         .#{$dsq-prefix}days {
-            position: absolute;
+            //position: absolute;
             background-color: $dsq-day-bkgnd;
             //padding: 0 5px;
             width: 100%;
             //height: 0;
-            left: 0;
-            top: $dsq-list-height;
+            //left: 0;
+            //top: 0;
             //background-color: $dsq-white;
             //z-index: $dsq-zix-3; 
             // animation
             //transform: translateY(0);
-            height: $dsq-list-height;
+            max-height: $dsq-list-height;
         	//min-height: $dsq-list-height-min;
             display: flex;
             padding: 0;
-            @include colourSet($dsq-day-bkgnd, $dsq-day-text, $dsq-day-bkgnd-active, $dsq-day-text-active, $dsq-day-bkgnd-focus);
+            @include colourSet($dsq-day-bkgnd, $dsq-day-text);
             .#{$dsq-prefix}side {
-                flex: 0 0 10%;
-                max-width: 10%;
+                flex: 0 0 20%;
                 //background-color: $dsq-primary;
                 background-color: $dsq-reminder-bkgnd;
                 align-items: center;
@@ -226,99 +210,71 @@
                 //border-right: 3px solid $dsq-white;
                 
                 .#{$dsq-prefix}reminder {
-                    //width: 100%;
-                    //line-height: calc(#{$dsq-list-row-height} - 2px);
-                    //text-align: center;
+                    width: 100%;
+                    line-height: calc(#{$dsq-list-row-height} - 2px);
+                    text-align: center;
                     margin: 0;
                     padding: 0;
-                    transform: rotate(180deg);
-                    color: $dsq-reminder-text;
-                    display: block;
-				    width: 100%;
-				    height: 100%;
-				    white-space: nowrap;
-				    writing-mode: vertical-rl;
-				    display: flex;
-				    align-items: center;
-				    justify-content: center;
-                    &:not(.#{$dsq-prefix}noh):hover,
-                    &:not(.#{$dsq-prefix}noh):focus {
-                        text-decoration: none;
-                		color: $dsq-reminder-text-active;
-                        background-color: $dsq-reminder-bkgnd-active;
-                    	cursor: pointer;
+                    a:not(.#{$dsq-prefix}noh):hover {
+                        text-decoration: underline;
+                		color: $dsq-reminder-text;
+                        //color: $dsq-on-primary;
+                        //color: $dsq-primary;
+                        cursor: pointer;
                     }
+                    a:not(.#{$dsq-prefix}noh):focus {
+                        text-decoration: underline;
+                    }
+                    line-height: 1em;
                     .#{$dsq-prefix}reminder-month,
                     .#{$dsq-prefix}reminder-year {
                         //color: $dsq-on-primary;
                         //color: $dsq-primary;
-                		//color: $dsq-reminder-text;
-                        //display: block;
-                        display: inline-block;
-  						vertical-align: middle;
+                		color: $dsq-reminder-text;
+                        display: block;
                     }
                     .#{$dsq-prefix}reminder-month {
                         font-size: $dsq-lg-text-size;
                         @media only screen and (min-width: #{$dsq-size-lg}) {
-                        	font-size: 170%;
+                        	font-size: 200%;
                         }
                         //color: $dsq-grey-1;
                     }
                     .#{$dsq-prefix}reminder-year {
                         font-size: $dsq-sm-text-size;
                         @media only screen and (min-width: #{$dsq-size-lg}) {
-                        	font-size: 170%;
+                        	font-size: 200%;
                         }
                         font-weight: 700;
                         //color: $dsq-grey-2;
                     }
-                    &:not(.#{$dsq-prefix}noh):after {
-                    	content: '\279C'; //'\25b6';
-                    	transform: rotate(-90deg); // because up is now left
-                    	font-size: $dsq-lg-text-size;
-					    font-weight: bold;
-					    position: absolute;
-					    bottom: $dsq-sm-text-size;
-					    right: auto;
-					    opacity: 0;
-					    transition: opacity 150ms $dsq-ease-in-out;
-                    }
                 }
             }
             .#{$dsq-prefix}list-days {
-                padding: 4px;
+                padding: 0;
                 margin: 0;
                 display: flex;
                 flex-wrap: wrap;
-                flex-direction: row;
-                //align-items: flex-start;
+                align-items: flex-start;
                 justify-content: flex-start;
-                height: $dsq-list-height;
+                max-height: $dsq-list-height;
             	//min-height: $dsq-list-height-min;
-                flex: 0 0 90%;
-                max-width: 90%; /* force IE11 */
-			    
                 li {
-                    //flex: 0 0 calc(14.28% - 4px);
-                    flex: 0 0 14.28%; /* IE11 hates calc + flex so... */
-                    max-width: calc(14.28% - 4px); /* ...force gutter */
-                    //line-height: $dsq-list-row-height;
+                    flex: 0 0 14.28%;
+                    line-height: $dsq-list-row-height;
                     border-radius: 2px;
                     text-align: center;
-                    margin: 2px;
+                    margin: 0;
                     color: $dsq-black;
-                    display: flex;
-				    align-items: center;
-				    justify-content: center;
                     &:focus {
                         outline: none;
                     }
                     &.#{$dsq-prefix}dow-header {
                         font-size: $dsq-xs-text-size;
                         color: $dsq-grey-2;
-                        //margin: 0;
+                        margin: 0;
                         //line-height: 16px;
-                        //line-height: $dsq-list-row-height;
+                        line-height: $dsq-list-row-height;
                     }
                     &.#{$dsq-prefix}today:before {
                         content: $dsq-indicator-label-text-today;
@@ -327,10 +283,11 @@
                         color: $dsq-grey-2;
                         display: block;
                         height: 0;
-                        position: absolute;
-    					top: 3px;
+                        transform: translateY(-13px);
                     }
                 }
+                flex: 0 0 80%;
+                padding: 10px 7px;
             }
         }
         &.#{$dsq-prefix}month {
@@ -338,7 +295,7 @@
                 &:before {
                     content: $dsq-indicator-label-text-month;
                     opacity: 1;
-                    z-index: $dsq-zix-0;
+                    z-index: 1;
                 }
                 li:not(.#{$dsq-prefix}active) {
                     opacity: 0.4;
@@ -346,7 +303,7 @@
             }
             &.#{$dsq-prefix}day {
                 .#{$dsq-prefix}list-months {
-                    //transition: max-height 200ms $dsq-ease-in-out;
+                    transition: max-height 200ms $dsq-ease-in-out;
                     &:before {
                         opacity: 0;
                     }
@@ -359,16 +316,11 @@
         }
         &.#{$dsq-prefix}out {
             .#{$dsq-prefix}days {
-                //animation: 150ms translateDown $dsq-ease-in-out forwards;
-                //transform: translateY(calc(-1 * (#{$dsq-list-height} * 2)));
-            	transition: top 150ms $dsq-ease-in-out;
-                height: $dsq-list-height;
-                .#{$dsq-prefix}list-days {
-                	padding: 3px;
-	            }
+                animation: 150ms translateDown $dsq-ease-in-out forwards;
+                transform: translateY(calc(-1 * (#{$dsq-list-height} * 2)));
             }
             .#{$dsq-prefix}list-months {
-                width: calc(100% - #{$dsq-month-width});
+                //transition: max-height 200ms $dsq-snap-out;
             }
             .#{$dsq-prefix}list-years {
                 //transition: max-height 200ms $dsq-snap-out;
@@ -397,10 +349,10 @@
     		//box-shadow: $dsq-box-1;
             //box-shadow: $dsq-box-2;
             // animation
-            height: $dsq-list-height;
+            max-height: $dsq-list-height;
             .#{$dsq-prefix}list-months {
                 overflow-y: hidden;
-                //max-height: 0;
+                max-height: 0;
             }
             .#{$dsq-prefix}days {
                 overflow-y: hidden; 
@@ -417,12 +369,9 @@
                     //opacity: 1;
                     //transform: translate($dsq-month-width, -100%);
                     // animation
-                    //max-height: $dsq-list-height;
-                    //animation: slideFadeIn 175ms forwards;
-                    //width: calc(100% - #{$dsq-month-width});
+                    max-height: $dsq-list-height;
+                    animation: slideFadeIn 175ms forwards;
                     overflow-y: auto;
-        			transition: left 200ms $dsq-cruise; //$dsq-ease-in-out;
-        			left: $dsq-month-width;
                     &.#{$dsq-prefix}switch {
 						>li {
 				        	animation: switchOut 250ms;
@@ -439,35 +388,23 @@
                 }
                 &.#{$dsq-prefix}day {
                     // animation
-                    //height: $dsq-list-height;
+                    max-height: $dsq-list-height;
                     //min-height: $dsq-list-height-min;
                     .#{$dsq-prefix}days {
                         // animation
                         //transition: transform 200ms $dsq-snap-out;
-            			transition: top 150ms $dsq-ease-in-out;
-                        height: $dsq-list-height;
+                        max-height: $dsq-list-height;
             			height: 100%;
-            			top: 0;
                     	//min-height: $dsq-list-height-min;
                         //transform: translateY(0); //calc(-1 * (#{$dsq-list-height} * 2))
-		                .#{$dsq-prefix}list-days {
-		                	//padding: 3px;
-			            }
-			            .#{$dsq-prefix}side {
-			            	.#{$dsq-prefix}reminder {
-			                    &:not(.#{$dsq-prefix}noh):after {
-			                    	opacity: 1;
-			                    }
-			                }
-			            }
                     }
                     .#{$dsq-prefix}list-years {
                         overflow-y: hidden;
-                        //max-height: 0;
+                        max-height: 0;
                     }
                     .#{$dsq-prefix}list-months {
                         overflow-y: hidden;
-                        //max-height: 0;
+                        max-height: 0;
                     }
                 }
             }
@@ -475,49 +412,39 @@
     }                
     &.#{$dsq-prefix}done,
     &.#{$dsq-prefix}closing {
-    	.#{$dsq-prefix}lists {
-    		//height: 0;
-	    	.#{$dsq-prefix}month:not(.#{$dsq-prefix}day) {
-		        .#{$dsq-prefix}list-years {
-		            transition: none;
-		            animation: none;
-		            //max-height: 0;
-	  				pointer-events: none;
-		        }
-		        .#{$dsq-prefix}list-months {
-		            transition: none;
-		            animation: none;
-		            //width: 0;
-	  				left: $dsq-month-width;
-		            //transform: translate($dsq-month-width, -100%);
-	  				//pointer-events: none;
-		        }
-		    }
-	    	.#{$dsq-prefix}month.#{$dsq-prefix}day {
-		        .#{$dsq-prefix}list-years {
-		            transition: none;
-		            animation: none;
-		            //max-height: 0;
-	  				pointer-events: none;
-	  				left: $dsq-month-width;
-		        }
-		        .#{$dsq-prefix}list-months {
-		            transition: none;
-		            animation: none;
-		            //max-height: 0;
-	  				pointer-events: none;
-		        }
-			    .#{$dsq-prefix}days {
-	        		top: 0;
-		            transition: none;
-	  				//pointer-events: none;
-		            //transform: translateY(0);
-	                .#{$dsq-prefix}list-days {
-	                	padding: 3px;
-		            }
-		        }
-		    }
-		}
+    	.#{$dsq-prefix}month:not(.#{$dsq-prefix}day) {
+	        .#{$dsq-prefix}list-years {
+	            transition: none;
+	            animation: none;
+	            //max-height: 0;
+  				pointer-events: none;
+	        }
+	        .#{$dsq-prefix}list-months {
+	            transition: none;
+	            animation: none;
+	            transform: translate($dsq-month-width, -100%);
+  				//pointer-events: none;
+	        }
+	    }
+    	.#{$dsq-prefix}month.#{$dsq-prefix}day {
+	        .#{$dsq-prefix}list-years {
+	            transition: none;
+	            animation: none;
+	            max-height: 0;
+  				pointer-events: none;
+	        }
+	        .#{$dsq-prefix}list-months {
+	            transition: none;
+	            animation: none;
+	            max-height: 0;
+  				pointer-events: none;
+	        }
+	        .#{$dsq-prefix}days {
+	            transition: none;
+  				//pointer-events: none;
+	            transform: translateY(0);
+	        }
+	    }
     }
 }
 
@@ -572,3 +499,74 @@
     }
 }
 
+/*
+.dsq .#{$dsq-prefix}lists {
+  	transition: max-height 200ms $dsq-ease-in-out, top 200ms $dsq-ease-in-out;
+  	max-height: 0;
+  	overflow: hidden;
+  	//top: 50px;
+    > .#{$dsq-prefix}list-years {
+        pointer-events: none;
+    }
+	> .#{$dsq-prefix}list-months {
+        pointer-events: none;
+	}
+    > .#{$dsq-prefix}days {
+        pointer-events: none;
+        transform: translateY(300px);
+        transition: transform 200ms $dsq-snap-out;
+    }
+}
+.#{$dsq-prefix}closing .#{$dsq-prefix}lists {
+  	transition: max-height 200ms $dsq-ease-in-out,  top 200ms $dsq-ease-in-out;
+  	overflow: hidden;
+  	//top: 50px;
+  	>ul > li {
+  		pointer-events: none;
+  	}
+	> .#{$dsq-prefix}days {
+        pointer-events: none;
+        //transform: translateY(0);
+	}
+}
+.#{$dsq-prefix}active .#{$dsq-prefix}lists {
+	//max-height: 400px;
+	//top: -50px;
+  	transition: max-height 250ms $dsq-snap-out; //,  top 200ms $dsq-ease-in-out, height 200ms $dsq-ease-in-out;
+	> .#{$dsq-prefix}list-years,
+	> .#{$dsq-prefix}list-months,
+	> .#{$dsq-prefix}days {
+        pointer-events: auto;
+	}
+	> .#{$dsq-prefix}list-months,
+	> .#{$dsq-prefix}days {
+		display: none;
+	}
+	&.#{$dsq-prefix}month {
+		.#{$dsq-prefix}list-months.#{$dsq-prefix}switch {
+			>li {
+	        	//animation: switchOut 250ms forwards;
+  				//transition: color 250ms $dsq-ease-in-out, background-color 250ms $dsq-ease-in-out;
+	        }
+	    }
+        .#{$dsq-prefix}list-months {
+            animation: slideFadeIn 225ms forwards;
+			display: block;
+	        &.#{$dsq-prefix}sout {
+		        //animation: slideFadeOut 150ms forwards;
+		        //transform: translate(-65%, -100%);
+		        display: none;
+	        }
+        }
+        &.#{$dsq-prefix}day .#{$dsq-prefix}days {
+			//display: block;
+            transform: translateY(0);
+        	//transition: transform 2200ms $dsq-snap-out;
+        }
+        &.#{$dsq-prefix}day .#{$dsq-prefix}days.#{$dsq-prefix}sout {
+			//display: block;
+            transform: translateY(300px);
+        	transition: transform 150ms $dsq-ease;
+        }
+    }
+}*/
