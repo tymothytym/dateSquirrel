@@ -5,7 +5,7 @@
 // A date picker with a nutty tang
 // https://github.com/tymothytym/dateSquirrel
 // License MIT
-// (c) tymothytym 2018
+// (c) tymothytym 2019
 // --------------------------------------------------------
 
 // --------------------------------------------------------
@@ -23,7 +23,6 @@ import defaults from './settings.js';
 class dsq {
 	// create instance
 	constructor(identifier, options) {
-		//console.log('dsq instance: ', identifier);
 		// check identifier exists
 		if (!identifier.nodeName) {
 			this.o = document.querySelector(identifier);
@@ -38,15 +37,6 @@ class dsq {
 		if (this.o.nodeName !== "INPUT") {
 			throw 'dateSquirrel only works on <input>';
 		}
-
-		/*// check dsq <label> doesn't wrap <input>
-		if (this.o.parentNode.nodeName === "LABEL") {
-			throw 'dateSquirrel needs a <label>';
-		}
-		// check dsq <label> has for
-		if (this.o.previousElementSibling.getAttribute('for') !== this.o.id) {
-			throw 'dateSquirrel\'s <label> has to include a matching "for" attribute';
-		}*/
 
 		// polyfill for Element.closest --> https://developer.mozilla.org/en-US/docs/Web/API/Element/closest#Polyfill
 		if (!Element.prototype.matches) {
@@ -63,89 +53,7 @@ class dsq {
 				return null;
 			};
 		}
-		// polyfill for Array.from --> https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/from#Polyfill
-		if (!Array.from) {
-			Array.from = (function () {
-				var toStr = Object.prototype.toString;
-				var isCallable = function (fn) {
-					return typeof fn === 'function' || toStr.call(fn) === '[object Function]';
-				};
-				var toInteger = function (value) {
-					var number = Number(value);
-					if (isNaN(number)) {
-						return 0;
-					}
-					if (number === 0 || !isFinite(number)) {
-						return number;
-					}
-					return (number > 0 ? 1 : -1) * Math.floor(Math.abs(number));
-				};
-				var maxSafeInteger = Math.pow(2, 53) - 1;
-				var toLength = function (value) {
-					var len = toInteger(value);
-					return Math.min(Math.max(len, 0), maxSafeInteger);
-				};
-
-				// The length property of the from method is 1.
-				return function from(arrayLike /*, mapFn, thisArg */ ) {
-					// 1. Let C be the this value.
-					var C = this;
-
-					// 2. Let items be ToObject(arrayLike).
-					var items = Object(arrayLike);
-
-					// 3. ReturnIfAbrupt(items).
-					if (arrayLike == null) {
-						throw new TypeError('Array.from requires an array-like object - not null or undefined');
-					}
-
-					// 4. If mapfn is undefined, then let mapping be false.
-					var mapFn = arguments.length > 1 ? arguments[1] : void undefined;
-					var T;
-					if (typeof mapFn !== 'undefined') {
-						// 5. else
-						// 5. a If IsCallable(mapfn) is false, throw a TypeError exception.
-						if (!isCallable(mapFn)) {
-							throw new TypeError('Array.from: when provided, the second argument must be a function');
-						}
-
-						// 5. b. If thisArg was supplied, let T be thisArg; else let T be undefined.
-						if (arguments.length > 2) {
-							T = arguments[2];
-						}
-					}
-
-					// 10. Let lenValue be Get(items, "length").
-					// 11. Let len be ToLength(lenValue).
-					var len = toLength(items.length);
-
-					// 13. If IsConstructor(C) is true, then
-					// 13. a. Let A be the result of calling the [[Construct]] internal method 
-					// of C with an argument list containing the single item len.
-					// 14. a. Else, Let A be ArrayCreate(len).
-					var A = isCallable(C) ? Object(new C(len)) : new Array(len);
-
-					// 16. Let k be 0.
-					var k = 0;
-					// 17. Repeat, while k < len… (also steps a - h)
-					var kValue;
-					while (k < len) {
-						kValue = items[k];
-						if (mapFn) {
-							A[k] = typeof T === 'undefined' ? mapFn(kValue, k) : mapFn.call(T, kValue, k);
-						} else {
-							A[k] = kValue;
-						}
-						k += 1;
-					}
-					// 18. Let putStatus be Put(A, "length", len, true).
-					A.length = len;
-					// 20. Return A.
-					return A;
-				};
-			}());
-		}
-		// yet more IE polyfill - for childNode.remove()
+		// IE polyfill - for childNode.remove()
 		// https://developer.mozilla.org/en-US/docs/Web/API/ChildNode/remove#Polyfill
 		// from:https://github.com/jserz/js_piece/blob/master/DOM/ChildNode/remove()/remove().md
 		(function (arr) {
@@ -167,16 +75,12 @@ class dsq {
 		
 		// check to see if there is a max or min on the input
 		if (this.o.hasAttribute('min')) {
-			//console.log('min: ', identifier.hasAttribute('min'));
 			let min = this.o.getAttribute('min').split('-');
 			defaults.start = new Date(min[0], (min[1] * 1) - 1, min[2]);
-			//console.log('defaults.start: ', defaults.start);
 		}
 		if (this.o.hasAttribute('max')) {
-			//console.log('max: ', identifier.hasAttribute('max'));
 			let max = this.o.getAttribute('max').split('-');
 			defaults.end = new Date(max[0], (max[1] * 1) - 1, max[2]);
-			//console.log('defaults.end: ', defaults.end);
 		}
 
 		// check for touch
@@ -188,18 +92,14 @@ class dsq {
 
 		// merge options & defaults
 		this.options = this.extend(defaults, options || {});
-		//console.log('this.options: ', this.options);
 
 		// create a new dateSquirrel instance
-		//this.label = document.querySelector(`[for="${this.o.id}"]`);
-		this.uid = '_dsq__' + this.o.id;//this.newId();
-		//console.log('this.label: ', this.label);
+		this.uid = '_dsq__' + this.o.id;
 
 		// check browser feature compatibility <-- Doesn't work in IE11?!
 		//const features = 'querySelector' in document && 'addEventListener' in window && 'classList' in window.Element.prototype;
 
 		// check activation criteria
-		//if (!features) {
 		if (!('querySelector' in document)) { // stupid
 			if (!('addEventListener' in window)) { // IE 11
 				if (!('classList' in window)) { // bugs
@@ -216,16 +116,6 @@ class dsq {
 	// initialise instance
 	init() {
 		let instanceId = '#' + this.uid;
-			/*,
-			cssRules = "",
-			cssClass = this.options.cssContainerClass + '_' + this.uid,
-			primaryTextCss = instanceId + ' .' + this.options.classPrefix + 'lists ul>li.' + this.options.classPrefix + 'active{color:' + this.options.primaryTextColour + '}',
-			primaryColourCss = instanceId + ' .' + this.options.classPrefix + 'lists ul>li:not(.' + this.options.classPrefix + 'dow-header):not(.' + this.options.classPrefix + 'disabled):hover{background-color:' + this.options.primaryColour + ';color:' + this.options.textOnPrimaryColour + '}' +
-			instanceId + ' .' + this.options.classPrefix + 'lists ul>li:not(.' + this.options.classPrefix + 'dow-header):active{background-color:' + this.options.primaryColour + ';color:' + this.options.textOnPrimaryColour + '}' +
-			'@media only screen and (min-width: ' + this.options.breakpoint + ') {' +
-			instanceId + ' .' + this.options.classPrefix + 'side{background-color:' + this.options.primaryColour + '}' +
-			instanceId + ' .' + this.options.classPrefix + 'reminder-month,' +
-			instanceId + ' .' + this.options.classPrefix + 'reminder-year {color:' + this.options.textOnPrimaryColour + '}}';*/
 
 		// process options
 		this.options.start = this.processUd(this.options.start);
@@ -302,10 +192,6 @@ class dsq {
 			delete this.options.callback;
 			delete this.options;
 		}
-		// purge associations
-		//this.o = null;
-		//this.label = null;
-		//this.uid = null;
 	}
 	// construction functions
 	makeLists() {
@@ -365,7 +251,6 @@ class dsq {
 				} else if (typeof this.options.disabledDates[item] === 'number') {
 					// range of dates
 					if (this.options.disabledDates[item].toString().length > 2) { // year
-						console.log('YEAR!');
 						this.disDates.years.push(this.options.disabledDates[item]);
 					} else { // month
 						for (let x = this.options.start.getFullYear(); x < this.options.end.getFullYear(); x++) {
@@ -391,7 +276,6 @@ class dsq {
 			this.disDates.recurringDates = new Set(this.uniqBy(this.disDates.recurringDates, JSON.stringify));
 			console.log('this.disDates.years: ', this.disDates.years);
 		} else {
-			//this.disDates = false;
 			this.disDates.days = false;
 			this.disDates.months = false;
 			this.disDates.years = false;
@@ -452,8 +336,6 @@ class dsq {
 						}
 					} else if (!that.hasYear && !that.hasMonth) {
 						that.lists.classList.add(that.options.classPrefix + 'month', that.options.classPrefix + 'day');
-					} else {
-						//that.o.focus();
 					}
 				}
 				
@@ -473,14 +355,6 @@ class dsq {
 				that.clearFocus();
 			}
 		};
-		/*this.changeFn = {
-			handleEvent: function (e) {
-				// check for invalid dates
-				if (!dsq.isValidDate(this.parseDateString(e.target.valur, zoneOrder))) {
-
-				}
-			}
-		};*/
 		this.yrClickFn = {
 			handleEvent: function (e) {
 
@@ -513,7 +387,6 @@ class dsq {
 						that.lists.classList.add(that.options.classPrefix + 'month');
 						// check months
 						that.checkMonths();
-						//that.listHeightCalc();
 					} else {
 						// finished dating section
 						that.finishUp();
@@ -579,13 +452,6 @@ class dsq {
 				let blocks,
 					unit,
 					unitId;
-				//console.log('--------------------------------');
-				//console.log('e.target: ', e.target);
-				//console.log('e.which: ', e.which);
-				//console.log('that.o.id: ', that.o.id);
-				//console.log('document.activeElement: ', document.activeElement);
-				//console.log('SAME: ', that.o === document.activeElement);
-				//console.log('document.activeElement.nodeName: ', document.activeElement.nodeName);
 
 				// which list is active
 				if (that.lists.classList.contains(that.options.classPrefix + 'day')) {
@@ -614,23 +480,15 @@ class dsq {
 				// find any existing focus
 				let blockOn = that.findFocus(blocks),
 					refocus = true;
-					//firstTime = focusedOn[0],
-					//blockOn = focusedOn[1];
-				//console.log('blockOn: ', blockOn);
+
 				// check user is not typing a date
 				if (document.activeElement.id !== that.o.id) {
-					//console.log('If -------------------->: ', e.which);
 
 					// key action modification
 					switch (e.which) {
 						case 40: {
-							//console.log('focusedOn: ', focusedOn);
-							//console.log('blockOn: ', blockOn);
-							//console.log('firstTime: ', firstTime);
-							//console.log('e.shiftKey: ', e.shiftKey);
-							//console.log('unitId: ', unitId);
 							e.preventDefault();
-							if (blockOn !== blocks.length - 1) {// && !firstTime) {
+							if (blockOn !== blocks.length - 1) {
 								if (unitId !== 2) {
 									blockOn++;
 								} else {
@@ -654,7 +512,7 @@ class dsq {
 						}
 						case 38: { // up
 							e.preventDefault();
-							if (blockOn !== 0) {// && !firstTime) {
+							if (blockOn !== 0) {
 								if (unitId !== 2) {
 									blockOn--;
 								} else {
@@ -670,8 +528,6 @@ class dsq {
 								}
 							} else {
 								// back to input
-								//console.log('back to input');
-								//document.activeElement.blur();
 								that.o.focus();
 								that.o.select();
 								refocus = false;
@@ -680,9 +536,9 @@ class dsq {
 						}
 						case 37: { // left
 							e.preventDefault();
-							if (blockOn !== 0 && unitId === 2) {// && !firstTime ) {
+							if (blockOn !== 0 && unitId === 2) {
 								blockOn--;
-							} else if (unitId === 1 && that.hasYear) {// && !firstTime ) {
+							} else if (unitId === 1 && that.hasYear) {
 								that.goToYear();
 								let lastActive = that.lists.years.querySelector('.' + that.options.classPrefix + 'active');
 								that.lists.years.setAttribute('aria-activedescendant', lastActive.id);
@@ -698,36 +554,6 @@ class dsq {
 							break;
 						}
 						case 9: {
-							//console.log('blocks[blockOn].id: ', blocks[blockOn].id);
-							/*let focusedOn = that.findFocus(blocks);
-							firstTime = false;
-							blockOn = focusedOn[1];
-							console.log('focusedOn: ', focusedOn);
-							console.log('blockOn: ', blockOn);
-							console.log('firstTime: ', firstTime);
-							console.log('e.shiftKey: ', e.shiftKey);
-							console.log('unitId: ', unitId);
-							if (e.shiftKey === false) {
-								if (blockOn === blocks.length - 1) {
-									if (unitId !== 2) {
-										e.preventDefault();
-									} else {
-										document.body.click();
-									}
-								} else {
-									that.clearFocus();
-								}
-							} else {
-								if (blockOn === 0) {
-									if (unitId !== 0) {
-										e.preventDefault();
-									} else {
-										document.body.click();
-									}
-								} else {
-									that.clearFocus();
-								}
-							}*/
 							that.removeActive(0);
 							// remove keyboard listener from window
 							that.rmEvt(window, 'keydown', that.keydownFn, false);
@@ -752,7 +578,6 @@ class dsq {
 						that.setFocus(blocks[blockOn]);
 					}
 				} else {
-					//console.log('Else -------------------->: ', e.which);
 					if (e.which === 8) { // backspace
 						// clear previous data
 						that.clearStored();
@@ -772,20 +597,12 @@ class dsq {
 						that.removeActive(300);
 						// remove keyboard listener from window
 						that.rmEvt(window, 'keydown', that.keydownFn, false);
-						/*if (that.wrapper.classList.contains(that.options.classPrefix + 'active')) {
-							that.wrapper.classList.remove(that.options.classPrefix + 'active');
-						}*/
 						// parse
 						if (that.options.parse.active) {
 							that.setValue(that.o.value, that.options.parse.rule);
 						}
 					} else if (e.which === 40) { // down
 						e.preventDefault();
-						//console.log('blockOn: ', blockOn);
-						//console.log('blocks.length: ', blocks.length);
-						//console.log('firstTime: ', firstTime);
-						//console.log('unit: ', unit);
-						//console.log('blocks[blockOn].id: ', blocks[blockOn].id);
 
 						// set parent to active
 						unit.setAttribute('aria-activedescendant', blocks[blockOn].id);
@@ -807,10 +624,8 @@ class dsq {
 				delay(function() {
 					if (!that.wrapper.classList.contains(that.options.classPrefix + 'active')) {
 						if (dsq.isValidDate(that.parseDateString(e.target.value, that.options.parse.rule))) {
-							//console.log('True parse fn: ', that.parseDateString(e.target.value, that.options.parse.rule));
 							that.setValue(e.target.value, that.options.parse.rule);
 						} else {
-							//console.log('False parse fn: ', that.parseDateString(e.target.value, that.options.parse.rule));
 							that.clearStored();
 							that.makeCallback();
 						}
@@ -844,7 +659,6 @@ class dsq {
 		}
 
 		// set initial date
-		//console.log('this.options.initial : ', this.options.initial );
 		if (this.options.initial !== false) {
 			this.finishUp(this.options.initial, this.options.parse.rule);
 		}
@@ -919,8 +733,6 @@ class dsq {
 			daysOfWeek = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'],
 			firstOfMonth;
 
-		//this.reminder = document.createElement('a');
-		//this.reminder.classList.add(this.options.classPrefix + 'reminder-month')
 		this.reminder.innerHTML = '<span class="' + this.options.classPrefix + 'reminder-month">' + this.options.monthList[this.selectedMonth] + '</span>&nbsp;<span class="' + this.options.classPrefix + 'reminder-year">' + this.selectedYear + '</span>';
 
 		this.lists.days.innerHTML = '<li class="' + this.options.classPrefix + 'dow-header">Mon</li><li class="' + this.options.classPrefix + 'dow-header">Tue</li><li class="' + this.options.classPrefix + 'dow-header">Wed</li><li class="' + this.options.classPrefix + 'dow-header">Thu</li><li class="' + this.options.classPrefix + 'dow-header">Fri</li><li class="' + this.options.classPrefix + 'dow-header">Sat</li><li class="' + this.options.classPrefix + 'dow-header">Sun</li>';
@@ -932,7 +744,6 @@ class dsq {
 		for (let d = 1; d < numberOfDays + 1; d++) {
 			let theDay = daysOfWeek[new Date(this.selectedYear, this.selectedMonth, d).getDay()];
 			if (dsq.isBetweenDates(new Date(this.selectedYear, this.selectedMonth, d), this.options.start, this.options.end) && (this.disDates.days === false || (!this.disDates.days.has(this.selectedYear + '/' + this.selectedMonth + '/' + d) && !this.disDates.recurringDays.has(theDay) && !this.disDates.recurringDates.has(this.selectedYear + '/' + this.selectedMonth + '/' + d)))) {
-				//console.log('Date ' + d + ' enabled (' + theDay + ')');
 				this.lists.days.insertAdjacentHTML('beforeend', '<li id="' + this.uid + '_d_' + d + '" data-day="' + d + '" tabindex="-1" role="option">' + d + '</li>');
 			} else {
 				this.lists.days.insertAdjacentHTML('beforeend', '<li id="' + this.uid + '_d_' + d + '" class="' + this.options.classPrefix + 'disabled" data-day="' + d + '" tabindex="-1" role="option">' + d + '</li>');
@@ -941,7 +752,6 @@ class dsq {
 				this.lists.days.querySelector('li[data-day="' + d + '"]').classList.add(this.options.classPrefix + 'today');
 			}
 		}
-		//this.listHeightCalc();
 		// day select
 		let activeDays = this.lists.days.querySelectorAll('li[data-day]'),
 			that = this;
@@ -963,55 +773,15 @@ class dsq {
 				e.stopPropagation();
 				that.lists.classList.add(that.options.classPrefix + 'out');
 				setTimeout(function () {
-					//that.lists.classList.remove(that.options.classPrefix + 'day');
 					that.lists.classList.remove(that.options.classPrefix + 'out');
-					//that.listHeightCalc();
 				}, 200);
 				that.lists.classList.remove(that.options.classPrefix + 'day');
 			}
 		};
-		/*this.reminderMonthFn = {
-			handleEvent: function (e) {
-				e.stopPropagation();
-				that.lists.classList.add(that.options.classPrefix + 'out');
-				setTimeout(function () {
-					//that.lists.classList.remove(that.options.classPrefix + 'day');
-					that.lists.classList.remove(that.options.classPrefix + 'out');
-					//that.listHeightCalc();
-				}, 200);
-				that.lists.classList.remove(that.options.classPrefix + 'day');
-			}
-		};
-		this.reminderYearFn = {
-			handleEvent: function (e) {
-				e.stopPropagation();
-				that.lists.classList.add(that.options.classPrefix + 'out-y');
-				setTimeout(function () {
-					//that.lists.classList.remove(that.options.classPrefix + 'day');
-					that.lists.classList.remove(that.options.classPrefix + 'out-y');
-					//that.listHeightCalc();
-				}, 200);
-				that.goToYear();
-			}
-		};*/
 		// add day click event
 		for (let i = 0; i < activeDays.length; i++) {
 			this.addEvt(activeDays[i], 'click', this.dayClickFn, false);
 		}
-
-		// add "return to month or year" event if applicable
-		/*if (this.hasYear) {
-			this.addEvt(this.lists.querySelector('.dsq-reminder-year'), 'click', this.reminderFn, false);
-		} else {
-			// remove css click indicators / hovers
-			this.lists.querySelector('.dsq-reminder-year').classList.add(this.options.classPrefix + 'noh');
-		}
-		if (this.hasMonth) {
-			this.addEvt(this.lists.querySelector('.dsq-reminder-month'), 'click', this.reminderFn, false);
-		} else {
-			// remove css click indicators / hovers
-			this.lists.querySelector('.dsq-reminder-month').classList.add(this.options.classPrefix + 'noh');
-		}*/
 		if (this.hasYear || this.hasMonth) {
 			this.addEvt(this.reminder, 'click', this.reminderFn, false);
 		} else {
@@ -1019,24 +789,12 @@ class dsq {
 		}
 	}
 	goToYear() {
-		/*this.lists.dayWrap.classList.add(this.options.classPrefix + 'sout');
-		setTimeout(() => {
-			this.lists.dayWrap.classList.remove(this.options.classPrefix + 'sout');
-			this.lists.classList.remove(this.options.classPrefix + 'day');
-			this.lists.months.classList.add(this.options.classPrefix + 'sout');
-			setTimeout(() => {
-				this.lists.classList.remove(this.options.classPrefix + 'month');
-				this.lists.months.classList.remove(this.options.classPrefix + 'sout');
-				//this.listHeightCalc();
-			}, 150);
-		}, 150);*/
 		this.lists.classList.remove(this.options.classPrefix + 'day');
 		this.lists.classList.remove(this.options.classPrefix + 'month');
 		this.lists.months.removeAttribute('aria-activedescendant');
 	}
 	finishUp(makeDate, zoneOrder) {
 		const delay = 300; // ms
-		//console.log('makeDate: ', makeDate);
 		if (makeDate === undefined) {
 			if (typeof this.selectedDay === 'undefined') {
 				// month only
@@ -1054,7 +812,6 @@ class dsq {
 				this.selectedMonth = this.setDate.getMonth();
 				this.selectedDay = this.setDate.getDate();
 			} else {
-				//console.error('dateSquirrel: Unrecognised date');
 				// date can't be parsed
 				return false;
 			}
@@ -1067,10 +824,6 @@ class dsq {
 		this.o.value = this.setDate.human;
 		// data-dsq-date
 		this.o.setAttribute('data-dsq-date', this.setDate.save);
-		// value attr
-		//this.o.setAttribute('value', this.selectedYear + '-' + (this.selectedMonth + 1) + '-' + this.selectedDay);
-		// remove active class
-		//that.wrapper.classList.remove(that.options.classPrefix + 'active');
 		// update UI
 		if (makeDate === undefined) {
 			// set status to done
@@ -1106,7 +859,6 @@ class dsq {
 				human: this.setDate ? this.setDate.human : undefined,
 				save: this.setDate ? this.setDate.save : undefined
 			};
-		//console.log('callback args: ', args);
 		callback = this.options.callback.call(args);
 
 		if (typeof this.options.callback === 'function') {
@@ -1117,6 +869,8 @@ class dsq {
 			/* eslint-enable no-console */
 		}
 	}
+
+	// utility functions
 	// DOM checks
 	/*wouldBeInView(el, retDir) {
 		retDir = retDir || false;
@@ -1134,7 +888,6 @@ class dsq {
 			return false;
 		}
 	}*/
-	// utility functions
 	removeData(node) {
 		while (node.firstChild) {
 			node.removeChild(node.firstChild);
@@ -1194,31 +947,6 @@ class dsq {
 			}
 		}
 	}
-	// calculate correct hight for list
-	/*listHeightCalc() {
-		let daysHeight = (Math.ceil(this.lists.querySelectorAll('.dsq-days > .dsq-list-days > li[data-day]').length / 7) + 1) * this.rowHeight + 20;
-
-		if (!this.wrapper.classList.contains(this.options.classPrefix + 'active')) {
-			this.lists.style.height = this.o.offsetHeight;
-		} else if (this.lists.classList.contains(this.options.classPrefix + 'day')) {
-			this.lists.style.height = daysHeight + 'px';
-		} else {
-			this.lists.style.height = this.listHeight + 'px';
-		}
-	}*/
-	// inject css
-	/*injectCss(theClass, rules) {
-		if (rules === "") {
-			return false;
-		} else if (document.querySelector('#dsq_styles') === null) {
-			let styleDiv = document.createElement('div');
-			styleDiv.id = 'dsq_styles';
-			styleDiv.innerHTML = '<style class="' + theClass + '">' + rules + '</style>';
-			document.body.appendChild(styleDiv);
-		} else {
-			document.querySelector('#dsq_styles').insertAdjacentHTML('beforeend', '<style class="' + theClass + '">' + rules + '</style>');
-		}
-	}*/
 	// wrap in HTML
 	wrap() {
 		// wrapper
@@ -1236,7 +964,6 @@ class dsq {
 		this.lists.daySide = document.createElement('span');
 		this.lists.daySide.className = `${this.options.classPrefix}side`;
 		// reminder
-		//this.reminder = document.createElement('p');
 		this.reminder = document.createElement('a');
 		this.reminder.className = `${this.options.classPrefix}reminder`;
 		// month list
@@ -1259,16 +986,13 @@ class dsq {
 		this.lists.appendChild(this.lists.years);
 		this.lists.appendChild(this.lists.months);
 		this.lists.appendChild(this.lists.dayWrap);
-		//this.wrapper.appendChild(this.label);
 		this.wrapper.appendChild(this.o);
 		this.wrapper.appendChild(this.lists);
 	}
 	unwrap() {
 		// remove lists
-		//document.querySelector('#' + this.uid + ' .dsq-lists').remove();
 		this.lists.remove();
 		// move input
-		//this.wrapper.parentNode.insertBefore(this.wrapper, this.o);
 		this.wrapper.parentNode.insertBefore(this.o, this.wrapper);
 		// remove wrapper
 		this.wrapper.remove();
@@ -1305,20 +1029,6 @@ class dsq {
 		}
 		return extended;
 	}
-	/*newId() {
-		return '_' + Math.random().toString(36).substr(2, 9);
-	}
-	//https://stackoverflow.com/questions/842336/is-there-a-way-to-select-sibling-nodes#answer-842346
-	getChildren(n, skipMe) {
-		var r = [];
-		for (; n; n = n.nextSibling)
-			if (n.nodeType == 1 && n != skipMe)
-				r.push(n);
-		return r;
-	}
-	getSiblings(n) {
-		return this.getChildren(n.parentNode.firstChild, n);
-	}*/
 	isFunction(obj) {
 		return !!(obj && obj.constructor && obj.call && obj.apply);
 	}
@@ -1510,10 +1220,6 @@ class dsq {
 	}
 	// parse string entered in UK date format
 	parseDateString(str, zone) {
-		//console.log('----------------------------------------');
-		//console.log('str: ', str);
-		//console.log('zone: ', zone);
-		//console.log('----------------------------------------');
 		let delimiter = false,
 			delimiterPT = false,
 			monthNum = null,
@@ -1526,8 +1232,6 @@ class dsq {
 			cleanerUI = str.replace(/,/g, '').replace(/\(/g, '').replace(/\)/g, '').replace(/\[/g, '').replace(/\]/g, ''), //remove commas & brackets,
 			cleanerPT = this.options.pattern.replace(/,/g, '').replace(/\(/g, '').replace(/\)/g, '').replace(/\[/g, '').replace(/\]/g, ''); //remove commas & brackets
 
-		//console.log('cleanerUI: ', cleanerUI);
-		//console.log('cleanerPT: ', cleanerPT);
 		// identify delimiter in user input & pattern
 		potentials.forEach(function(instance) {
 			if (cleanerUI.indexOf(instance) > 0) {
@@ -1543,8 +1247,6 @@ class dsq {
 				delimiterPT = instance;
 			}
 		});
-		//console.log('delimiter: ', delimiter);
-		//console.log('delimiterPT: ', delimiterPT);
 		if (delimiter) {
 			let parts = cleanerUI.split(delimiter),
 				partsPT = cleanerPT.split(delimiterPT);
@@ -1555,17 +1257,10 @@ class dsq {
 				}
 				return ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'].indexOf(part.substring(0,3).toLowerCase()) > -1;
 			});
-			//console.log('parts: ', parts);
-			//console.log('partsPT: ', partsPT);
 
 			if (parts.length < 3 ) { // maybe partial or short pattern
 				if (parts.length === partsPT.length) { // probably short pattern
 					partsPT.forEach(function(partPT, j) {
-						//console.log('==============================');
-						//console.log('partPT: ', partPT);
-						//console.log('j: ', j);
-						//console.log('partPT[j]: ', partPT[j]);
-						//console.log('parts[j]: ', parts[j]);
 						if (partPT.indexOf('w') > -1) {
 							partsPT.splice(partsPT[j], 1);
 						} else if (partsPT[j].indexOf('d') > -1) {
@@ -1580,18 +1275,6 @@ class dsq {
 					// inidentifiable parts
 					return false;
 				}
-			 
-				/*if (parts.length === partsPT.length) { // probably short pattern
-					for (let x = 0; x < partsPT.length; x++) {
-						if (partsPT[x].indexOf('d')) {
-							dayPart = parts[x];
-						} else if (partsPT[x].indexOf('m')) {
-							monthPart = parts[x];
-						} else if (partsPT[x].indexOf('y')) {
-							yearPart = parts[x];
-						}
-					}
-				}*/
 			} else if (parts.length === 3) { // e.g day, month, year
 				// workout return order
 				if (zone !== undefined) {
@@ -1633,9 +1316,6 @@ class dsq {
 				// too many parts
 				return false;
 			}
-			//console.log('dayPart: ', dayPart);
-			//console.log('monthPart: ', monthPart);
-			//console.log('yearPart: ', yearPart);
 
 			// check for words
 			if (monthPart) {
@@ -1673,9 +1353,7 @@ class dsq {
 			} else {
 				yearNum = new Date().getFullYear();
 			}
-			//console.log('dayPart: ', dayPart);
-			//console.log('monthPart: ', monthPart);
-			//console.log('yearPart: ', yearPart);
+
 			const retDate = new Date(yearNum,monthNum,dayNum);
 			if (dsq.isValidDate(retDate)) {
 				return new Date(yearNum,monthNum,dayNum);
@@ -1688,15 +1366,7 @@ class dsq {
 			return false;
 		}
 	}
-	// static functions
-	/*static modMonths(date, add) {
-		let d = new Date(date),
-			n = d.getDate();
-		d.setDate(1);
-		d.setMonth(d.getMonth() + add);
-		d.setDate(Math.min(n, dsq.daysInMonth(d.getFullYear(), d.getMonth())));
-		return d;
-	}*/
+	
 	// add touch classes to dsq instances
 	static touchSet() {
 		// add touch class

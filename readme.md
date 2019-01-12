@@ -7,18 +7,12 @@
     <img src="https://rawgit.com/tymothytym/dateSquirrel/master/static/squirrelicity.svg" alt="squirrelicity"/>
 </p>
 
-dateSquirrel is a date picker with calendar dates. It's modal-free, dependency-free, library-free and asterisk-free. This project was created in response to a request for an app date picker that fitted inside a single input field and didn't launch modals or spawn additional inputs but was still: versatile enough to pick a date or just a month, was easily (re)brandable, didn't mess with the inputs styles, supported IE11 and could be destroyed & reset with new date ranges. 
-
-Obviously this repo is Plan B. Plan A is still to repeatedly tell people it isn't possible with increasingly wild gesticulations.
+dateSquirrel is a date picker with calendar dates. It's modal-free, dependency-free, library-free and asterisk-free. This project was created in response to a request for an app date picker that fitted inside a single input field and didn't launch modals or spawn additional inputs but was still: versatile enough to pick a date by day, month and year, was brandable, didn't mess with the inputs core behaviour, supported IE11 and could be destroyed & reset with new date ranges via JavaScript. 
 
 **[Try the demo](https://tymothytym.com/datesquirrel/)**
 
 ## Changelog
 [See the changelog](https://github.com/tymothytym/dateSquirrel/blob/master/CHANGELOG.md)
-
-## To do
-- [ ] Add styling options to readme
-- [ ] Optimise
 
 ## Table of Contents
 - [Before you get started](#warning)
@@ -89,7 +83,7 @@ It's not because dateSquirrel was made by a crazy person (that's simply a coinci
 When you give dateSquirrel a date it assumes two things right off the bat:
 
 1. You mean the **whole** of that day regardless of any time you may indicate
-2. You want to **include** that day in whatever circumstance you're identifying (e.g day-a to day-n **includes** both day-a and day-n)
+2. You want to **include** that day in whatever circumstance you're identifying (e.g day-a to day-n **includes** day-a **and** day-n **and** all intervening days)
 
 This means that if you asked for a range from now to 5 days hence, but excluding the third day, you would only need to indicate a point at any time during a day to indicate the whole day. Effectively this just means you should ignore the time parts of a Date object when dealing with dateSquirrel. It's always midnight in the land of the squirre... ah nuts; I should have called it dateNight.
 
@@ -147,7 +141,6 @@ new dsq('#myDateInput');
 
 ```javascript
 require(['dsq'], function (dsq) {
-  // ...
   new dsq('#myDateInput');
 });
 ```
@@ -205,11 +198,8 @@ const defaults = { // dsq defaults
     hideScrollbars: false, // if true then a scrollbars on year and month list are hidden (visual effect)
     activation: function() {return true}, // if the function evaluates to true when DOM loads then dateSquirrel activates
     callback: function() {}, // optional callback fired on date completion
-        //console.log('Date set: ', this.date);
-        //console.log('The input element: ', this.input);
-        //console.log('The dateSquirrel wrapper: ', this.wrapper);
     parse: {
-    	active: true, // if true dateSquirrel will (after [parseDelay]ms) parse, format and rewrite a user given date
+    	active: true, // if true dateSquirrel will (after [parse][delay] ms) parse, format and rewrite a user given date
     	delay: 100, // the delay in ms before dateSquirrel will parse, format and rewrite a user given date
     	etype: 'change', // the type of event dateSquirrel will listen for before parsing >> https://developer.mozilla.org/en-US/docs/Web/Events
     	rule: 'dmy' // the expected order a user will input a date (default = day > month > year)
@@ -822,7 +812,7 @@ n.b. the `dsq-` prefix can be changed in the JavaScript & SCSS settings files bu
 
 <a name="css"/></a>
 ### CSS
-If you're including the stock build (css & js) and want to fancy that up some then you can! dateSquirrel tries to be as non-judgemental as possible and due to [speci...ifi..ciftit..y](https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity)(?) you can override any styles by making yours more specificifiky. Or in english; give your form or overall container an ID, then reference it in your rules to override the defaults. 
+If you're including the stock build (css & js) and want to fancy that up some then you can! dateSquirrel tries to be as non-judgemental as possible and due to [speci...specifi..ciftit..y](https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity)(?) you can override any styles by making yours more specific. Or in english; give your form or overall container an ID, then reference it in your rules to override the defaults. 
 
 ```html
 <form id="myForm">
@@ -847,7 +837,7 @@ If you're including the stock build (css & js) and want to fancy that up some th
 
 ```
 
-Who says programming is full of niche, inpenetrable and hard to spell words? Everyone. That's who. Literally everyone.
+Who says programming is full of niche, inpenetrable and hard to spell words? Everyone; that's who. Literally everyone.
 
 <a name="scss"/></a>
 ### SCSS
