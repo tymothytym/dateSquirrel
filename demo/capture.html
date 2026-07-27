@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>dateSquirrel — capture stage</title>
+    <style>
+      /*
+       * A bare stage for `npm run gif`. No headings, no cards, nothing but one
+       * picker on a transparent background, at a fixed size so successive runs
+       * produce identical frames.
+       */
+      html,
+      body {
+        margin: 0;
+        background: transparent;
+      }
+
+      #stage {
+        width: 420px;
+        padding: 22px;
+        /* Slower than the shipped default so a screenshot burst samples the
+           slide properly. Playback delay is set by the encoder. */
+        --dsq-duration: 320ms;
+      }
+
+      /* Slightly tighter rows keep the GIF a sensible height. */
+      #stage .dsq {
+        --dsq-row-height: 2.25rem;
+        --dsq-radius: 6px;
+      }
+
+      #stage.theme-pink .dsq {
+        --dsq-primary: #b4185d;
+        --dsq-focus: #a4114f;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="stage">
+      <input id="field" placeholder="Pick a date" />
+    </div>
+    <script type="module" src="./capture.ts"></script>
+  </body>
+</html>

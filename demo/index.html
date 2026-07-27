@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>dateSquirrel — examples</title>
+    <link rel="icon" href="/logo_dsq.svg" />
+    <link rel="stylesheet" href="./demo.css" />
+  </head>
+  <body>
+    <header>
+      <!-- The logo already carries the wordmark and tagline, so it *is* the h1. -->
+      <h1><img src="/logo_dsq.svg" alt="dateSquirrel" height="90" /></h1>
+      <p class="tagline">
+        A year&nbsp;&rarr;&nbsp;month&nbsp;&rarr;&nbsp;day drill-down picker. Zero dependencies.
+        <kbd>&darr;</kbd> opens, arrows navigate, <kbd>Backspace</kbd> steps back,
+        <kbd>Esc</kbd> closes.
+      </p>
+    </header>
+
+    <main>
+      <!-- ============================================ MODES -->
+      <section id="modes">
+        <h2>Modes</h2>
+        <p>How much of a date the user picks. This is the headline feature.</p>
+        <div class="grid">
+          <div class="field">
+            <label for="mode-ymd">Year &rarr; month &rarr; day <code>ymd</code></label>
+            <input id="mode-ymd" placeholder="Pick a date" />
+            <output id="mode-ymd-out">&mdash;</output>
+          </div>
+          <div class="field">
+            <label for="mode-ym">Year &rarr; month <code>ym</code></label>
+            <date-squirrel mode="ym" min="2020-01" max="2030-12">
+              <input id="mode-ym" name="reporting-month" placeholder="Pick a month" />
+            </date-squirrel>
+            <output id="mode-ym-out">&mdash;</output>
+          </div>
+          <div class="field">
+            <label for="mode-y">Year only <code>y</code></label>
+            <date-squirrel mode="y" min="1920" max="2010">
+              <input id="mode-y" placeholder="Year of birth" />
+            </date-squirrel>
+            <output id="mode-y-out">&mdash;</output>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================ FORMATS -->
+      <section id="formats">
+        <h2>Display formats &amp; initial values</h2>
+        <div class="grid">
+          <div class="field">
+            <label for="fmt-1">Ordinal short <code>dx mmm yyyy</code></label>
+            <input id="fmt-1" placeholder="Pick a date" />
+            <output id="fmt-1-out">&mdash;</output>
+          </div>
+          <div class="field">
+            <label for="fmt-2">Full, with weekday <code>wwww, dx mmmm yyyy</code></label>
+            <input id="fmt-2" placeholder="Pick a date" />
+            <output id="fmt-2-out">&mdash;</output>
+          </div>
+          <div class="field">
+            <label for="fmt-3">Apostrophe year <code>mmm 'yy</code></label>
+            <input id="fmt-3" placeholder="Pick a month" />
+            <output id="fmt-3-out">&mdash;</output>
+          </div>
+          <div class="field">
+            <label for="fmt-initial">Pre-set value <code>initial</code></label>
+            <input id="fmt-initial" />
+            <output id="fmt-initial-out">&mdash;</output>
+          </div>
+          <div class="field">
+            <label for="fmt-locale">French <code>locale: 'fr-FR'</code></label>
+            <date-squirrel locale="fr-FR" pattern="wwww dx mmmm yyyy" min="2024-01-01" max="2027-12-31">
+              <input id="fmt-locale" placeholder="Choisissez une date" />
+            </date-squirrel>
+            <output id="fmt-locale-out">&mdash;</output>
+          </div>
+          <div class="field">
+            <label for="fmt-de">German, Monday-first <code>locale: 'de-DE'</code></label>
+            <date-squirrel locale="de-DE" pattern="dd.mm.yyyy" min="2024-01-01" max="2027-12-31">
+              <input id="fmt-de" placeholder="Datum wählen" />
+            </date-squirrel>
+            <output id="fmt-de-out">&mdash;</output>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================ RANGES -->
+      <section id="ranges">
+        <h2>Ranges</h2>
+        <p>
+          Where the range collapses to one year or one month, the picker opens
+          straight at the level that still has a choice in it.
+        </p>
+        <div class="grid">
+          <div class="field">
+            <label for="rng-obj">Object bounds <code>{ d, m, y }</code></label>
+            <input id="rng-obj" placeholder="Nov 2029 – Apr 2030" />
+            <output id="rng-obj-out">&mdash;</output>
+          </div>
+          <div class="field">
+            <label for="rng-fn">Function bounds <code>min: () =&gt; …</code></label>
+            <input id="rng-fn" placeholder="3 working days ahead" />
+            <output id="rng-fn-out">&mdash;</output>
+          </div>
+          <div class="field">
+            <label for="rng-attr">Via <code>min</code> / <code>max</code> attributes</label>
+            <input id="rng-attr" min="2026-03-01" max="2026-09-30" placeholder="Mar – Sep 2026" />
+            <output id="rng-attr-out">&mdash;</output>
+          </div>
+          <div class="field">
+            <label for="rng-year">One year &rarr; opens on months</label>
+            <input id="rng-year" min="2026-01-01" max="2026-12-31" placeholder="Any month in 2026" />
+            <output id="rng-year-out">&mdash;</output>
+          </div>
+          <div class="field">
+            <label for="rng-month">One month &rarr; opens on days</label>
+            <input id="rng-month" placeholder="This month only" />
+            <output id="rng-month-out">&mdash;</output>
+          </div>
+          <div class="field">
+            <label for="rng-past">Ten years back, one forward</label>
+            <input id="rng-past" placeholder="Pick a date" />
+            <output id="rng-past-out">&mdash;</output>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================ DISABLED -->
+      <section id="disabled">
+        <h2>Disabled dates</h2>
+        <p>
+          Every entry form at once: recurring weekdays and dates, single dates,
+          ranges, whole years, recurring months and arbitrary predicates. Years and
+          months grey out only when nothing inside them is selectable.
+        </p>
+        <div class="grid">
+          <div class="field wide">
+            <label for="dis-all">The full matrix, 2000&ndash;2020</label>
+            <input id="dis-all" placeholder="Pick a selectable date" />
+            <output id="dis-all-out">&mdash;</output>
+          </div>
+          <div class="field">
+            <label for="dis-week">Working days, no Christmas</label>
+            <input id="dis-week" placeholder="Working days only" />
+            <output id="dis-week-out">&mdash;</output>
+          </div>
+          <div class="field">
+            <label for="dis-fn">Predicate: no Friday the 13th</label>
+            <input id="dis-fn" placeholder="Pick a date" />
+            <output id="dis-fn-out">&mdash;</output>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================ BEHAVIOUR -->
+      <section id="behaviour">
+        <h2>Behaviour</h2>
+        <div class="grid">
+          <div class="field">
+            <label for="beh-overlay">Overlay, not in-flow <code>overlay</code></label>
+            <input id="beh-overlay" placeholder="Floats over the page" />
+            <output id="beh-overlay-out">&mdash;</output>
+            <p class="note">Content below should not move when this opens.</p>
+          </div>
+          <div class="field">
+            <label for="beh-scroll">Hidden scrollbars <code>hideScrollbars</code></label>
+            <input id="beh-scroll" placeholder="Still scrollable" />
+            <output id="beh-scroll-out">&mdash;</output>
+          </div>
+          <div class="field">
+            <label for="beh-activate">Wide screens only <code>activation</code></label>
+            <input id="beh-activate" type="date" placeholder="Pick a date" />
+            <output id="beh-activate-out">&mdash;</output>
+            <p class="note">
+              Below 1024px this stays a native <code>&lt;input type="date"&gt;</code>.
+            </p>
+          </div>
+          <div class="field">
+            <label for="beh-callback">Callback <code>callback</code></label>
+            <input id="beh-callback" placeholder="Fires a callback" />
+            <output id="beh-callback-out">&mdash;</output>
+          </div>
+          <div class="field">
+            <label for="beh-parse">Typed input <code>parse</code></label>
+            <input id="beh-parse" placeholder="Try 27/7/26" />
+            <output id="beh-parse-out">&mdash;</output>
+            <p class="note">
+              Also <code>27 July 2026</code>, <code>2026-07-27</code>, <code>Mon 27 Jul 2026</code>.
+            </p>
+          </div>
+          <div class="field">
+            <label for="beh-open">Stays open <code>closeOnSelect: false</code></label>
+            <input id="beh-open" placeholder="Panel stays put" />
+            <output id="beh-open-out">&mdash;</output>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================ LINKED -->
+      <section id="linked">
+        <h2>A linked range</h2>
+        <p>
+          The second picker's <code>min</code> follows the first via
+          <code>setOptions()</code> — no destroy-and-recreate needed.
+        </p>
+        <div class="grid">
+          <div class="field">
+            <label for="link-from">From</label>
+            <input id="link-from" placeholder="Start date" />
+          </div>
+          <div class="field">
+            <label for="link-to">To</label>
+            <input id="link-to" placeholder="Pick a start date first" disabled />
+          </div>
+        </div>
+        <output id="link-out" class="span">&mdash;</output>
+      </section>
+
+      <!-- ============================================ THEMING -->
+      <section id="theming">
+        <h2>Themed at runtime</h2>
+        <p>No recompile — every colour and metric is a CSS custom property.</p>
+        <div class="grid">
+          <div class="field theme-pink">
+            <label for="thm-1">Pink, taller rows, round</label>
+            <input id="thm-1" placeholder="Pick a month" />
+            <output id="thm-1-out">&mdash;</output>
+          </div>
+          <div class="field theme-forest">
+            <label for="thm-2">Forest, square, compact</label>
+            <input id="thm-2" placeholder="Pick a date" />
+            <output id="thm-2-out">&mdash;</output>
+          </div>
+          <div class="field theme-mono">
+            <label for="thm-3">Monochrome</label>
+            <input id="thm-3" placeholder="Pick a date" />
+            <output id="thm-3-out">&mdash;</output>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================ LIFECYCLE -->
+      <section id="lifecycle">
+        <h2>Lifecycle</h2>
+        <p>
+          <code>destroy()</code> restores the original input exactly, so this can
+          be toggled indefinitely without leaking listeners or DOM.
+        </p>
+        <div class="grid">
+          <div class="field">
+            <label for="life">Toggle me</label>
+            <input id="life" type="date" placeholder="Pick a date" />
+            <output id="life-out">&mdash;</output>
+            <div class="buttons">
+              <button type="button" id="life-destroy">destroy()</button>
+              <button type="button" id="life-create">re-create</button>
+              <button type="button" id="life-clear">clear()</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>
+        MIT. Built with Vite. <code>npm test</code> for the suite.
+      </p>
+    </footer>
+
+    <script type="module" src="./demo.ts"></script>
+  </body>
+</html>

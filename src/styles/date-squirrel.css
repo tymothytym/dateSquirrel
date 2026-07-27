@@ -1,0 +1,553 @@
+/**
+ * dateSquirrel styles.
+ *
+ * Everything lives in a single cascade layer, so any unlayered CSS you write
+ * beats it without needing to out-specify it. The 0.x advice of "give your form
+ * an ID and reference it in your rules" is no longer necessary:
+ *
+ *   .dsq-day { border-radius: 0; }   <-- just works
+ *
+ * Theming is via custom properties rather than recompiling Sass. Set them on
+ * `.dsq`, on any ancestor, or on `:root`:
+ *
+ *   .dsq { --dsq-primary: #6d28d9; --dsq-row-height: 2.75rem; }
+ *
+ * Structure is driven by data attributes the picker maintains
+ * (`data-open`, `data-stage`, `data-mode`), not by cumulative class names.
+ */
+
+@layer date-squirrel {
+  :where(.dsq) {
+    /*
+     * ---- palette ----
+     *
+     * Every text pair here clears WCAG AA (4.5:1) against its own background, in
+     * both colour schemes, and non-text indicators clear 3:1. contrast.test.ts
+     * reads these declarations directly and fails the build if a change drops
+     * below that, so tune with the test running.
+     */
+    --dsq-primary: #384f88;
+    --dsq-on-primary: #fbfffe;
+    --dsq-selected: #51cbee;
+    --dsq-surface: #ffffff;
+    --dsq-text: #444444;
+    --dsq-muted: #5f6672;
+    --dsq-placeholder: #6b7280;
+    /* Darker than a hairline grey so the field boundary itself clears 3:1. */
+    --dsq-border: #8a92a0;
+    --dsq-focus: #1177a3;
+    --dsq-today-ring: var(--dsq-primary);
+
+    /*
+     * Disabled needs a pair per panel, not one global pair: the year and day
+     * lists sit on a light surface while the month list sits on --dsq-primary,
+     * and no single text colour is readable on both.
+     */
+    --dsq-year-surface: var(--dsq-surface);
+    --dsq-year-text: var(--dsq-text);
+    --dsq-year-surface-hover: color-mix(in srgb, var(--dsq-primary) 12%, transparent);
+    --dsq-year-surface-active: var(--dsq-primary);
+    --dsq-year-text-active: var(--dsq-on-primary);
+    --dsq-year-surface-disabled: #f1f2f4;
+    --dsq-year-text-disabled: #5f6672;
+
+    --dsq-month-surface: var(--dsq-primary);
+    --dsq-month-text: var(--dsq-on-primary);
+    --dsq-month-surface-hover: color-mix(in srgb, #ffffff 12%, var(--dsq-primary));
+    /*
+     * Selected month inverts rather than lightening the primary. Lightening it
+     * enough to read as "selected" pushed the white label down to 3.7:1;
+     * inverting is both compliant and a clearer signal.
+     */
+    --dsq-month-surface-active: var(--dsq-on-primary);
+    --dsq-month-text-active: var(--dsq-primary);
+    --dsq-month-surface-disabled: color-mix(in srgb, #000000 14%, var(--dsq-primary));
+    --dsq-month-text-disabled: #c3cade;
+
+    --dsq-day-surface: var(--dsq-surface);
+    --dsq-day-text: var(--dsq-text);
+    --dsq-day-surface-hover: color-mix(in srgb, var(--dsq-primary) 12%, transparent);
+    --dsq-day-surface-active: var(--dsq-primary);
+    --dsq-day-text-active: var(--dsq-on-primary);
+    --dsq-day-surface-disabled: #f1f2f4;
+    --dsq-day-text-disabled: #5f6672;
+
+    --dsq-side-surface: var(--dsq-on-primary);
+    --dsq-side-text: var(--dsq-primary);
+    --dsq-side-surface-hover: var(--dsq-primary);
+    --dsq-side-text-hover: var(--dsq-on-primary);
+
+    /* ---- metrics ---- */
+    --dsq-row-height: 2.5rem;
+    /* Six-and-a-half rows of list plus one row of affordance, as in 0.x. */
+    --dsq-panel-height: calc(var(--dsq-row-height) * 7.5);
+    --dsq-month-inset: 5rem;
+    --dsq-radius: 0.25rem;
+    --dsq-border-width: 1px;
+    --dsq-scrollbar-width: 6px;
+    --dsq-gap: 2px;
+
+    --dsq-font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    --dsq-text-size: 1.0625rem;
+    --dsq-text-size-sm: 1rem;
+    --dsq-text-size-xs: 0.8125rem;
+
+    --dsq-shadow: 0 1px 3px rgb(0 0 0 / 0.12), 0 1px 2px rgb(0 0 0 / 0.24);
+    --dsq-shadow-focus: 0 0 0 3px color-mix(in srgb, var(--dsq-focus) 45%, transparent);
+
+    --dsq-ease: cubic-bezier(0.76, 0.1, 0.46, 0.92);
+    --dsq-duration: 175ms;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :where(.dsq) {
+      --dsq-surface: #1c1f26;
+      --dsq-text: #e8eaed;
+      --dsq-muted: #a8aeb8;
+      --dsq-placeholder: #9aa0aa;
+      --dsq-border: #6d7481;
+      --dsq-focus: #63c7ee;
+      /* Lighter primary so white labels still read against it. */
+      --dsq-primary: #6d8ad6;
+      --dsq-on-primary: #10131a;
+      --dsq-today-ring: #93ace4;
+
+      --dsq-year-text-active: #10131a;
+      --dsq-year-surface-disabled: #262a33;
+      --dsq-year-text-disabled: #a8aeb8;
+
+      --dsq-month-text: #10131a;
+      --dsq-month-surface-hover: color-mix(in srgb, #ffffff 14%, var(--dsq-primary));
+      --dsq-month-surface-active: #10131a;
+      --dsq-month-text-active: #cfdcff;
+      --dsq-month-surface-disabled: color-mix(in srgb, #000000 30%, var(--dsq-primary));
+      --dsq-month-text-disabled: #e4e9f6;
+
+      --dsq-day-text-active: #10131a;
+      --dsq-day-surface-disabled: #262a33;
+      --dsq-day-text-disabled: #a8aeb8;
+
+      --dsq-side-surface: #23272f;
+      --dsq-side-text: #c3d2f7;
+      --dsq-side-surface-hover: var(--dsq-primary);
+      --dsq-side-text-hover: #10131a;
+    }
+  }
+
+  /* Explicit opt-outs, for apps that manage their own theme switch. */
+  :where(.dsq[data-theme='light']) { color-scheme: light; }
+  :where(.dsq[data-theme='dark']) { color-scheme: dark; }
+
+  /* ------------------------------------------------------------ wrapper */
+
+  .dsq {
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 15.625rem;
+    max-width: 37.5rem;
+    font-family: var(--dsq-font);
+    color: var(--dsq-text);
+    border: var(--dsq-border-width) solid var(--dsq-border);
+    border-radius: var(--dsq-radius);
+    transition: border-color var(--dsq-duration) var(--dsq-ease),
+                box-shadow var(--dsq-duration) var(--dsq-ease);
+  }
+
+  .dsq * {
+    box-sizing: border-box;
+  }
+
+  .dsq > input {
+    width: 100%;
+    font: inherit;
+    color: inherit;
+    padding: 0 0.75em;
+    line-height: var(--dsq-row-height);
+    background: var(--dsq-surface);
+    border: 0;
+    border-radius: inherit;
+  }
+
+  .dsq > input:focus-visible {
+    outline: none;
+  }
+
+  .dsq:focus-within {
+    border-color: var(--dsq-focus);
+    box-shadow: var(--dsq-shadow-focus);
+  }
+
+  .dsq[data-invalid='true'] {
+    border-color: #c0392b;
+    animation: dsq-shake 300ms var(--dsq-ease);
+  }
+
+  @keyframes dsq-shake {
+    25% { translate: -3px 0; }
+    75% { translate: 3px 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dsq,
+    .dsq * {
+      transition-duration: 1ms !important;
+      animation-duration: 1ms !important;
+    }
+  }
+
+  /* -------------------------------------------------------------- panel */
+
+  .dsq-lists {
+    position: relative;
+    width: 100%;
+    height: 0;
+    /*
+     * `clip`, not `hidden`. The month and day panels are positioned outside this
+     * box and slid in with `translate`, and `overflow: hidden` leaves a real
+     * scroll container behind: focusing a cell in a translated panel makes the
+     * browser scroll this element sideways to "reveal" it, dragging the whole
+     * day view out of alignment. `overflow: clip` creates no scroll container,
+     * so nothing — including the browser — can scroll it.
+     */
+    overflow: clip;
+    background: var(--dsq-surface);
+    transition: height var(--dsq-duration) var(--dsq-ease);
+  }
+
+  .dsq[data-open='true'] .dsq-lists {
+    height: var(--dsq-panel-height);
+  }
+
+  /*
+   * Year-only mode has no following stage, so the panel can size to its content
+   * instead of reserving room for a month list that will never arrive. The other
+   * modes keep a fixed height on purpose: shrinking to a short year list and then
+   * growing again when the months slide in reads as the panel jumping about.
+   */
+  .dsq[data-mode='y'][data-open='true'] .dsq-lists,
+  .dsq[data-mode='y'] .dsq-list-years {
+    height: auto;
+    max-height: var(--dsq-panel-height);
+  }
+
+  /* Float over the page instead of pushing it down. */
+  .dsq-lists[data-overlay='true'] {
+    position: absolute;
+    inset-inline: calc(var(--dsq-border-width) * -1);
+    top: 100%;
+    z-index: 200;
+    box-shadow: var(--dsq-shadow);
+    border: var(--dsq-border-width) solid var(--dsq-border);
+    border-top: 0;
+    border-radius: 0 0 var(--dsq-radius) var(--dsq-radius);
+  }
+
+  /* -------------------------------------------------- shared list chrome */
+
+  .dsq-list-years,
+  .dsq-list-months {
+    height: var(--dsq-panel-height);
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    list-style: none;
+    scrollbar-width: thin;
+  }
+
+  .dsq-option {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0 1em;
+    min-height: var(--dsq-row-height);
+    font-size: var(--dsq-text-size-sm);
+    line-height: var(--dsq-row-height);
+    cursor: pointer;
+    transition: background-color 100ms var(--dsq-ease), color 100ms var(--dsq-ease);
+  }
+
+  /*
+   * currentColor, not a fixed hue: no single focus colour clears 3:1 against
+   * both the white year/day lists and the dark month list. The cell's own text
+   * colour is already held to 4.5:1 against its own background, so the ring is
+   * compliant wherever it lands.
+   */
+  .dsq-option:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: -3px;
+  }
+
+  .dsq-option.dsq-active {
+    font-weight: 700;
+  }
+
+  /*
+   * Disabled cells stay readable, so the strikethrough — not low contrast — is
+   * what marks them unavailable (SC 1.4.1). Per-panel colours are applied in the
+   * year / month / day sections below.
+   */
+  .dsq-option.dsq-disabled,
+  .dsq-day.dsq-disabled {
+    text-decoration: line-through;
+    text-decoration-thickness: 1px;
+    cursor: not-allowed;
+  }
+
+  /* Hide the scrollbars without losing scrollability. */
+  .dsq[data-hide-scrollbars='true'] :is(.dsq-list-years, .dsq-list-months) {
+    scrollbar-width: none;
+  }
+  .dsq[data-hide-scrollbars='true'] :is(.dsq-list-years, .dsq-list-months)::-webkit-scrollbar {
+    display: none;
+  }
+
+  :is(.dsq-list-years, .dsq-list-months)::-webkit-scrollbar {
+    width: var(--dsq-scrollbar-width);
+  }
+  :is(.dsq-list-years, .dsq-list-months)::-webkit-scrollbar-thumb {
+    background-color: color-mix(in srgb, currentcolor 30%, transparent);
+    border-radius: var(--dsq-scrollbar-width);
+  }
+
+  /* --------------------------------------------------------------- years */
+
+  .dsq-list-years {
+    position: relative;
+    width: 100%;
+    background: var(--dsq-year-surface);
+    color: var(--dsq-year-text);
+    z-index: 1;
+  }
+
+  .dsq-list-years .dsq-option.dsq-active {
+    background-color: var(--dsq-year-surface-active);
+    color: var(--dsq-year-text-active);
+  }
+
+  .dsq-list-years .dsq-option.dsq-disabled {
+    background-color: var(--dsq-year-surface-disabled);
+    color: var(--dsq-year-text-disabled);
+  }
+
+  @media (hover: hover) {
+    .dsq-list-years .dsq-option:not(.dsq-disabled, .dsq-active):hover {
+      background-color: var(--dsq-year-surface-hover);
+    }
+  }
+
+  /* -------------------------------------------------------------- months */
+
+  .dsq-list-months {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    width: 100%;
+    background: var(--dsq-month-surface);
+    color: var(--dsq-month-text);
+    z-index: 2;
+    /* Parked off to the side; slides in when the month stage begins. */
+    translate: 100% 0;
+    transition: translate var(--dsq-duration) var(--dsq-ease);
+  }
+
+  .dsq[data-stage='month'] .dsq-list-months,
+  .dsq[data-stage='day'] .dsq-list-months {
+    translate: var(--dsq-month-inset) 0;
+  }
+
+  /* With only one year to choose from there is nothing to slide over. */
+  .dsq[data-single-year='true'] .dsq-list-months {
+    --dsq-month-inset: 0px;
+  }
+
+  .dsq-list-months .dsq-option.dsq-active {
+    background-color: var(--dsq-month-surface-active);
+    color: var(--dsq-month-text-active);
+    font-weight: 700;
+  }
+
+  .dsq-list-months .dsq-option.dsq-disabled {
+    background-color: var(--dsq-month-surface-disabled);
+    color: var(--dsq-month-text-disabled);
+  }
+
+  @media (hover: hover) {
+    .dsq-list-months .dsq-option:not(.dsq-disabled, .dsq-active):hover {
+      background-color: var(--dsq-month-surface-hover);
+    }
+  }
+
+  /* ---------------------------------------------------------------- days */
+
+  .dsq-days {
+    position: absolute;
+    inset-inline: 0;
+    inset-block-start: 0;
+    height: var(--dsq-panel-height);
+    display: flex;
+    background: var(--dsq-day-surface);
+    color: var(--dsq-day-text);
+    z-index: 3;
+    /* Parked below; slides up when the day stage begins. */
+    translate: 0 100%;
+    transition: translate var(--dsq-duration) var(--dsq-ease);
+  }
+
+  .dsq[data-stage='day'] .dsq-days {
+    translate: 0 0;
+  }
+
+  /* Modes without a day stage never render or reveal this panel. */
+  .dsq[data-mode='y'] .dsq-days,
+  .dsq[data-mode='ym'] .dsq-days {
+    display: none;
+  }
+
+  /* The vertical "Jul 2026 ➜" strip that steps back a stage. */
+  .dsq-side {
+    flex: 0 0 2.5rem;
+    display: flex;
+    align-items: stretch;
+    background: var(--dsq-side-surface);
+  }
+
+  .dsq-reminder {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    margin: 0;
+    padding: 0;
+    font: inherit;
+    color: var(--dsq-side-text);
+    background: none;
+    border: 0;
+    cursor: pointer;
+    white-space: nowrap;
+    writing-mode: vertical-rl;
+    rotate: 180deg;
+    transition: background-color 150ms var(--dsq-ease), color 150ms var(--dsq-ease);
+  }
+
+  .dsq-reminder:hover,
+  .dsq-reminder:focus-visible {
+    background-color: var(--dsq-side-surface-hover);
+    color: var(--dsq-side-text-hover);
+    outline: 2px solid currentColor;
+    outline-offset: -3px;
+  }
+
+  .dsq-reminder-month {
+    font-size: 1.25rem;
+  }
+
+  .dsq-reminder-year {
+    font-size: var(--dsq-text-size-sm);
+    font-weight: 700;
+  }
+
+  .dsq-reminder::after {
+    content: '\279C';
+    font-size: 1.25rem;
+    font-weight: 700;
+    /* The strip is rotated, so "back" points down the vertical axis. */
+    rotate: -90deg;
+    opacity: 0;
+    transition: opacity 150ms var(--dsq-ease);
+  }
+
+  .dsq-reminder:hover::after,
+  .dsq-reminder:focus-visible::after {
+    opacity: 1;
+  }
+
+  /*
+   * The day grid. 0.x used one flat flex-wrapped <ul> with 14.28% children and
+   * an IE11 calc workaround. This is a real ARIA grid: a column of rows, each
+   * row a seven-column CSS grid. The roles line up with the layout, so screen
+   * readers announce row and column context.
+   */
+  .dsq-list-days {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: var(--dsq-gap);
+    min-width: 0;
+  }
+
+  .dsq-dow,
+  .dsq-week {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: var(--dsq-gap);
+  }
+
+  .dsq-week {
+    flex: 1;
+  }
+
+  .dsq-dow-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--dsq-text-size-xs);
+    color: var(--dsq-muted);
+    min-height: calc(var(--dsq-row-height) * 0.75);
+    cursor: default;
+  }
+
+  .dsq-day {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font: inherit;
+    font-size: var(--dsq-text-size-sm);
+    color: inherit;
+    background: none;
+    border: 0;
+    border-radius: var(--dsq-radius);
+    cursor: pointer;
+    transition: background-color 100ms var(--dsq-ease), color 100ms var(--dsq-ease);
+  }
+
+  .dsq-day:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: -3px;
+  }
+
+  .dsq-day.dsq-active {
+    background-color: var(--dsq-day-surface-active);
+    color: var(--dsq-day-text-active);
+    font-weight: 700;
+  }
+
+  .dsq-day.dsq-disabled {
+    background-color: var(--dsq-day-surface-disabled);
+    color: var(--dsq-day-text-disabled);
+  }
+
+  @media (hover: hover) {
+    .dsq-day:not(.dsq-disabled, .dsq-active):hover {
+      background-color: var(--dsq-day-surface-hover);
+    }
+  }
+
+  /* Today gets a ring rather than a fill, so it can coexist with selection. */
+  .dsq-day.dsq-today:not(.dsq-active) {
+    box-shadow: inset 0 0 0 2px var(--dsq-today-ring);
+  }
+
+  .dsq-padding {
+    pointer-events: none;
+  }
+
+  /* Wider viewports get slightly larger type, as in 0.x. */
+  @media (min-width: 60rem) {
+    :where(.dsq) {
+      --dsq-text-size-sm: var(--dsq-text-size);
+    }
+  }
+}

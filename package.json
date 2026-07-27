@@ -1,57 +1,87 @@
 {
-  "name": "dateSquirrel",
-  "version": "0.4.1",
-  "description": "A date picker with a nutty tang",
-  "main": "dist/dsq.js",
-  "scripts": {
-    "start": "gulp",
-    "build": "gulp build --production"
-  },
+  "name": "date-squirrel",
+  "version": "2.0.0",
+  "description": "A year/month/day drill-down date picker with a nutty tang. Zero dependencies, framework-agnostic.",
+  "type": "module",
+  "keywords": [
+    "date-picker",
+    "datepicker",
+    "month-picker",
+    "year-picker",
+    "web-component",
+    "custom-element",
+    "vanilla-js",
+    "accessibility"
+  ],
   "author": "Tim O'Donoghue",
   "license": "MIT",
+  "sideEffects": [
+    "./dist/element.js",
+    "./dist/element.cjs",
+    "**/*.css"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./element": {
+      "types": "./dist/element.d.ts",
+      "import": "./dist/element.js",
+      "require": "./dist/element.cjs"
+    },
+    "./styles.css": "./dist/date-squirrel.css",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "readme.md",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run typecheck && vite build && npm run build:types",
+    "build:types": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "shots": "node scripts/screenshots.mjs",
+    "gif": "node scripts/demo-gif.mjs",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
   "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-loader": "^7.1.5",
-    "babel-preset-env": "^1.7.0",
-    "babel-register": "^6.26.0",
-    "browser-sync": "^2.24.6",
-    "css-reset-and-normalize-sass": "^0.1.2",
-    "eslint": "^5.2.0",
-    "gulp": "^4.0.0",
-    "gulp-autoprefixer": "^5.0.0",
-    "gulp-babel": "^7.0.1",
-    "gulp-cli": "^2.0.1",
-    "gulp-concat": "^2.6.1",
-    "gulp-extname": "^0.2.2",
-    "gulp-if": "^2.0.2",
-    "gulp-load-plugins": "^1.5.0",
-    "gulp-postcss": "^7.0.1",
-    "gulp-rename": "^1.4.0",
-    "gulp-sass": "^4.0.1",
-    "gulp-sourcemaps": "^2.6.4",
-    "gulp-uglify": "^3.0.1",
-    "gulp-wait": "0.0.2",
-    "js-yaml": "^3.12.0",
-    "panini": "^1.6.2",
-    "postcss-clean": "^1.1.0",
-    "postcss-uncss": "^0.16.1",
-    "rimraf": "^2.6.2",
-    "uncss": "^0.16.2",
-    "vinyl-named": "^1.1.0",
-    "webpack": "^4.16.4",
-    "webpack-stream": "^5.1.0",
-    "yargs": "^12.0.1"
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^26.1.2",
+    "eslint": "^10.8.0",
+    "gifenc": "^1.0.3",
+    "jsdom": "^29.1.1",
+    "playwright": "^1.62.0",
+    "pngjs": "^7.0.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.65.0",
+    "vite": "^8.1.5",
+    "vitest": "^4.1.10"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/tymothytym/dateSquirrel.git"
+    "url": "git+https://github.com/tymothytym/dateSquirrel.git"
   },
   "bugs": {
     "url": "https://github.com/tymothytym/dateSquirrel/issues"
   },
-  "babel": {
-    "presets": [
-      "env"
-    ]
-  }
+  "homepage": "https://github.com/tymothytym/dateSquirrel#readme",
+  "engines": {
+    "node": ">=20"
+  },
+  "browserslist": [
+    "chrome >= 111",
+    "edge >= 111",
+    "firefox >= 128",
+    "safari >= 16.5"
+  ]
 }

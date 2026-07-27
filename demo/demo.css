@@ -1,0 +1,197 @@
+/* Demo page chrome only — the picker's own styles live in src/styles/. */
+
+:root {
+  --page: #f6f7f9;
+  --card: #ffffff;
+  --ink: #1f2430;
+  --ink-soft: #5b6373;
+  --rule: #e3e6ec;
+  --accent: #384f88;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page: #14171d;
+    --card: #1c1f26;
+    --ink: #e8eaed;
+    --ink-soft: #9aa0a6;
+    --rule: #2f343d;
+    --accent: #7f9bdc;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 0 1.5rem 6rem;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.55;
+  color: var(--ink);
+  background: var(--page);
+}
+
+header {
+  max-width: 60rem;
+  margin-inline: auto;
+  padding: 3.5rem 0 2rem;
+}
+
+h1 {
+  margin: 0;
+  line-height: 1;
+}
+
+h1 img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  max-height: 5.625rem;
+}
+
+.tagline {
+  margin: 0.5rem 0 0;
+  max-width: 44rem;
+  color: var(--ink-soft);
+}
+
+main {
+  max-width: 60rem;
+  margin-inline: auto;
+  display: grid;
+  gap: 1.25rem;
+}
+
+section {
+  padding: 1.75rem;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 0.75rem;
+}
+
+section h2 {
+  margin: 0 0 0.25rem;
+  font-size: 1.125rem;
+}
+
+section > p {
+  margin: 0 0 1.5rem;
+  color: var(--ink-soft);
+  font-size: 0.9375rem;
+}
+
+.grid {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  align-items: start;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 0.375rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+output {
+  display: block;
+  margin-top: 0.625rem;
+  min-height: 1.25rem;
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-soft);
+}
+
+code {
+  padding: 0.1em 0.35em;
+  font-size: 0.875em;
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border-radius: 0.25rem;
+}
+
+.field.wide { grid-column: 1 / -1; }
+
+.note {
+  margin: 0.5rem 0 0;
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+}
+
+.buttons {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.buttons button {
+  font: inherit;
+  font-size: 0.8125rem;
+  padding: 0.35em 0.8em;
+  color: var(--ink);
+  background: var(--page);
+  border: 1px solid var(--rule);
+  border-radius: 0.375rem;
+  cursor: pointer;
+}
+
+.buttons button:hover { border-color: var(--accent); }
+
+output.span {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.9375rem;
+  color: var(--ink);
+}
+
+footer {
+  max-width: 60rem;
+  margin: 3rem auto 0;
+  font-size: 0.8125rem;
+  color: var(--ink-soft);
+}
+
+kbd {
+  padding: 0.1em 0.4em;
+  font: inherit;
+  font-size: 0.8em;
+  border: 1px solid var(--rule);
+  border-bottom-width: 2px;
+  border-radius: 0.25rem;
+  background: var(--page);
+}
+
+/*
+ * Runtime theming: override the picker's custom properties. No rebuild, no Sass
+ * recompile, and no need to out-specify anything — the library's own rules live
+ * in a @layer, so these plain selectors win.
+ */
+.theme-pink .dsq {
+  --dsq-primary: #b4185d;
+  --dsq-selected: #f0a6c4;
+  --dsq-row-height: 2.75rem;
+  --dsq-radius: 0.75rem;
+  --dsq-month-inset: 3.5rem;
+}
+
+.theme-forest .dsq {
+  --dsq-primary: #1b5e3f;
+  --dsq-selected: #7fc8a0;
+  --dsq-radius: 0;
+  --dsq-row-height: 2.125rem;
+  --dsq-gap: 1px;
+}
+
+.theme-mono .dsq {
+  --dsq-primary: #202020;
+  --dsq-selected: #909090;
+  --dsq-side-surface: #f0f0f0;
+  --dsq-side-text: #202020;
+  --dsq-radius: 0.125rem;
+}
