@@ -11,10 +11,10 @@
 
 # dateSquirrel
 
-**A year → month → day drill-down date picker with a nutty tang.**
+**A rapid, back-to-front, date picker with a distinctly nutty tang**
 
-Lives inside a single input. No modals, no extra fields, no runtime
-dependencies. Works as a plain class, as a `<date-squirrel>` custom element, or
+dateSquirrel lives inside a single input. No modals, no extra faff, no runtime
+dependencies, no libraries. Works as a plain class, as a `<date-squirrel>` custom element, or
 inside React, Vue and Svelte.
 
 <p align="center">
@@ -30,16 +30,17 @@ inside React, Vue and Svelte.
 
 ## Why this exists
 
-`<input type="date">` is good now, and you should usually just use it. Two things
+`<input type="date">` is pretty good now and you should usually just use it. Two (and a half) things
 it still cannot do:
 
 - **Pick a year and month without a day.** There is no natively supported "month"
   control, and a day grid is the wrong shape for "reporting month" or "card
-  expiry".
-- **Drill down through a wide range.** Picking a 1957 birthday by paging a month
-  grid is miserable. Picking the year first is not.
+  expiry". Boring? Yes. Useful in forms? Also, sadly, yes.
+- **Drill down through a wide range quickly.** Picking a 1967 birthday by paging though an endless people-who-are-younger-than-me
+  grid is depressing... I mean, I _assume_ its depressing for people born in 1967 and other [Before Recycling Bin](https://en.wikipedia.org/wiki/Recycling_bin) years, whereas picking a year is _nostalgic_ and who doesn't like nostalgia?!
+- **It's not really customisable.** I mean it is crazy flexible, but not really any fun to use and it is usually at least a sprints worth of "Lets make our own datepicker" plus half a sprint of "WTF were we smoking last week? Just use the native version"
 
-Those two cases are the whole point of this chronological mamal. If you need a general-purpose day picker,
+Those two (and a half) cases are the whole point of this chronological mamal. If you need a general-purpose day picker,
 use the native one.
 
 ## Install
@@ -67,7 +68,7 @@ npm install date-squirrel
 
 The element enhances the `<input>` you give it, so `<label for>`, `name`, form
 serialisation and every form library keep working. Omit the input and one is
-created for you.
+created for you. You're preemptively welcome.
 
 ### As a class
 
@@ -85,7 +86,7 @@ picker.value;         // PlainDate { year: 2026, month: 6, day: 1 }
 ### In React
 
 The picker dispatches real bubbling `input` and `change` events on the underlying
-input, so `onChange`, React Hook Form and Formik all just work.
+input, so `onChange`, React Hook Form and Formik all work.
 
 ```tsx
 import { useEffect, useRef } from 'react';
@@ -108,8 +109,8 @@ function MonthField({ name, onChange }) {
 }
 ```
 
-`destroy()` is complete and idempotent, so React 18/19 strict-mode double
-mounting is safe. Importing the package on a server is also safe — see [SSR](#ssr).
+`destroy()` is complete and idempotent (which is exciting, if only linguistically), so React 18/19 strict-mode double
+mounting is safe. Importing the package on a server is also safe - have a butchers at [SSR](#ssr) to find more inpenetrably sureal sentances.
 
 ## Modes
 
@@ -122,12 +123,12 @@ mounting is safe. Importing the package on a server is also safe — see [SSR](#
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="static/demo-ym-dark.gif" />
-    <img src="static/demo-ym.gif" alt="mode: ym — picking a year then a month, with no day step" width="464" />
+    <img src="static/demo-ym.gif" alt="mode: ym - picking a year then a month, with no day step" width="464" />
   </picture>
 </p>
 
 <p align="center"><em>
-  <code>mode: 'ym'</code> — commits on the month, no day step.
+  <code>mode: 'ym'</code> - commits on the month, no day step.
 </em></p>
 
 ```ts
@@ -138,7 +139,7 @@ In `ym` and `y` mode the value is snapped to the start of the period, so
 `setValue('2026-07-27')` in `ym` mode stores `2026-07`.
 
 If `min` and `max` fall in the same year the picker starts on the month list; if
-they fall in the same month it starts on the day grid.
+they fall in the same month it starts on the day grid. Yay for user experience!
 
 ## Options
 
@@ -148,7 +149,7 @@ they fall in the same month it starts on the day grid.
 | `min` | date, function, `null` | `null` | Also read from the input's `min` attribute |
 | `max` | date, function, `null` | `null` | Defaults to ten years past `min` |
 | `initial` | date, `null` | `null` | Set before any user input; fires no change event |
-| `pattern` | string | per mode | Display format — see [Formatting](#formatting) |
+| `pattern` | string | per mode | Display format - see [Formatting](#formatting) |
 | `patternSave` | string | per mode | Written to `data-dsq-date` |
 | `locale` | BCP 47 tag(s) | browser locale | Month/weekday names, ordinals |
 | `firstDayOfWeek` | `0`–`6` or `'auto'` | `'auto'` | `'auto'` follows the locale; `0` is Sunday |
@@ -166,7 +167,7 @@ they fall in the same month it starts on the day grid.
 
 Any date-shaped option accepts a `PlainDate`, a `Date`, an ISO string
 (`'2026-07-27'`, `'2026-07'`, `'2026'`), a `{ year, month, day }` object, or the
-0.x `{ y, m, d }` shape. **Months are 0-indexed** (`0` = January), matching
+1.x `{ y, m, d }` shape. **Months are 0-indexed** (`0` = January), matching
 `Date`. `{ d: 32 }` still means "last day of the month".
 
 ### `parse`
@@ -185,7 +186,7 @@ new DateSquirrel('#field', { parse: false }); // shorthand for { active: false }
 ```
 
 `rule` is one of `'dmy'`, `'mdy'`, `'ymd'`, `'ydm'`. It only disambiguates bare
-numbers — ISO input and textual months are recognised regardless, and a bare year
+numbers - ISO input and textual months are recognised regardless, and a bare year
 or `"Mar 2026"` resolves in `y` and `ym` mode.
 
 ## Disabled dates
@@ -210,7 +211,7 @@ new DateSquirrel('#field', {
 ```
 
 A month is offered when at least one of its days is selectable, and a year when
-at least one of its months is — so the three levels can never disagree.
+at least one of its months is; so the three levels can never disagree.
 Unrecognised entries are collected and reported in a single `console.warn`.
 
 ## Methods and properties
@@ -239,8 +240,8 @@ Dispatched on the wrapper, bubbling and composed:
 | Event | `detail` |
 | :--- | :--- |
 | `dsq:change` | `{ date, human, save, mode }` |
-| `dsq:open` | — |
-| `dsq:close` | — |
+| `dsq:open` | - |
+| `dsq:close` | - |
 
 Plus native bubbling `input` and `change` on the underlying `<input>`, written
 through the prototype value setter so React's change tracker notices.
@@ -253,7 +254,7 @@ picker.wrapper.addEventListener('dsq:change', (event) => {
 
 ## Formatting
 
-`format(date, pattern, { locale })` is exported and usable standalone.
+`format(date, pattern, { locale })` is exported and usable standalone, if you're into formatting dates.
 
 | Token | Output | Token | Output |
 | :--- | :--- | :--- | :--- |
@@ -274,8 +275,8 @@ are applied for English locales only.
 
 ## Theming
 
-Every colour and metric is a CSS custom property, and all styles sit in a
-`@layer`, so your own unlayered CSS wins without a specificity fight.
+Every colour and metric is a CSS custom property. All styles sit in a
+`@layer`, so any unlayered CSS wins without a specificity fight.
 
 ```css
 .dsq {
@@ -286,7 +287,6 @@ Every colour and metric is a CSS custom property, and all styles sit in a
   --dsq-month-inset: 3.5rem;
 }
 
-/* No ID gymnastics needed any more: */
 .dsq-day { border-radius: 0; }
 ```
 
@@ -302,12 +302,11 @@ both schemes, and non-text indicators clear 3:1.
 if a change drops below that, so run the tests when retuning the palette.
 
 **Disabled dates are held to the same 4.5:1 as everything else.** WCAG exempts
-inactive controls from contrast requirements, which is exactly why disabled dates
-are normally unreadable — they were 1.94:1 here before. Since legible disabled
-cells can no longer be identified *by* their low contrast, they also carry a
+inactive controls from contrast requirements (apparently). Since legible disabled
+cells can no longer be identified *by* their low contrast, they also have a rather fetching
 strikethrough (SC 1.4.1, Use of Colour) and `aria-disabled`.
 
-Two other consequences worth knowing if you override the palette:
+Two other consequences if you override the palette:
 
 - **Disabled needs a pair of tokens per panel.** The year and day lists sit on a
   light surface, the month list sits on `--dsq-primary`; no single text colour is
@@ -398,13 +397,14 @@ if (!submitted || !check.isDaySelectable(submitted)) throw new Error('Not bookab
 Chrome/Edge 111+, Firefox 128+, Safari 16.5+. Uses CSS nesting, `color-mix()`,
 cascade layers, `AbortController` listener signals and `Intl.DateTimeFormat`.
 
-No IE support.
+No IE support. I appreciate you were probably anticipating this limitation, with it being the late 2020's, but it's just nice to write it down occasionally now we are here in the future and IE... isn't.
 
 ## Migrating from 1.x
 
-Old code mostly keeps working — `start`/`end`, `day`/`month`, `disableDates`,
+Old code mostly keeps working, if you're really that stubborn - `start`/`end`, `day`/`month`, `disableDates`,
 `monthList`, `callback`, `getValue`, `setValue` and `destroy` are all still
-accepted. What changed:
+grudgingly accepted but the application will judge you harshly for using them in an old fashioned way.
+Changes from v1.x to v2.x:
 
 | 1.x | 2.x |
 | :--- | :--- |
@@ -412,7 +412,7 @@ accepted. What changed:
 | `day: false` | `mode: 'ym'` (old spelling still works) |
 | `day: false, month: false` | `mode: 'y'` (old spelling still works) |
 | `start` / `end` | `min` / `max` |
-| `disableDates` / `disabledDates` | `disabledDates` (both accepted; 0.x disagreed with itself) |
+| `disableDates` / `disabledDates` | `disabledDates` (both still accepted; that 'd' cost me hours) |
 | `monthList` | `monthNamesShort` |
 | `parse.etype` | `parse.event` |
 | SCSS variables | CSS custom properties |
@@ -435,20 +435,21 @@ npm run typecheck
 npm run lint
 ```
 
-`demo/` covers every option — modes, formats, locales, ranges, the full
-disabled-dates matrix, overlay, theming and a linked date range.
+`demo/` shows some example options I lazily slung together with AI. I'm just assuming it works 'cause of aforementioned indolence. Maybe it includes stuff like - modes, formats, locales, ranges, the full
+disabled-dates matrix, overlay, theming and a linked date range, but I've not checked.
 
 `npm run shots` drives that demo in headless Chromium and writes a PNG per mode,
 stage, theme and locale. jsdom has no layout, so the unit tests cannot see the
 sliding panels or the overlay positioning.
 
-`npm run gif` regenerates the GIFs at the top of this file from
-[`demo/capture.html`](demo/capture.html). Playwright drives the picker and bursts
-screenshots through each transition; [`gifenc`](https://github.com/mattdesl/gifenc)
-encodes them. Both are pure JS — no ffmpeg or ImageMagick to install. Pass
+## Note to future self
+Use `npm run gif` regenerates the GIFs at the top of this file from
+[`demo/capture.html`](demo/capture.html). Playwright moves the picker and takes
+screenshots of each transition; [`gifenc`](https://github.com/mattdesl/gifenc)
+encodes them. Both are in pure JS - no ffmpeg or ImageMagick to install (these are actually great ways to balls this up). Pass
 `--frames` to also dump every frame as a PNG, which is the only practical way to
-check the timing.
+check the timing if you f%&k it up like before. Also; find a better place to leave yourself notes.
 
 ## Licence
 
-MIT
+MIT - I mean, I've not read it but everyones doing it.
