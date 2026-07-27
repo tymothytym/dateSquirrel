@@ -4,13 +4,20 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>dateSquirrel — examples</title>
-    <link rel="icon" href="/logo_dsq.svg" />
+    <link rel="icon" href="/logo_dsq.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" href="/logo_dsq_dark.svg" media="(prefers-color-scheme: dark)" />
     <link rel="stylesheet" href="./demo.css" />
   </head>
   <body>
     <header>
-      <!-- The logo already carries the wordmark and tagline, so it *is* the h1. -->
-      <h1><img src="/logo_dsq.svg" alt="dateSquirrel" height="90" /></h1>
+      <!-- The logo already carries the wordmark and tagline, so it *is* the h1.
+           The "date" half is near-black, so it needs a light variant on dark. -->
+      <h1>
+        <picture>
+          <source media="(prefers-color-scheme: dark)" srcset="/logo_dsq_dark.svg" />
+          <img src="/logo_dsq.svg" alt="dateSquirrel" height="90" />
+        </picture>
+      </h1>
       <p class="tagline">
         A year&nbsp;&rarr;&nbsp;month&nbsp;&rarr;&nbsp;day drill-down picker. Zero dependencies.
         <kbd>&darr;</kbd> opens, arrows navigate, <kbd>Backspace</kbd> steps back,

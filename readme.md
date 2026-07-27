@@ -1,5 +1,8 @@
 <p align="center">
-	<img src="static/logo_dsq.svg" height="130" alt="dateSquirrel">
+	<picture>
+		<source media="(prefers-color-scheme: dark)" srcset="static/logo_dsq_dark.svg">
+		<img src="static/logo_dsq.svg" height="130" alt="dateSquirrel">
+	</picture>
 </p>
 <p align="center">
     <img src="static/mit.svg" alt="licence" />

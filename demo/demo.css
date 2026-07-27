@@ -43,6 +43,10 @@ h1 {
   line-height: 1;
 }
 
+h1 picture {
+  display: block;
+}
+
 h1 img {
   display: block;
   max-width: 100%;
