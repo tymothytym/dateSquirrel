@@ -9,18 +9,32 @@
        * picker on a transparent background, at a fixed size so successive runs
        * produce identical frames.
        */
+      /*
+       * Opaque background, deliberately. GIF alpha is 1-bit and its frame
+       * disposal rules make partially transparent animations flicker; opaque
+       * frames sidestep both. These match GitHub's readme canvas so the GIF
+       * blends in, and the encoder ships one file per scheme.
+       */
       html,
       body {
         margin: 0;
-        background: transparent;
+        background: #ffffff;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        html,
+        body {
+          background: #0d1117;
+        }
       }
 
       #stage {
         width: 420px;
         padding: 22px;
-        /* Slower than the shipped default so a screenshot burst samples the
-           slide properly. Playback delay is set by the encoder. */
-        --dsq-duration: 320ms;
+        /* Slower than the shipped default so a screenshot burst gets plenty of
+           frames through the slide. Playback delay is set by the encoder, so
+           this only affects how densely the motion is sampled. */
+        --dsq-duration: 450ms;
       }
 
       /* Slightly tighter rows keep the GIF a sensible height. */

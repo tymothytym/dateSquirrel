@@ -8,44 +8,47 @@
  * Both encoder and PNG decoder are pure JS, so there is nothing to install
  * beyond npm packages.
  *
- * Output: static/demo-<name>.gif, transparent background so the same file sits
- * on a light or dark readme.
+ * Output: static/demo-<name>.gif plus a -dark variant. Frames are fully opaque —
+ * GIF alpha is 1-bit and its disposal rules make partially transparent
+ * animations flicker, so each scheme gets its own opaque file and the readme
+ * picks between them with <picture>.
  */
 
-import { createServer } from 'vite';
-import { chromium } from 'playwright';
-// gifenc ships CommonJS, so its exports come off the default binding.
-import gifenc from 'gifenc';
-import { PNG } from 'pngjs';
-
-const { GIFEncoder, quantize, applyPalette } = gifenc;
-import { mkdir, writeFile } from 'node:fs/promises';
 import { statSync } from 'node:fs';
+import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import gifenc from 'gifenc';
+import { chromium } from 'playwright';
+import { PNG } from 'pngjs';
+import { createServer } from 'vite';
+
+// gifenc ships CommonJS, so its exports come off the default binding.
+const { GIFEncoder, quantize, applyPalette } = gifenc;
 
 const PORT = 5233;
 const OUT_DIR = 'static';
-/** Playback delay per frame, ms. 70ms ≈ 14fps, which GIF quantises cleanly. */
-const FRAME_DELAY = 70;
+/** Playback delay per frame, ms. 60ms ≈ 17fps; GIF stores this in 10ms units. */
+const FRAME_DELAY = 60;
 /** How long the final state is held, in frames. */
 const HOLD = 10;
 /**
- * Palette size. The UI is flat colour, so 64 entries covers it with no visible
- * banding and encodes far smaller than the 255 maximum.
+ * Palette size. The maximum GIF allows — antialiased text needs the greys, and
+ * file size is not the binding constraint here.
  */
-const PALETTE_SIZE = 64;
+const PALETTE_SIZE = 256;
 /** GitHub renders light and dark readmes, so ship one GIF for each. */
 const SCHEMES = ['light', 'dark'];
 
-/**
- * Each variant is a list of steps. `burst` frames are captured back to back to
- * sample a transition; `hold` frames repeat the current state to create a pause.
- */
 /**
  * Years sit under the month panel, inset by --dsq-month-inset, so only that
  * left sliver of a row is visible. Click inside it, as a user would.
  */
 const YEAR_HIT = { x: 30, y: 10 };
+
+/**
+ * Each variant is a list of steps. `burst` captures frames back to back to
+ * sample a transition in flight; `hold` repeats the settled state as a pause.
+ */
 
 const VARIANTS = [
   {
@@ -53,17 +56,17 @@ const VARIANTS = [
     query: { mode: 'ymd', min: '2015-01-01', max: '2030-12-31' },
     steps: [
       { hold: 4 },
-      { click: '#field', burst: 7 },
+      { click: '#field', burst: 10 },
       { hold: 7 },
-      { click: '.dsq-list-years li[data-year="2026"]', position: YEAR_HIT, burst: 7 },
+      { click: '.dsq-list-years li[data-year="2026"]', position: YEAR_HIT, burst: 10 },
       { hold: 7 },
-      { click: '.dsq-list-months li[data-month="6"]', burst: 7 },
+      { click: '.dsq-list-months li[data-month="6"]', burst: 10 },
       { hold: 7 },
-      { click: '.dsq-day[data-day="17"]', burst: 4 },
+      { click: '.dsq-day[data-day="17"]', burst: 6 },
       // Linger on the highlighted day before closing, then show the value
       // landing in the field.
       { hold: 10 },
-      { press: 'Escape', burst: 5 },
+      { press: 'Escape', burst: 8 },
       { hold: HOLD },
     ],
   },
@@ -72,13 +75,13 @@ const VARIANTS = [
     query: { mode: 'ym', min: '2015-01', max: '2030-12' },
     steps: [
       { hold: 4 },
-      { click: '#field', burst: 7 },
+      { click: '#field', burst: 10 },
       { hold: 7 },
-      { click: '.dsq-list-years li[data-year="2026"]', position: YEAR_HIT, burst: 7 },
+      { click: '.dsq-list-years li[data-year="2026"]', position: YEAR_HIT, burst: 10 },
       { hold: 7 },
-      { click: '.dsq-list-months li[data-month="6"]', burst: 4 },
+      { click: '.dsq-list-months li[data-month="6"]', burst: 6 },
       { hold: 10 },
-      { press: 'Escape', burst: 5 },
+      { press: 'Escape', burst: 8 },
       { hold: HOLD },
     ],
   },
@@ -142,13 +145,19 @@ async function captureVariant(page, base, variant, scheme) {
 
   const frames = [];
   const shoot = async () => {
-    frames.push(toRgba(await page.screenshot({ clip, omitBackground: true })));
+    frames.push(toRgba(await page.screenshot({ clip })));
   };
 
   for (const step of variant.steps) {
     if (step.click) {
       const target = page.locator(step.click);
       await target.click(step.position ? { position: step.position } : {});
+      /*
+       * Park the cursor off the picker. Selecting a year scrolls the list to
+       * centre it, which slides a different row under the stationary cursor and
+       * leaves a stray hover highlight next to the real selection.
+       */
+      await page.mouse.move(660, 660);
     }
     if (step.press) {
       await page.keyboard.press(step.press);
@@ -172,44 +181,56 @@ async function captureVariant(page, base, variant, scheme) {
   return frames;
 }
 
+/**
+ * Collapse runs of identical frames into one frame with a longer delay.
+ *
+ * This replaces an earlier attempt that wrote a synthetic "blank" frame per held
+ * frame. That frame was `new Uint8Array(w * h)` — every pixel palette index 0,
+ * not the transparent index — so every pause painted a solid block of whichever
+ * colour landed in slot 0, which is what made the GIFs flicker.
+ */
+function coalesce(frames) {
+  const runs = [];
+  for (const frame of frames) {
+    const last = runs.at(-1);
+    if (last && Buffer.compare(Buffer.from(last.frame.data), Buffer.from(frame.data)) === 0) {
+      last.delay += FRAME_DELAY;
+    } else {
+      runs.push({ frame, delay: FRAME_DELAY });
+    }
+  }
+  return runs;
+}
+
 function encodeGif(frames) {
   const encoder = GIFEncoder();
   const { width, height } = frames[0];
 
-  // One palette for the whole animation, built from a mid-animation frame so it
-  // covers every panel colour. A per-frame palette would flicker.
-  const sample = frames[Math.floor(frames.length / 2)];
-  const palette = quantize(sample.data, PALETTE_SIZE, { format: 'rgba4444' });
-  // Reserve the last slot for full transparency.
-  const transparentIndex = palette.length;
-  palette.push([0, 0, 0, 0]);
+  /*
+   * One palette for the whole animation, quantised from frames sampled evenly
+   * across it. A mid-animation frame alone misses colours that only appear in
+   * another stage (the navy month panel, say), and a per-frame palette shifts
+   * hues between frames.
+   */
+  const sampleCount = Math.min(10, frames.length);
+  const stride = Math.max(1, Math.floor(frames.length / sampleCount));
+  const samples = [];
+  for (let i = 0; i < frames.length; i += stride) samples.push(frames[i].data);
+  const histogram = new Uint8ClampedArray(samples.length * samples[0].length);
+  samples.forEach((data, index) => {
+    histogram.set(data, index * data.length);
+  });
 
-  let previous = null;
-  for (const frame of frames) {
-    // Identical consecutive frames become a longer delay on the previous one.
-    if (previous && Buffer.compare(Buffer.from(frame.data), Buffer.from(previous.data)) === 0) {
-      encoder.writeFrame(new Uint8Array(width * height), width, height, {
-        palette,
-        delay: FRAME_DELAY,
-        transparent: true,
-        transparentIndex,
-        dispose: 1,
-      });
-      continue;
-    }
-    const indexed = applyPalette(frame.data, palette, 'rgba4444');
-    // Anything essentially transparent maps to the reserved index.
-    for (let i = 0; i < indexed.length; i++) {
-      if (frame.data[i * 4 + 3] < 128) indexed[i] = transparentIndex;
-    }
-    encoder.writeFrame(indexed, width, height, {
-      palette,
-      delay: FRAME_DELAY,
-      transparent: true,
-      transparentIndex,
-      dispose: 2,
-    });
-    previous = frame;
+  const palette = quantize(histogram, PALETTE_SIZE, { format: 'rgb565' });
+
+  for (const { frame, delay } of coalesce(frames)) {
+    /*
+     * Fully opaque, full-canvas frames with `dispose: 1` ("do not dispose").
+     * Every frame overwrites the whole canvas, so there is no compositing to get
+     * wrong — no transparency, and nothing cleared between frames.
+     */
+    const indexed = applyPalette(frame.data, palette, 'rgb565');
+    encoder.writeFrame(indexed, width, height, { palette, delay, dispose: 1 });
   }
 
   encoder.finish();
@@ -224,12 +245,8 @@ await mkdir(OUT_DIR, { recursive: true });
 const browser = await chromium.launch();
 const page = await browser.newPage({
   viewport: { width: 700, height: 700 },
-  /*
-   * 1.5x, not 2x. The readme displays these around 464px wide, so 1.5x still
-   * looks sharp on a HiDPI screen while cutting the pixel count — and therefore
-   * the file — by roughly half against 2x.
-   */
-  deviceScaleFactor: 1.5,
+  // 2x: the readme shows these at 464px, so this is pixel-perfect on HiDPI.
+  deviceScaleFactor: 2,
 });
 
 const problems = [];
