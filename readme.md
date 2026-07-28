@@ -29,7 +29,7 @@ inside React, Vue and Svelte.
 </em></p>
 
 <p align="center">
-  <strong><a href="https://datesquirrel.vercel.app">Try it live &rarr;</a></strong>
+  <strong><a href="https://date-squirrel.vercel.app">Try it live &rarr;</a></strong>
 </p>
 
 ## Why this exists
@@ -442,7 +442,7 @@ npm run lint
 
 `demo/` shows some example options I lazily slung together with AI. I'm just assuming it works 'cause of aforementioned indolence. Maybe it includes stuff like - modes, formats, locales, ranges, the full
 disabled-dates matrix, overlay, theming and a linked date range, but I've not checked. It's
-deployed at [datesquirrel.vercel.app](https://datesquirrel.vercel.app) — Vercel runs
+deployed at [date-squirrel.vercel.app](https://date-squirrel.vercel.app) — Vercel runs
 `build:demo` and serves `dist-demo/`, per [`vercel.json`](vercel.json). Note that
 `npm run build` is a *library* build and emits no HTML, so the demo needs its own
 config in [`vite.demo.config.ts`](vite.demo.config.ts).

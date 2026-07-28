@@ -4,13 +4,16 @@ export default defineConfig({
   // `npm run dev` serves demo/index.html, which imports src/ directly.
   server: { open: '/demo/' },
 
-  // The logo and badges the demo and readme reference. Not copied into the
-  // library build — `lib` mode ignores publicDir.
+  // The logo and badges the demo and readme reference.
   publicDir: 'static',
 
   build: {
     outDir: 'dist',
     emptyOutDir: true,
+    // `lib` mode does NOT exempt publicDir, contrary to what you'd hope: without
+    // this, static/ lands in dist/ and ~1MB of readme GIFs ships to npm inside
+    // the package. The demo build wants them, the library build never does.
+    copyPublicDir: false,
     sourcemap: true,
     target: 'es2022',
     cssCodeSplit: false,

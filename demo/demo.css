@@ -161,6 +161,17 @@ footer {
   color: var(--ink-soft);
 }
 
+/* --accent is the only themed colour with enough contrast on both schemes; the
+   browser default link blue is unreadable on the dark palette. */
+a {
+  color: var(--accent);
+  text-underline-offset: 0.15em;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
 kbd {
   padding: 0.1em 0.4em;
   font: inherit;
