@@ -6,16 +6,24 @@
 
 import { DateSquirrel, PlainDate } from '../src/index.js';
 import type { DateSquirrelUserOptions } from '../src/index.js';
-import '../src/element.js';
 
-// The stylesheet, imported explicitly rather than relied upon via index.ts.
-// package.json's `sideEffects` describes the *published* layout (./dist/*), so
-// nothing under src/ matches it and src/index.ts counts as side-effect-free —
-// which lets a production build tree-shake its bare CSS import away. That never
-// bites the lib build (entries are always kept) or `npm run dev` (no
-// tree-shaking), only a build from source like `npm run build:demo`. This is
-// also what a real consumer writes: `import 'date-squirrel/styles.css'`.
+// Both of these are deliberately *used* rather than imported for side effects.
+//
+// package.json's `sideEffects` describes the published layout (./dist/*), so
+// nothing under src/ matches it and src/*.ts counts as side-effect-free. That
+// lets a production build discard a bare `import '../src/element.js'` whole —
+// taking `defineDateSquirrel()` with it, so `<date-squirrel>` never upgrades —
+// and likewise drop index.ts's bare CSS import, leaving the page unstyled.
+// Calling the function and importing the stylesheet directly can't be shaken
+// out. Neither trap fires in the lib build (entries are always kept) or in
+// `npm run dev` (no tree-shaking) — only in a build from source, i.e.
+// `npm run build:demo`.
+//
+// This is also exactly what the readme tells a consumer to write.
+import { defineDateSquirrel } from '../src/element.js';
 import '../src/styles/date-squirrel.css';
+
+defineDateSquirrel();
 
 const show = (id: string, human?: string, save?: string) => {
   const output = document.getElementById(id);
