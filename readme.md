@@ -28,6 +28,10 @@ inside React, Vue and Svelte.
   Years stay on the left, months slide in over them, days slide up over both.
 </em></p>
 
+<p align="center">
+  <strong><a href="https://datesquirrel.vercel.app">Try it live &rarr;</a></strong>
+</p>
+
 ## Why this exists
 
 `<input type="date">` is pretty good now and you should usually just use it. Two (and a half) things
@@ -431,12 +435,17 @@ npm test           # vitest
 npm run shots      # visual check in a real browser -> screenshots/
 npm run gif        # rebuild the readme GIFs -> static/demo-*.gif
 npm run build      # dist/ + .d.ts
+npm run build:demo # the demo as a static site -> dist-demo/
 npm run typecheck
 npm run lint
 ```
 
 `demo/` shows some example options I lazily slung together with AI. I'm just assuming it works 'cause of aforementioned indolence. Maybe it includes stuff like - modes, formats, locales, ranges, the full
-disabled-dates matrix, overlay, theming and a linked date range, but I've not checked.
+disabled-dates matrix, overlay, theming and a linked date range, but I've not checked. It's
+deployed at [datesquirrel.vercel.app](https://datesquirrel.vercel.app) — Vercel runs
+`build:demo` and serves `dist-demo/`, per [`vercel.json`](vercel.json). Note that
+`npm run build` is a *library* build and emits no HTML, so the demo needs its own
+config in [`vite.demo.config.ts`](vite.demo.config.ts).
 
 `npm run shots` drives that demo in headless Chromium and writes a PNG per mode,
 stage, theme and locale. jsdom has no layout, so the unit tests cannot see the

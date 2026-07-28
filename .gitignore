@@ -5,5 +5,7 @@ npm-debug.log*
 *.local
 *.tsbuildinfo
 dist
+dist-demo
+.vercel
 coverage
 screenshots
