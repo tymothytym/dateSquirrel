@@ -8,6 +8,15 @@ import { DateSquirrel, PlainDate } from '../src/index.js';
 import type { DateSquirrelUserOptions } from '../src/index.js';
 import '../src/element.js';
 
+// The stylesheet, imported explicitly rather than relied upon via index.ts.
+// package.json's `sideEffects` describes the *published* layout (./dist/*), so
+// nothing under src/ matches it and src/index.ts counts as side-effect-free —
+// which lets a production build tree-shake its bare CSS import away. That never
+// bites the lib build (entries are always kept) or `npm run dev` (no
+// tree-shaking), only a build from source like `npm run build:demo`. This is
+// also what a real consumer writes: `import 'date-squirrel/styles.css'`.
+import '../src/styles/date-squirrel.css';
+
 const show = (id: string, human?: string, save?: string) => {
   const output = document.getElementById(id);
   if (output) output.textContent = save ? `${human}  →  stored "${save}"` : '—';
